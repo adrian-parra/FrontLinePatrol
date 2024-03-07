@@ -1,49 +1,180 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LinePatrol</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LinePatrol.styles.css" asp-append-version="true" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LinePatrol</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+    <section class="app-dashboard">
+        <nav>
+            <div class="contenedor-btn-menu">
+                <button class="btn-menu" (click)="abrirMenu()">
+                    <img class="img-menu"
+                        src="https://raw.githubusercontent.com/adrian-parra/PuntoDeVenta/1f831d4bc864cee7f2b9580a1eef4bba631bcced/src/assets/menu.svg"
+                        alt="">
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+            </div>
+
+            <h1>loal</h1>
+        </nav>
+
+        <aside>
+            <div class="item-profile">
+                <div class="contenedor-img">
+                    <img src="https://r.loyverse.com/dashboard/images/ic_account_circle_black1b1c7b5e68cdc7130c56.svg"
+                        alt="">
+                </div>
+                <div class="contenedor-perfil ocultar">
+                    <p>ADMIN</p>
+                    <p> loal@loal.com </p>
+                </div>
+
+                <div class="cardview-float-perfil">
+                    <a>Cuenta</a>
+                    <a>Cerrar sesión</a>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <div class="menu-item">
+                <div class="contenedor-enlases">
+                    <!-- REF OCULTAS -->
+                    <a class="ref-hide">Proveedores</a>
+                    <a class="ref-hide">Proveedores</a>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - LinePatrol - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+                    <label for="">Inicio</label>
+                    <a>INICIO</a>
+
+                    <!--REF VISIBLES-->
+                    <label for="">Propiedades</label>
+                    <a>Propietarios</a>
+                    <a>Vehículos</a>
+
+                </div>
+                <div id="eventClick" title="Administración">
+                    <img src="https://r.loyverse.com/dashboard/images/ic_reportsa54b269abfd191558e00.svg"
+                        style="filter: invert(40%) sepia(56%) saturate(560%) hue-rotate(194deg) brightness(94%) contrast(89%);"
+                        alt="">
+                    <h1 class="menu-admin ocultar">LinePatrol</h1>
+                </div>
+
+            </div>
+            <div class="menu-item">
+                <div class="contenedor-enlases">
+
+
+                    <!-- <label for="">Propiedades</label>
+                <a routerLinkActive="active-link" routerLink="/dashboard/goods/price">Calles</a>
+                <a routerLinkActive="active-link" routerLink="/dashboard/goods/categories">Tipos de propiedades</a> -->
+                    <label for="">Cuenta</label>
+                    <a>Usuarios</a>
+                </div>
+                <div id="eventClick" title="Configuración">
+                    <img src=""
+                        style="filter: invert(37%) sepia(93%) saturate(990%) hue-rotate(142deg) brightness(90%) contrast(101%);"
+                        alt="">
+                    <h1 class="menu-config ocultar">Configuración</h1>
+                </div>
+
+            </div>
+
+
+
+        </aside>
+        @RenderBody()
+        <script>
+            document.querySelector('.btn-menu').addEventListener('click', () => {
+
+                document.querySelector('.contenedor-perfil').classList.toggle('ocultar')
+                document.querySelector('.menu-admin').classList.toggle('ocultar')
+                document.querySelector('.menu-config').classList.toggle('ocultar')
+
+
+                let contenedoresEnlases = document.querySelectorAll('.contenedor-enlases');
+
+                contenedoresEnlases.forEach((elemento) => {
+                    if (elemento.classList.contains('menu-item-flotante')) {
+                        elemento.classList.remove('menu-item-flotante');
+                    }
+                    if (elemento.classList.contains('menu-item-espandible')) {
+                        elemento.classList.remove('menu-item-espandible');
+                    }
+                });
+
+                document.querySelector('aside').classList.toggle('espandible-menu')
+            })
+
+            // EXPANDIBLE ITEM MENU CLICK
+            document.querySelector('aside').addEventListener('click', (e) => {
+                var elemento = e.target;
+
+
+                if (elemento.className == 'contenedor-perfil') {
+                    elemento.classList.toggle('cardview-float-perfil-active')
+                }
+
+                if (elemento.tagName == 'A') {
+                    this.recetearContenedorEnlases();
+
+                    @* this.menuDesplegado = false; *@
+                    document.querySelector('aside').classList.toggle('espandible-menu')
+                }
+
+                if (elemento.id == 'eventClick') {
+                    const contEnlales = elemento.parentNode?.querySelector(
+                        '.contenedor-enlases'
+                    );
+
+                    if (!document.querySelector('aside').classList.contains('espandible-menu')) {
+                        if (contEnlales?.classList.contains('menu-item-flotante')) {
+                            contEnlales?.classList.toggle('menu-item-flotante');
+                        } else {
+                            //VERIFICAR SI OTRO ELEMENTO ESTA ACTIVO Y DESACTIVARLO SI LO ESTA
+                            let contenedoresEnlases = document.querySelectorAll(
+                                '.contenedor-enlases'
+                            );
+
+                            contenedoresEnlases.forEach((elemento) => {
+                                if (elemento.classList.contains('menu-item-flotante')) {
+                                    elemento.classList.remove('menu-item-flotante');
+                                }
+                            });
+
+                            contEnlales?.classList.toggle('menu-item-flotante');
+                        }
+                        return false;
+                    }
+
+                    if (contEnlales?.classList.contains('menu-item-espandible')) {
+                        contEnlales?.classList.toggle('menu-item-espandible');
+                    } else {
+                        //VERIFICAR SI OTRO ELEMENTO ESTA ACTIVO Y DESACTIVARLO SI LO ESTA
+                        let contenedoresEnlases = document.querySelectorAll(
+                            '.contenedor-enlases'
+                        );
+
+                        contenedoresEnlases.forEach((elemento) => {
+                            if (elemento.classList.contains('menu-item-espandible')) {
+                                elemento.classList.remove('menu-item-espandible');
+                            }
+                        });
+
+                        contEnlales?.classList.toggle('menu-item-espandible');
+                    }
+                }
+            })
+        </script>
+        @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+        @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        @await RenderSectionAsync("Scripts", required: false)
+
+    </section>
 </body>
+
 </html>

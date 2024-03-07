@@ -1,18 +1,552 @@
-html {
-  font-size: 14px;
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap");
+:root {
+  /*COLOR PRINCIPAL rgb(75, 175, 79)*/
+  --ColorPrincipal: rgb(255, 255, 255);
+
+  /* --ColorSecundario:#5469D4;#FF6C37; #5469D4;rgb(23, 101, 190) */
+  --ColorSecundario:#322374;
+  --ColorFondo: rgb(242, 242, 242);
+
+  --ColorExtra: rgb(29, 29, 29);
+
+  --ColorSuccess:#00C951;
+  --ColorDanger: #ff4a56;
+  --ColorWarning: #f57c00;
+
+  --Transition: 0.3s;
+
+  /*COLOR WHITE PARA FILTER EN UNA IMAGEN SVG*/
+  --ColorImgSvg: invert(100%) sepia(0%) saturate(7491%) hue-rotate(217deg)
+    brightness(106%) contrast(101%);
+
+  --ColorTitulo: rgb(33, 33, 33);
+  --ColorDescripcion: #827582;
+  /*rgb(206,206.206);*/
+
+  --ColorTextoPrincipal: #666666;
+  --ColorTextoSecundario: #5a5a5a;
+
+  --Padding: 10px;
+  --Margin: 10px;
+  --SpaseLetter: 0.5px;
+  /*--Border: 1.5px;*/
+  --Border: 1.5px;
+  --BorderRadius: 3px;
+
+  --SizeTitulo: 1.13rem;
+  --SizeDescripcion: 0.75rem;
+
+  --FontSize: 16px;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+* {
+  margin: 0;
+  border: 0;
+  box-sizing: border-box;
+  outline: none;
+}
+html {
+  font-size: var(--FontSize);
+  scroll-behavior: smooth;
+}
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--ColorFondo);
+}
+
+/*ESTILOS GENERALES PARA COMPONENTES HIJOS DENTRO DEL DASHBOARD*/
+.contenedor-componente {
+  width: calc(100% - 0px);
+  height: calc(100% - 48px);
+  padding: 24px 24px 15px 96px;
+  overflow: auto;
+}
+
+/*contenedor de componentes respomsibe */
+@media (max-width: 600px) {
+  .contenedor-componente {
+    padding: 0;
   }
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.contenedor-componente .cardview {
+  max-width: 810px;
+  background-color: var(--ColorPrincipal);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+  border-radius: var(--BorderRadius);
+  animation: opacity 1s ease 0s 1 normal forwards;
+
+  /*PROpiedad agregada para cale*/
+  width: 100%;
+}
+/*
+@keyframes opacity {
+  0% {
+    animation-timing-function: ease-in;
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+
+  24% {
+    opacity: 0.24;
+  }
+
+  40% {
+    animation-timing-function: ease-in;
+    transform: translateX(-26px);
+    opacity: 0.4;
+  }
+
+  65% {
+    animation-timing-function: ease-in;
+    transform: translateX(-13px);
+    opacity: 0.65;
+  }
+
+  82% {
+    animation-timing-function: ease-in;
+    transform: translateX(-6.5px);
+    opacity: 0.82;
+  }
+
+  93% {
+    animation-timing-function: ease-in;
+    transform: translateX(-4px);
+    opacity: 0.93;
+  }
+
+  25%,
+  55%,
+  75%,
+  87%,
+  98% {
+    animation-timing-function: ease-out;
+    transform: translateX(0px);
+  }
+
+  100% {
+    animation-timing-function: ease-out;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}*/
+
+@keyframes opacity {
+  from {
+    opacity: 0;
+    /*width: 0%;*/
+  }
+  to {
+    opacity: 1;
+    /*width: 100%;*/
+  }
 }
 
-body {
-  margin-bottom: 60px;
+.contenedor-componente .cardview .cardview-body {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px 0 0 0;
 }
+
+.contenedor-componente .cardview .cardview-header {
+  height: 66px;
+  padding: 0 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.contenedor-componente .cardview .cardview-header .container-filtros{
+  display: flex;
+  flex-direction: row;
+  gap: var(--Margin);
+  align-items: flex-end;
+  width: 50%;
+}
+
+.contenedor-componente .cardview .cardview-header .container-filtros .container-search{
+  display: flex;
+    flex-direction: row;
+    gap: var(--Margin);
+    align-self: center;
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .container-search input{
+  width: 0;
+  transition: .3s all;
+  border-bottom: var(--Border) solid var(--ColorPrincipal);
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .container-search .cerrarInputSearch{
+  display: none;
+}
+
+
+.contenedor-componente .cardview .cardview-header .container-filtros .filtro{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .filtro label{
+  font-size: var(--SizeDescripcion);
+  font-weight: 400;
+  color: var(--ColorDescripcion);
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .filtro select{
+  border: 0;
+  padding: 7px 0;
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  border-bottom: calc(var(--Border) + 0.2px) solid var(--ColorDescripcion);
+  transition: border 0.3s;
+  font-weight: 400;
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .filtro select option{
+  background-color: var(--ColorPrincipal);
+  border-radius: 20px;
+  font-size: var(--SizeTitulo);
+}
+.contenedor-componente .cardview .cardview-header .container-filtros .filtro select:focus{
+  border-color: var(--ColorSecundario);
+}
+
+/*ESTILOS PARA CARDVIEW CON INFORMACION CUANDO EL COMPONENTE NO TENGA DATOS PARA MOSTRAR
+(table de bd sin registros)*/
+.contenedor-componente .cardview .cardview-content {
+  padding: 48px 0;
+  width: 100%;
+  height: 100%;
+}
+
+.contenedor-componente .cardview .cardview-content .contenedor-img {
+  width: 128px;
+  height: 128px;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.contenedor-componente .cardview .cardview-content .contenedor-img img {
+  filter: invert(72%) sepia(6%) saturate(7%) hue-rotate(13deg) brightness(88%)
+    contrast(84%);
+  width: 70px;
+  height: 70px;
+}
+
+.contenedor-componente .cardview .cardview-content h1 {
+  font-size: calc(var(--SizeTitulo) + 6px);
+  color: #767676;
+  text-align: center;
+  font-weight: 400;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.contenedor-componente .cardview .cardview-content p {
+  font-size: 1rem;
+  color: #767676;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.contenedor-componente .cardview .cardview-content button {
+  display: block;
+  margin: 0 auto;
+}
+
+/*FIN ESTILOS GENERALES PARA COMPONENTES HIJOS DENTRO DEL DASHBOARD*/
+
+/*------------------------------------------------------------------*/
+
+/*ESTILOS G. PARA BOTONES */
+
+/*---BUTTON DEFAULT---*/
+.l-btn-outline {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  font-family: "Roboto", sans-serif;
+  font-weight: 450;
+  padding: 0 16px;
+  height: 36px;
+  border-radius: var(--BorderRadius);
+  background-color: transparent;
+  transition: 0.3s all;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.l-btn-outline:hover {
+  cursor: pointer;
+  background-color: #fafafa;
+}
+.l-btn-d {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  font-family: "Roboto", sans-serif;
+  color: var(--ColorPrincipal);
+  font-weight: 550;
+  padding: 0 16px;
+  height: 36px;
+  border-radius: var(--BorderRadius);
+  background-color: var(--ColorSecundario);
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%);
+  transition: 0.3s all;
+  min-width: 173px;
+}
+.l-btn-d:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+/*---FIN BUTTON DEFAULT---*/
+
+/*FIN ESTILOS G. PARA BOTONES */
+
+/*ESTILOS G PARA TABLAS DENTRO DEL SISTEMA */
+.header-table {
+  width: 100%;
+  min-width: 710px;
+  height: 55px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  border-bottom: var(--Border) solid var(--ColorFondo);
+  padding: 0 24px;
+}
+
+.header-table div {
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  font-weight: 500;
+  color: var(--ColorDescripcion);
+}
+
+.body-table {
+}
+.body-table .contenedor-element-table {
+  width: 100%;
+  min-width: 710px;
+  height: 55px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 0 24px;
+  border-bottom: var(--Border) solid #eaeaea;
+  transition: all 0.3s;
+}
+
+.body-table .contenedor-element-table:hover {
+  background-color: #fafafa;
+  cursor: pointer;
+}
+
+.body-table .contenedor-element-table div {
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  font-weight: 400;
+  color: var(--ColorDescripcion);
+  max-width: 150px;
+  overflow: hidden;
+}
+
+/*ESTILOS G PARA TABLAS DENTRO DEL SISTEMA */
+
+/*ESTILOS GENERALES PARA FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--Padding);
+}
+
+.form .contenedor-input {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  position: relative;
+  padding-top: var(--Padding);
+}
+
+.form .contenedor-input label:first-of-type {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  position: absolute;
+  color: var(--ColorDescripcion);
+  bottom: 10px;
+  left: 53px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.form .contenedor-input label:last-of-type {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  position: absolute;
+  color: var(--ColorDescripcion);
+  bottom: 10px;
+  left: 1px;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+.form .contenedor-input input,
+.form .contenedor-input select {
+  border: 0;
+  padding: 7px 0;
+  font-size: 0.9rem;
+  border-bottom: calc(var(--Border) + 0.2px) solid var(--ColorDescripcion);
+  transition: border 0.3s;
+}
+
+.form .contenedor-input:after {
+  display: flex;
+  position: absolute;
+  top: calc(50% - 1px);
+  left: -12px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid var(--ColorDescripcion);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+/*CLASS ENCARGADA DE DESHABILITAR INPUT*/
+.deshabilitar-input {
+  pointer-events: none;
+  border: 0 !important;
+  appearance: none;
+}
+
+.form .contenedor-input input::placeholder {
+  color: rgb(206, 206, 206);
+}
+
+.form .contenedor-input input:focus,
+.form .contenedor-input select:focus {
+  border-color: var(--ColorSecundario);
+}
+
+.form .contenedor-input input:focus + label:first-of-type,
+.form .contenedor-input select:focus + label:first-of-type,
+.form .contenedor-input input:focus ~ label:last-of-type,
+.form .contenedor-input select:focus ~ label:last-of-type {
+  color: var(--ColorSecundario);
+}
+
+/*ANIMACION EN INPUT COMO ANDROID MATERIAL */
+
+.form .contenedor-input input:not(:placeholder-shown) {
+  color: black;
+}
+.form .contenedor-input input:not(:placeholder-shown) + label:first-of-type {
+  bottom: 30px;
+  left: 0px;
+  transform: scale(1);
+}
+
+.form .contenedor-input input:not(:placeholder-shown) ~ label:last-of-type {
+  bottom: -11px;
+  opacity: 0;
+}
+/*FIN ANIMACION EN INPUT COMO ANDROID MATERIAL */
+
+/*DISENHO PARA INPUT FILE*/
+.form .contenedor-input button{
+  cursor: pointer;
+  border-radius: var(--BorderRadius);
+  display: flex;
+  padding: var(--Padding);
+}
+/*FIN DISENHO PARA INPUT FILE*/
+
+
+/*DISEÑO A SELECT,OPTION */
+.form .contenedor-input select {
+  cursor: pointer;
+  /*appearance: none;*/
+}
+
+.form .contenedor-input select + label {
+  top: 0;
+  left: 0;
+}
+
+.form .contenedor-input select option {
+  background-color: var(--ColorPrincipal);
+  border-radius: 20px;
+  font-size: var(--SizeTitulo);
+}
+/*FIN DISEÑO A SELECT,OPTION */
+
+.form .contenedor-input .smsError {
+  position: absolute;
+  color: var(--ColorDanger);
+  font-size: var(--SizeDescripcion);
+  bottom: -15px;
+}
+
+.form .contenedor-botones {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--Padding);
+}
+.form .contenedor-botones button {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+  color: black;
+  font-weight: 550;
+  padding: 0 16px;
+  height: 36px;
+  border-radius: var(--BorderRadius);
+  background-color: var(--ColorPrincipal);
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%);
+  transition: 0.3s all;
+}
+.form .contenedor-botones button:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+.form .contenedor-botones button:nth-of-type(1) {
+ 
+  
+}
+.form .contenedor-botones button:nth-of-type(2){
+  background-color: var(--ColorSecundario);
+  color: var(--ColorPrincipal);
+}
+.form .contenedor-botones button:nth-of-type(2):disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.form .contenedor-botones button:nth-of-type(3) {
+  background-color: var(--ColorDanger);
+  color: var(--ColorPrincipal);
+  margin-left: auto;
+}
+
+/*DISEÑO PARA AGREGAR DOS COLUMNAS EN FORM*/
+.form .contenedor-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--Padding);
+}
+
+/*GRID RESPONSIBE */
+@media (max-width: 700px) {
+  .form .contenedor-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--Padding);
+  }
+}
+
+/*DISEÑO PARA CONTENEDOR CHECKBOX*/
+.form .contenedor-checkbox label {
+  font-size: calc(var(--SizeDescripcion) + 2px);
+}
+.form .contenedor-checkbox {
+  margin-bottom: 24px;
+}
+.form .contenedor-checkbox label input {
+  margin: 0;
+  margin-right: 10px;
+  transform: scale(1.4);
+  background-color: var(--ColorSecundario);
+}
+
+/*FIN ESTILOS GENERALES PARA FORM */

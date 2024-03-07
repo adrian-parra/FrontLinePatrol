@@ -1,48 +1,335 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-a {
-  color: #0077cc;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
+﻿.app-dashboard {
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  height: 100%;
+}
+
+/*ESTILOS PARA NAV BAR */
+.app-dashboard nav {
+  height: 48px;
+  width: 100%;
+  background-color: var(--ColorSecundario);
+  box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.app-dashboard nav .contenedor-btn-menu {
+  width: 72px;
+  height: 48px;
+  display: flex;
+ align-items: center;
+ justify-content: center;
+}
+.app-dashboard nav .btn-menu {
+  width: 48px;
+  height: 48px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all .2s;
+  border-radius: 50%;
+}
+.app-dashboard nav .btn-menu:active {
+  background-color: rgb(206,206,206);
+  transform: scale(1.1);
+}
+.app-dashboard nav .btn-menu .img-menu {
+  width: 24px;
+  height: 24px;
+  filter: var(--ColorImgSvg);
+}
+
+.app-dashboard nav h1 {
+  font-size:calc(var(--SizeTitulo) + 2px);
+  color: var(--ColorPrincipal);
+  font-weight: 400;
+}
+/*FIN ESTILOS PARA NAV BAR */
+
+/*ESTILOS PARA ASIDE FLOTANE TOP|LEFT */
+.app-dashboard aside {
+  /*width: 72px;*/
+  width: 72px;
+  height: calc(100% - 48px);
+  background-color: var(--ColorPrincipal);
+  position: fixed;
+  top: 48px;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0px 2px 5px rgb(0 0 0 / 15%);
+
+  transition: all .3s;
+}
+
+/*ASIDE RESPONSIBE */
+@media (max-width:600px) {
+  .app-dashboard aside {
+      /*width: 72px;*/
+      width: 0px;
+      overflow: hidden;
+     
+  }   
+}
+
+.espandible-menu {
+  width: 320px !important;
+}
+
+.app-dashboard aside.espandible-menu {
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+}
+
+.app-dashboard aside .item-profile {
+  height: 64px;
+  width: 72px;
+  border-bottom: var(--Border) solid var(--ColorFondo);
+  position: relative;
+}
+
+.app-dashboard aside.espandible-menu .item-profile {
+  width: 320px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.app-dashboard aside.espandible-menu .item-profile .contenedor-img {
+  width: 72px;
+  height: 36px;
+  padding-left:12px;
+}
+
+.app-dashboard aside .item-profile .cardview-float-perfil {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+  top: 45px;
+  right: 5px;
+  z-index: 1001;
+  height: auto;
+  width: 120px;
+  background-color: var(--ColorPrincipal);
+  padding: 5px 0;
+}
+
+.app-dashboard aside .item-profile .cardview-float-perfil a {
+  text-decoration: none;
+  color: #000000de;
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  padding: 0 16px;
+  width:100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  transition: all .3s;
+  cursor: pointer;
+}
+.app-dashboard aside .item-profile .cardview-float-perfil a:hover {
+  background-color: var(--ColorFondo);
+}
+.app-dashboard aside.espandible-menu 
+.item-profile 
+.contenedor-perfil.cardview-float-perfil-active + .cardview-float-perfil {
+  opacity: 1;
+  pointer-events: all;
+}
+.app-dashboard aside.espandible-menu .item-profile .contenedor-perfil {
+  height: 36px;
+  padding: 0 8px;
+ cursor: pointer;
+ display: block;
+}
+.app-dashboard aside.espandible-menu .item-profile .contenedor-perfil p:first-of-type {
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  pointer-events: none;
+  padding-left: 5px;
+
+}
+.app-dashboard aside.espandible-menu .item-profile .contenedor-perfil p:last-of-type {
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  color: var(--ColorDescripcion);
+  pointer-events: none;
+  padding-left: 5px;
+}
+
+.app-dashboard aside .menu-item {
+  width: 72px;
+  display: flex;
+  flex-direction: column-reverse;
+
+  /*height: 56px; */
+  border: 0;
+  transition: all .3s;
+  position: relative;
+
+
+  transition: all .3s ease;
+}
+.app-dashboard aside.espandible-menu .menu-item {
+  width: 320px;
+}
+
+.app-dashboard aside .menu-item div:last-of-type:hover {
+  background-color: var(--ColorFondo);
+  cursor: pointer;
+}
+
+.app-dashboard aside .menu-item div ,
+.app-dashboard aside .item-profile div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  
+}
+
+.app-dashboard aside .menu-item div:last-of-type {
+  border-left:calc(var(--Border) * 3) solid transparent;
+
+  /*CODIGO AGREGADO PARA ANIMACION ASIDE*/
+  padding-left:calc(var(--Padding) * 2);
+  display: flex;
+  flex-direction: row;
+  justify-content:flex-start;
+  height: 56px;
+  width: 72px;
+  transition: width .3s;
+}
+
+.app-dashboard aside.espandible-menu .menu-item div:last-of-type{
+  width: 100%;
+}
+
+
+.app-dashboard aside .menu-item div img {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+.app-dashboard aside .item-profile div img {
+  width: 36px;
+  height: 36px;
+}
+
+/*ESTILOS PARA CARDVIEW CON ENLASES A OTRO COMPONENTE (ROUTER LINK)*/
+.app-dashboard aside .menu-item .contenedor-enlases {
+  /*width: 224px;*/
+  width: 100%;
+  height: auto;
+  /*position: absolute;*/
+  position: absolute;
+  top: 0;
+  /*left: 72px;*/
+  left: 64px;
+  background-color: var(--ColorPrincipal);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--BorderRadius);
+  /*padding:5px 0;*/
+  padding: 0 0 5px 0;
+  
+  /*box-shadow: 0 2px 5px rgb(0 0 0 / 15%);*/
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  /*transition: all .3s;*/
+}
+.app-dashboard aside .menu-item .contenedor-enlases label{
+  align-self: flex-start;
+  font-size: var(--SizeDescripcion);
+  color: var(--ColorDescripcion);
+  padding: 10px 0 10px 10px;
+}
+.app-dashboard aside .menu-item .contenedor-enlases.menu-item-espandible{
+  border-bottom: var(--Border) solid #EAEAEA;
+}
+.app-dashboard aside .menu-item .contenedor-enlases.menu-item-espandible label{
+  align-self: flex-start;
+  font-size: var(--SizeDescripcion);
+  color: var(--ColorDescripcion);
+  margin-left: 70px;
+  padding: 10px 0 10px 0;
+}
+.app-dashboard aside .menu-item .contenedor-enlases a {
+  text-decoration: none;
+  color: #000000de;
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  padding: 0 16px;
+  width:100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  transition: all .3s;
+
+  padding-left:71px ;
+ 
+}
+
+
+.app-dashboard aside .menu-item .contenedor-enlases a:hover {
+  background-color: var(--ColorFondo);
+}
+
+
+/*COLOR PARA ENLASES EN MENU-ITEM INFORME */
+.app-dashboard aside .menu-item .contenedor-enlases a.active-link {
+  color: var(--ColorSecundario);
+}
+/*MENU ITEM REPORT COLOR BORDER Y FONDO  */
+.app-dashboard aside .menu-item .contenedor-enlases.menu-item-active + div {
+  background-color: var(--ColorFondo);
+  border-left-color: var(--ColorSecundario);
+}
+
+/*STYLE PARA MENU DESPLEGABLE ASIDE*/
+.app-dashboard aside .menu-item div:last-of-type h1 {
+  margin-left: calc(var(--Margin) * 2 + 3px);
+  pointer-events: none;
+  font-size:calc(var(--SizeDescripcion) + 2px);
+  font-weight: 500;
+}
+
+
+.menu-item-espandible {
+  position: static !important;
+  opacity: 1 !important;
+  transition: none !important;
+  pointer-events: all !important;
+}
+
+.menu-item-flotante {
+  opacity: 1 !important;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+  pointer-events: all !important;
+  padding:5px 0 !important;
+  width: 224px !important;
+  left: 72px !important;
+  z-index: 1000;
+}
+.menu-item-flotante a {
+  padding: 5px 10px !important;
+  transition: none !important;
+}
+
+
+/*FIN STYLE PARA MENU DESPLEGABLE ASIDE*/
+
+
+
+/*FIN ESTILOS PARA ASIDE FLOTANE TOP|LEFT */
+
+.ref-hide{
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+
+.ocultar{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
