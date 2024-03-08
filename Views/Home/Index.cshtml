@@ -2,7 +2,79 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    .contenedor-componente 
+.cardview {
+    max-width: none;
+}
+
+
+
+.header-table {
+    grid-template-columns: 2fr 1fr 1fr;
+}
+.body-table .contenedor-element-table {
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+.body-table .contenedor-element-table div {
+    max-width: none;
+}
+</style>
+
+<section class="contenedor-componente">
+    <div class="cardview">
+
+
+        <div class="cardview-header">
+
+            <button class="l-btn-d">+ REGISTRAR VEHICULO</button>
+
+
+            <div class="container-filtros">
+                <div class="filtro">
+                    <label for="">Propiedad</label>
+                    <select (change)="onSelectChangePropiedad($event)">
+                        <option value="0">Todas las propiedades</option>
+                        <option value="{{propiedad.id}}" *ngFor="let propiedad of propiedades">{{propiedad.descripcion}}
+                        </option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <label for="">Tipo</label>
+                    <select (change)="onSelectChangeTipoVehiculo($event)">
+                        <option value="0">Todos los tipos</option>
+                        <option value="{{tipovehiculo.id}}" *ngFor="let tipovehiculo of tiposvehiculo">
+                            {{tipovehiculo.nombre}} </option>
+                    </select>
+                </div>
+                <div class="container-search">
+                    <a style="cursor: pointer;" (click)="animacionSearch()"><img
+                            src="../../../../../../assets/magnifying-glass-solid.svg" width="20px" height="20px"
+                            alt=""></a>
+                    <input id="inputSearch" type="text" placeholder="Buscar" name="" #search
+                        (keyup)="searchVehiculo(search.value ,$event)">
+                    <a style="cursor:pointer;" class="cerrarInputSearch" (click)="cerrarAnimacioneSearch()"><img
+                            src="../../../../../../assets/xmark-solid (1).svg" width="20px" height="20px" alt=""></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cardview-body">
+            <div class="header-table">
+                <div>Descripción</div>
+                <div>Placas</div>
+                <div>Color</div>
+            </div>
+            <div class="body-table">
+
+                <div class="contenedor-element-table" *ngFor="let vehiculo of vehiculos"
+                    routerLink='/dashboard/vehiculos/editar/{{vehiculo.id}}'>
+                    <div>{{vehiculo.marca}}</div>
+                    <div>{{vehiculo.placas}}</div>
+                    <div>{{vehiculo.color}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

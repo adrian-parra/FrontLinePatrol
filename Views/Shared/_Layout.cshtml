@@ -42,18 +42,15 @@
             </div>
             <div class="menu-item">
                 <div class="contenedor-enlases">
-                    <!-- REF OCULTAS -->
-                    <a class="ref-hide">Proveedores</a>
-                    <a class="ref-hide">Proveedores</a>
+                   
 
+                   
+                    <a>Listado</a>
+                    <a>Registrar</a>
 
-                    <label for="">Inicio</label>
-                    <a>INICIO</a>
-
-                    <!--REF VISIBLES-->
-                    <label for="">Propiedades</label>
-                    <a>Propietarios</a>
-                    <a>Vehículos</a>
+                   
+                    <a>Editar</a>
+                    <a>Eliminar</a>
 
                 </div>
                 <div id="eventClick" title="Administración">
@@ -64,7 +61,7 @@
                 </div>
 
             </div>
-            <div class="menu-item">
+            @* <div class="menu-item">
                 <div class="contenedor-enlases">
 
 
@@ -81,7 +78,7 @@
                     <h1 class="menu-config ocultar">Configuración</h1>
                 </div>
 
-            </div>
+            </div> *@
 
 
 
@@ -92,7 +89,7 @@
 
                 document.querySelector('.contenedor-perfil').classList.toggle('ocultar')
                 document.querySelector('.menu-admin').classList.toggle('ocultar')
-                document.querySelector('.menu-config').classList.toggle('ocultar')
+                @* document.querySelector('.menu-config').classList.toggle('ocultar') *@
 
 
                 let contenedoresEnlases = document.querySelectorAll('.contenedor-enlases');

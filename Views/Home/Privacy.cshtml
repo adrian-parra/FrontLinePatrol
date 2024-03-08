@@ -1,6 +1,202 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
+<style>
+    .contenedor-componente .cardview {
+    max-width: 773px;
+    padding: 24px;
+    padding-top: 48px;
+}
 
-<p>Use this page to detail your site's privacy policy.</p>
+.form .contenedor-botones {
+    padding: 2px;
+}
+
+/*
+    TODO: ESTILOS PARA LA CREACION DE UN MODAL
+    TODO: DONDE SE PUEDA SELECCIONAR Y BUSCAR ELEMENTOS
+*/
+
+/* ? DIMENCION DE TABLA DENTRO DEL MODAL */
+.header-table {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.body-table .contenedor-element-table {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.body-table .contenedor-element-table div {
+    max-width: none;
+}
+
+/* ? MODAL PARA MOSTRAR PROPIEDADES */
+.container-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: opacity .5s;
+    z-index: 10;
+}
+.container-modal .modal {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border-radius: var(--BorderRadius);
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+    margin: 0 var(--Margin) 0 var(--Margin);
+
+}
+.container-modal .modal .header {
+    display: flex;
+    flex-direction: column;
+}
+.header button {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    background-color: transparent;
+    transition: .3s all;
+}
+.header button:hover {
+    cursor: pointer;
+    background-color: var(--ColorDanger);
+    color: white;
+}
+.header input {
+    border: var(--Border) solid var(--ColorSuccess);
+    max-width: 300px;
+    min-width: 100px;
+    padding:calc(var(--Padding) / 2);
+    margin-left: var(--Margin);
+    margin-right: var(--Margin);
+
+}
+.container-modal .modal .body {
+    max-width: 800px;
+    overflow-x: auto;
+}
+
+.body-table .contenedor-element-table div p{
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@* @keyframes opacity {
+    from {
+      opacity: 0;
+      /*width: 0%;*/
+    }
+    to {
+      opacity: 1;
+      /*width: 100%;*/
+    }
+  } *@
+</style>
+<section class="contenedor-componente">
+    <div class="cardview">
+        
+            <form  class="form" (keydown.enter)="$event.preventDefault()" [formGroup]="vehiculoFormRegistro" (ngSubmit)="addVehiculo()">
+
+             
+                
+                
+                <div class="contenedor-grid-2">
+                    <div class="contenedor-input">
+                        <select formControlName="id_tipo_vehiculo">
+                            <option value="{{tipovehiculo.id}}" *ngFor="let tipovehiculo of tiposvehiculo">{{tipovehiculo.nombre}} </option>
+                         </select>
+                        <label for="">Planta</label>
+                        <p class="smsError"
+                        *ngIf="vehiculoFormRegistro.get('id_tipo_vehiculo')?.touched && vehiculoFormRegistro.get('id_tipo_vehiculo')?.errors?.['required']">
+                        El campo no puede estar en blanco</p>
+                    </div>
+                    <div class="contenedor-input">
+                       <!-- <input type="text" placeholder=" " formControlName="color"> -->
+                        <select formControlName="color">
+                            <option value="{{color.name}}" *ngFor="let color of colores">{{color.name}}</option>
+                        </select>
+                        <label for="">Linea</label>
+
+    
+                        <p class="smsError"
+                        *ngIf="vehiculoFormRegistro.get('color')?.touched && vehiculoFormRegistro.get('color')?.errors?.['required']">
+                        El campo no puede estar en blanco</p>
+                    
+                    </div>
+                    <div class="contenedor-input">
+                        <select formControlName="id_estado">
+                            <option value="{{estado.id}}" *ngFor="let estado of estados">{{estado.nombre}}</option>
+                        </select>
+                        <label for="">Estacion</label>
+                       <p class="smsError"
+                        *ngIf="vehiculoFormRegistro.get('id_estado')?.touched && vehiculoFormRegistro.get('id_estado')?.errors?.['required']">
+                        El campo no puede estar en blanco</p>
+                    </div>
+                    <div class="contenedor-input">
+                        <button type="button" (click)="clickInputFile()" style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;"  placeholder=" ">Imagen <i class="fa fa-file-pdf"></i></button>
+                        <input id="inputFile" type="file" accept="application/pdf" (change)="onFileSelected($event)" style="display: none;">
+                        <a *ngIf="selectedFile" style="color: var(--ColorWa); font-size: 11px; margin-top: 10px; text-decoration: underline; cursor: pointer;" (click)="previewFile()">Imagen seleccionada</a>
+                    </div>
+                 
+                    
+                    <div class="contenedor-input">
+                        <input type="text" placeholder=" " formControlName="placas">
+                        <label for="">comentarios</label>
+                        <label for="">Ingrese</label>
+    
+                        <p class="smsError"
+                        *ngIf="vehiculoFormRegistro.get('placas')?.touched && vehiculoFormRegistro.get('placas')?.errors?.['required']">
+                        El campo no puede estar en blanco</p>
+                    
+                    </div>
+                </div>
+
+
+
+                <div class="contenedor-botones">
+                    <button type="button" routerLink="/dashboard/vehiculos/listado">CANCELAR</button>
+                    <button type="submit" [disabled]="vehiculoFormRegistro.invalid">GUARDAR</button>
+                </div>
+            </form>
+        </div>
+  
+</section>
+
+<!-- ? MODAL PARA MOSTRAR LAS PROPIEDADES Y PODER SELECCIONAR ALGUNA  -->
+@* <div class="container-modal" *ngIf="showModal" (click)="showModal = false">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="header">
+            <button (click)="showModal = false"><i class="fa-solid fa-xmark"></i></button>
+            <input type="search" #search placeholder="Buscar" (keyup)="searchPropiedad(search.value ,$event)">
+        </div>
+        <div class="body">
+            <div class="header-table" >
+                <div>Tipo</div>
+                <div>Clave catastral</div>
+                <div>Descripcion</div>
+                <div>Propietario</div>
+            </div>
+            <div class="body-table">             
+                <div class="contenedor-element-table" *ngFor="let propiedad of propiedades" (click)="selectPropiedad(propiedad)">
+                    <div> <p title="{{propiedad.tipoPropiedad.descripcion}}">{{propiedad.tipoPropiedad.descripcion}}</p></div>
+                    <div><p title="{{propiedad.claveCatastral}}">{{propiedad.claveCatastral}}</p></div>
+                    <div><p title="{{propiedad.descripcion}}">{{propiedad.descripcion}}</p></div>
+                    <div><p title="{{propiedad.propietario.nombre}}">{{propiedad.propietario.nombre}}</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+
+        </div>
+    </div>
+</div> *@
