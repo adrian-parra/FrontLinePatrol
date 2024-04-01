@@ -1,4 +1,4 @@
-@model List<Tarea>
+@model List<LinePatrolM>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -21,20 +21,25 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>IdUser</th>
                     <th>Id</th>
-                    <th>Title</th>
-                    <th>Descripcion</th>
-                    <th></th>
+                    <th>Id planta</th>
+                    <th>Id linea</th>
+                    <th>Id estacion</th>
+                    <th>path</th>
+                    <th>comentario</th>
+
                 </tr>
             </thead>
             <tbody>
                 @foreach(var item in Model){
                     <tr>
-                        <td>@item.userId</td>
                         <td>@item.id</td>
-                        <td>@item.title</td>
-                        <td>@item.body</td>
+                        <td>@item.id_planta</td>
+                        <td>@item.id_linea</td>
+                        <td>@item.id_estacion</td>
+                        <td>@item.path_imagen</td>
+                        <td>@item.comentario</td>
+
                         <td>
                             <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id" class="btn btn-primary btn-sm" >Editar</a>
                             <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id" class="btn btn-danger btn-sm" >Eliminar</a>
@@ -47,3 +52,21 @@
     </div>
 
 </div>
+
+<script>
+    @* fetch('/Tarea/Index')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Hubo un problema al obtener los datos.');
+    }
+    return response.json(); // O response.json() si esperas datos en formato JSON
+  })
+  .then(data => {
+    // Manejar los datos recibidos
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  }); *@
+
+</script>

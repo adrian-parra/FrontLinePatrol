@@ -16,3 +16,26 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+/** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
+
+.form-line-patrol .container-formLP {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+      .form-line-patrol  .container-formLP {
+        display: flex;
+        flex-direction: column;
+      }
+      .form-line-patrol .container-buttons {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+  }
+/** FIN ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
