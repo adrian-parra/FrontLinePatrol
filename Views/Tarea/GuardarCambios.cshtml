@@ -4,41 +4,98 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+
 <div class="card">
     <div class="card-header">
-        Guardar
+        Registrar Line Patrol
     </div>
     <div class="card-body">
 
-        <form asp-action="GuardarCambios" asp-controller="Tarea" method="post">
 
-            @* <input type="hidden" asp-for="IdProducto" /> *@
+        <form class="form-line-patrol">
+            <div class="container-formLP">
+                <div class="mb-2">
+                    <label class="form-label">Planta</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_planta">
+                        <option disabled selected>Seleccionar planta</option>
+                        <option value="1">mch-3</option>
+                        <option value="2">mch-2</option>
+                        <option value="3">mch-1</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Linea</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_linea">
+                        <option disabled selected>Seleccionar linea</option>
+                        <option value="1">18</option>
+                        <option value="2">19</option>
+                        <option value="3">20</option>
+                    </select>
+                </div>
 
-            <div class="mb-2">
-                <label class="form-label">Id user</label>
-                <input type="text" class="form-control form-control-sm" asp-for="userId" />
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Id</label>
-                <input type="text" class="form-control form-control-sm" asp-for="id" />
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Title</label>
-                <input type="text" class="form-control form-control-sm" asp-for="title"/>
-            </div>
-            <div class="mb-2">
-                <label class="form-label">Descripcion</label>
-                <input type="text" class="form-control form-control-sm" asp-for="body"/>
-            </div>
-           
 
-            <button type="submit" class="btn btn-success btn-sm">Guardar Cambios</button>
-            <a asp-action="Index" asp-controller="Tarea" class="btn btn-warning btn-sm">Volver a lista</a>
+                <div class="mb-2">
+                    <label class="form-label">Imagen</label>
+                    <input class="form-control form-control-sm" id="formFileSm" type="file" name="imagen"
+                        accept="image/*">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Estacion</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion">
+                        <option disabled selected>Seleccionar estacion</option>
+                        <option value="1">clips</option>
+                        <option value="2">Prueba electrica</option>
+                        <option value="3">Vision</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Comentarios</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
+                            style="height: 100px" name="comentario"></textarea>
+                        <label for="floatingTextarea2">Ingresar comentarios</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Registrar</button>
+                <a asp-action="Index" asp-controller="Tarea" class="btn btn-warning btn-sm">Volver a lista</a>
+            </div>
+
         </form>
 
 
-        
-       
+
+
     </div>
 
 </div>
+
+
+
+
+<script type="module">
+    document.querySelector('.form-line-patrol').addEventListener('submit', async (e) => {
+        e.preventDefault()
+        var formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('/Tarea/GuardarCambios', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.text();
+
+            console.log('Datos guardados:', data);
+            // Hacer algo con la respuesta del servidor si es necesario
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    })
+
+
+</script>
