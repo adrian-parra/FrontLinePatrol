@@ -17,7 +17,6 @@ body {
   margin-bottom: 60px;
 }
 
-
 /** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
 
 .form-line-patrol .container-formLP {
@@ -26,16 +25,56 @@ body {
   gap: 10px;
 }
 
-@media (max-width: 600px) {
-      .form-line-patrol  .container-formLP {
-        display: flex;
-        flex-direction: column;
-      }
-      .form-line-patrol .container-buttons {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-  }
+/** ESTILOS PARA INPUT FILE IMAGE */
+#btnChangeInputFileImage {
+  text-align: left;
+}
+
+#btnChangeInputFileImage::before {
+  content: "Seleccionar imagen ";
+}
+
+#btnChangeInputFileImage::after {
+  content: "\1F4C2";
+}
+
+/** FIN ESTILOS PARA INPUT FILE IMAGE */
+
+/** ESTILOS PARA LINK INFO IMAGE FILE*/
+#linkInfoImagenSelected {
+  flex-direction: row;
+  gap: 5px;
+}
+#linkInfoImagenSelected::before {
+  content: "Imagen seleccionada";
+}
+#linkInfoImagenSelected::after {
+  content: "\2713";
+}
+
+/** FIN ESTILOS PARA LINK INFO IMAGE FILE*/
+
 /** FIN ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
+
+/** RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+  .form-line-patrol .container-formLP {
+    display: flex;
+    flex-direction: column;
+  }
+  .form-line-patrol .container-buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #btnChangeInputFileImage::before {
+    content: "Tomar imagen ";
+  }
+  #btnChangeInputFileImage::after {
+    content: "\1F4F7";
+  }
+  #linkInfoImagenSelected::before {
+    content: "Imagen capturada";
+  }
+}

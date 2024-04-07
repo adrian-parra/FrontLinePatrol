@@ -5,7 +5,6 @@
 }
 
 
-
 <div class="card">
     <div class="card-header">
         Registrar Line Patrol
@@ -37,8 +36,12 @@
 
                 <div class="mb-2">
                     <label class="form-label">Imagen</label>
-                    <input class="form-control form-control-sm" id="formFileSm" type="file" name="imagen"
-                        accept="image/*">
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
                 </div>
                 <div class="mb-2">
                     <label class="form-label">Estacion</label>
@@ -50,18 +53,18 @@
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Comentarios</label>
+                    <label class="form-label">Comentario</label>
                     <div class="form-floating">
                         <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
                             style="height: 100px" name="comentario"></textarea>
-                        <label for="floatingTextarea2">Ingresar comentarios</label>
+                        <label for="floatingTextarea2">Ingresar comentario</label>
                     </div>
                 </div>
             </div>
 
             <div class="container-buttons">
                 <button type="submit" class="btn btn-success btn-sm">Registrar</button>
-                <a asp-action="Index" asp-controller="Tarea" class="btn btn-warning btn-sm">Volver a lista</a>
+                <a asp-action="Index" asp-controller="Tarea" class="btn btn-primary btn-sm">Cancelar</a>
             </div>
 
         </form>
@@ -73,12 +76,40 @@
 
 </div>
 
+@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+Abrir Modal
+</button> *@
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Imagen seleccionada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
 <script type="module">
-    document.querySelector('.form-line-patrol').addEventListener('submit', async (e) => {
+    const $ = (selector) => document.querySelector(selector);
+
+    // SIMULAR CLICK EN BTN SELECT IMAGE
+    $('#btnChangeInputFileImage').addEventListener('click', () => {
+        $('#formFileSm').click()
+    })
+
+    // EVENTO SUBMIT PARA FORM LINE PATROL (PROCESO DE DATOS)
+    $('.form-line-patrol').addEventListener('submit', async (e) => {
         e.preventDefault()
+
         var formData = new FormData(e.target);
 
         try {
@@ -87,15 +118,42 @@
                 body: formData,
             });
 
-            const data = await response.text();
-
-            console.log('Datos guardados:', data);
-            // Hacer algo con la respuesta del servidor si es necesario
+            if (response.ok) {
+                // Estado de respuesta 200 (OK)
+                const data = await response.text();
+                console.log('Datos guardados:', data);
+                // Hacer algo con la respuesta del servidor si es necesario
+            } else {
+                // Manejar otros estados de respuesta (por ejemplo, 404, 500, etc.)
+                console.error('Error en la solicitud:', response.status);
+                // Si deseas obtener más información sobre el error, puedes acceder a response.statusText
+            }
         } catch (error) {
+            // Error de red u otro tipo de error
             console.error('Error:', error);
         }
 
     })
+
+    // Agregar un event listener para el cambio
+    $('#formFileSm').addEventListener("change", (e) => {
+        // Obtener el archivo seleccionado
+        const file = event.target.files[0];
+        $('#linkInfoImagenSelected').style.display = 'none';
+        if (file) {
+            // Habilitar descripcion de imagen
+            $('#linkInfoImagenSelected').style.display = 'flex';
+            // Crear un objeto URL para la imagen
+            const imageURL = URL.createObjectURL(file);
+            // Mostrar la imagen en el modal
+            $('#imagenSeleccionada').src = imageURL;
+            // Mostrar el modal
+            const modal = new bootstrap.Modal($('#exampleModal'));
+            modal.show();
+        }
+    });
+
+
 
 
 </script>

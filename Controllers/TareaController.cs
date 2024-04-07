@@ -7,6 +7,9 @@ using LinePatrol.Services;
 
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace LinePatrol.Controllers;
 
@@ -38,6 +41,13 @@ public class TareaController : Controller
     {
         if (linePatrolM.imagen != null && linePatrolM.imagen.Length > 0)
         {
+
+            // Lista de extensiones de archivo válidas (en minúsculas)
+            var extensionesValidas = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
+            // Obtener la extensión de archivo de la imagen cargada
+            var extension = Path.GetExtension(linePatrolM.imagen.FileName).ToLower();
+            // Verificar si la extensión es válida
+            if (!(extensionesValidas.Contains(extension))) { return BadRequest("La extensión del archivo de imagen no es válida."); }
             var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), RUTA_IMAGENES);
 
             // Generar un nombre de archivo único utilizando un UUID
@@ -48,11 +58,35 @@ public class TareaController : Controller
             linePatrolM.path_imagen = RUTA_IMAGENES + nombreArchivo;
 
 
-            // Guardar la imagen en el sistema de archivos
-            using (var fileStream = new FileStream(rutaImagen, FileMode.Create))
+
+            // Comprimir la imagen antes de guardarla
+            using (var inputStream = linePatrolM.imagen.OpenReadStream())
             {
-                linePatrolM.imagen.CopyTo(fileStream);
+                using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
+                {
+                    // Cargar la imagen utilizando ImageSharp
+                    using (var image = Image.Load(inputStream))
+                    {
+                        // Aplicar la compresión a la imagen
+                        image.Mutate(x => x
+                            .Resize(image.Width, image.Height)); // Ajustar el tamaño si es necesario
+
+                        // Configurar la calidad de compresión
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 70 // Ajustar la calidad de compresión según sea necesario
+                        };
+
+                        // Guardar la imagen comprimida en el sistema de archivos
+                        image.Save(outputStream, encoder);
+                    }
+                }
             }
+            // Guardar la imagen en el sistema de archivos
+            // using (var fileStream = new FileStream(rutaImagen, FileMode.Create))
+            // {
+            //     linePatrolM.imagen.CopyTo(fileStream);
+            // }
 
             // ! Obtener la ruta completa donde se guardó la imagen
             //var rutaCompletaImagen = Path.GetFullPath(rutaImagen);
