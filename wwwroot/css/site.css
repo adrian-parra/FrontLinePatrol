@@ -93,6 +93,22 @@ body {
   color:#555555;
   text-align: right;
 }
+
+.card-text-small {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+.card-text-small.show {
+  display: flex;
+}
+
+.container-card-item {
+  display: none;
+}
 /** RESPONSIVE DESIGN */
 @media (max-width: 600px) {
   .form-line-patrol .container-formLP {
@@ -113,5 +129,14 @@ body {
   }
   #linkInfoImagenSelected::before {
     content: "Imagen capturada";
+  }
+  .container-card-item {
+    display: block;
+  }
+  .table {
+    display: none;
+  }
+  #btnRegistrarLP {
+    width: 100%;
   }
 }
