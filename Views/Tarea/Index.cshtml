@@ -1,72 +1,125 @@
 @model List<LinePatrolM>
-@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
-</div>
+  @{ ViewData["Title"] = "Home Page"; }
 
 
-<div class="card">
-    <div class="card-header">
-        Lista de tareas
-    </div>
+
+  <div class="card">
+    <div class="card-header">Lista de patrullaje de líneas</div>
     <div class="card-body">
+      <a
+        asp-action="GuardarCambios"
+        asp-controller="Tarea"
+        class="btn btn-success btn-sm"
+        >Registrar</a>
+      <hr />
+      @*
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Id planta</th>
+            <th>Id linea</th>
+            <th>Id estacion</th>
+            <th>path</th>
+            <th>comentario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach(var item in Model){
+          <tr>
+            <td>@item.id</td>
+            <td>@item.id_planta</td>
+            <td>@item.id_linea</td>
+            <td>@item.id_estacion</td>
+            <td>@item.path_imagen</td>
+            <td>@item.comentario</td>
 
-        <a asp-action="GuardarCambios" asp-controller="Tarea" class="btn btn-success btn-sm">Nuevo producto</a>
-        @*<a asp-action="test" asp-controller="Home" class="btn btn-success">test</a>*@
-        <hr />
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Id planta</th>
-                    <th>Id linea</th>
-                    <th>Id estacion</th>
-                    <th>path</th>
-                    <th>comentario</th>
+            <td>
+              <a
+                asp-action="Producto"
+                asp-controller="Home"
+                asp-route-idProducto="@item.id"
+                class="btn btn-primary btn-sm"
+                >Editar</a
+              >
+              <a
+                asp-action="Eliminar"
+                asp-controller="Home"
+                asp-route-idProducto="@item.id"
+                class="btn btn-danger btn-sm"
+                >Eliminar</a
+              >
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      *@
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var item in Model){
-                    <tr>
-                        <td>@item.id</td>
-                        <td>@item.id_planta</td>
-                        <td>@item.id_linea</td>
-                        <td>@item.id_estacion</td>
-                        <td>@item.path_imagen</td>
-                        <td>@item.comentario</td>
 
-                        <td>
-                            <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id" class="btn btn-primary btn-sm" >Editar</a>
-                            <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id" class="btn btn-danger btn-sm" >Eliminar</a>
-                            
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+      <div class="container-items">
+
+        @foreach(var item in Model){
+          <div class="card item">
+            <img class="card-img-top" src="@item.path_imagen" alt="Card image cap" loading="lazy"/>
+            <div class="card-body">
+                <div class="container-description">
+                    <p>Planta:</p>
+                    <p class="right">@item.id_planta</p>
+                    <p>Linea:</p>
+                    <p class="right">@item.id_linea</p>
+                    <p>Estación:</p>
+                    <p class="right">@item.id_estacion</p>
+                </div>
+                <hr>
+                <p>Comentario:</p>
+                <p class="card-text">
+                  @item.comentario
+              </p>
+            </div>
+          </div>
+        }
+          
+      </div>
+      
+     
+      
     </div>
+  </div>
 
+
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Imagen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
+            </div>
+        </div>
+    </div>
 </div>
+  
 
-<script>
-    @* fetch('/Tarea/Index')
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Hubo un problema al obtener los datos.');
-    }
-    return response.json(); // O response.json() si esperas datos en formato JSON
-  })
-  .then(data => {
-    // Manejar los datos recibidos
-    console.log(data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  }); *@
+  <script>
+    const $ = (selector) => document.querySelector(selector);
 
-</script>
+    $('.container-items').addEventListener('click', (e) => {
+       let tagNameClick = e.target.tagName.toLowerCase()
+        if(tagNameClick === 'img'){
+
+             $('#imagenSeleccionada').src = e.target.src;
+            // Mostrar el modal
+            const modal = new bootstrap.Modal($('#exampleModal'));
+            modal.show();
+        }
+
+       // if(tagNameClick === 'p' && e.target.classList.contains("card-text")){
+       // e.target.classList.toggle("show");
+       // } 
+        
+    })
+  </script>
