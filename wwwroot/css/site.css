@@ -31,7 +31,7 @@ body {
 }
 
 #btnChangeInputFileImage::before {
-  content: "Seleccionar imagen ";
+  content: "Adjuntar imagen ";
 }
 
 #btnChangeInputFileImage::after {

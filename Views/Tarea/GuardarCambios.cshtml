@@ -7,7 +7,7 @@
 
 <div class="card">
     <div class="card-header">
-        Registrar Line Patrol
+        Registro de patrullaje de líneas
     </div>
     <div class="card-body">
 
@@ -24,9 +24,9 @@
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Linea</label>
+                    <label class="form-label">Línea</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_linea">
-                        <option disabled selected>Seleccionar linea</option>
+                        <option disabled selected>Seleccionar línea</option>
                         <option value="1">18</option>
                         <option value="2">19</option>
                         <option value="3">20</option>
@@ -44,9 +44,9 @@
                         data-bs-target="#exampleModal"></a>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Estacion</label>
+                    <label class="form-label">Estación</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion">
-                        <option disabled selected>Seleccionar estacion</option>
+                        <option disabled selected>Seleccionar estación</option>
                         <option value="1">clips</option>
                         <option value="2">Prueba electrica</option>
                         <option value="3">Vision</option>
@@ -57,14 +57,14 @@
                     <div class="form-floating">
                         <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
                             style="height: 100px" name="comentario"></textarea>
-                        <label for="floatingTextarea2">Ingresar comentario</label>
+                        <label for="floatingTextarea2">Comentario u observación</label>
                     </div>
                 </div>
             </div>
 
             <div class="container-buttons">
-                <button type="submit" class="btn btn-success btn-sm">Registrar</button>
-                <a asp-action="Index" asp-controller="Tarea" class="btn btn-primary btn-sm">Cancelar</a>
+                <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+                <a asp-action="Index" asp-controller="Tarea" class="btn btn-primary btn-sm">Salir sin guardar</a>
             </div>
 
         </form>
@@ -76,10 +76,6 @@
 
 </div>
 
-@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-Abrir Modal
-</button> *@
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -89,7 +85,7 @@ Abrir Modal
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width: 100%;">
+                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
             </div>
         </div>
     </div>
