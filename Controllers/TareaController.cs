@@ -16,7 +16,7 @@ namespace LinePatrol.Controllers;
 public class TareaController : Controller
 {
     private IServicio_API _servicioApi;
-    private const string RUTA_IMAGENES = "uploads/";
+    private const string RUTA_IMAGENES = "images/linePatrol/";
 
     public TareaController(IServicio_API servicioApi)
     {
@@ -48,7 +48,7 @@ public class TareaController : Controller
             var extension = Path.GetExtension(linePatrolM.imagen.FileName).ToLower();
             // Verificar si la extensión es válida
             if (!(extensionesValidas.Contains(extension))) { return BadRequest("La extensión del archivo de imagen no es válida."); }
-            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), RUTA_IMAGENES);
+            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + RUTA_IMAGENES);
 
             // Generar un nombre de archivo único utilizando un UUID
             var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(linePatrolM.imagen.FileName)}";
@@ -107,33 +107,6 @@ public class TareaController : Controller
         else
             return NoContent();
 
-    }
-
-
-    [HttpPost]
-    public async Task<IActionResult> GuardarImagen(string descripcion, string planta, IFormFile imagen)
-    {
-        if (imagen != null && imagen.Length > 0)
-        {
-            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), RUTA_IMAGENES);
-            var nombreArchivo = Path.GetFileName(imagen.FileName);
-            var rutaImagen = Path.Combine(rutaCarpeta, nombreArchivo);
-
-            using (var fileStream = new FileStream(rutaImagen, FileMode.Create))
-            {
-                imagen.CopyTo(fileStream);
-            }
-            Console.WriteLine("El valor de respuesta es: " + descripcion);
-            // Aquí puedes manejar la descripción y la planta como desees
-            // Por ejemplo, guardarlos en la base de datos junto con la ruta de la imagen
-            return Content("Datos y imagen guardados correctamente.");
-            //  return NoContent();
-        }
-        else
-        {
-            return Content("No se ha seleccionado ninguna imagen.");
-            //  return NoContent();
-        }
     }
 
 
