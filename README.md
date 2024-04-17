@@ -37,22 +37,14 @@ Para ejecutar el proyecto, sigue estos pasos:
 
 ## Vista en Desktop
 
-Listado.
-
 ![Texto alternativo](https://github.com/adrian-parra/FrontLinePatrol/blob/main/images/chrome_desktop.png?raw=true)
-
-Registro.
 
 ![Texto alternativo](https://github.com/adrian-parra/FrontLinePatrol/blob/main/images/chrome_desktop_registro.png?raw=true)
 
 
 ## Vista en Móvil
 
-Listado.
-
 ![Texto alternativo](https://github.com/adrian-parra/FrontLinePatrol/blob/main/images/chrome_movil_listado.png?raw=true)
-
-Registro.
 
 ![Texto alternativo](https://github.com/adrian-parra/FrontLinePatrol/blob/main/images/chrome_movil_registro.png?raw=true)
 
