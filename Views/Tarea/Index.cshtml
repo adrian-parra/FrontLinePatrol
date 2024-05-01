@@ -94,7 +94,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
+        <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;" loading="lazy">
       </div>
     </div>
   </div>
@@ -107,7 +107,6 @@
   $('.container-items').addEventListener('click', (e) => {
     let tagNameClick = e.target.tagName.toLowerCase()
     if (tagNameClick === 'img') {
-
       $('#imagenSeleccionada').src = e.target.src;
       // Mostrar el modal
       const modal = new bootstrap.Modal($('#exampleModal'));

@@ -94,7 +94,7 @@ public class TareaController : Controller
         }
         else
         {
-            return Content("No se ha seleccionado ninguna imagen.");
+            return BadRequest("No se ha seleccionado ninguna imagen.");
         }
         bool respuesta;
 
