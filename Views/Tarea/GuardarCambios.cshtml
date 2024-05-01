@@ -109,6 +109,7 @@
         var formData = new FormData(e.target);
 
         try {
+            document.querySelector('.container-loading').style = 'display:flex;'
             const response = await fetch('/Tarea/GuardarCambios', {
                 method: 'POST',
                 body: formData,
@@ -118,15 +119,31 @@
                 // Estado de respuesta 200 (OK)
                 const data = await response.text();
                 console.log('Datos guardados:', data);
+                document.querySelector('.container-loading').style = 'display:none;'
+                Swal.fire({
+                    title: 'Exito!',
+                    text: 'Patrullaje registrada',
+                    icon: 'success'
+                });
+
+                e.target.reset();
+                $('#linkInfoImagenSelected').style.display = 'none';
                 // Hacer algo con la respuesta del servidor si es necesario
             } else {
                 // Manejar otros estados de respuesta (por ejemplo, 404, 500, etc.)
                 console.error('Error en la solicitud:', response.status);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Imagen no cargada',
+                    icon: 'error'
+                });
                 // Si deseas obtener más información sobre el error, puedes acceder a response.statusText
+                document.querySelector('.container-loading').style = 'display:none;'
             }
         } catch (error) {
             // Error de red u otro tipo de error
             console.error('Error:', error);
+            document.querySelector('.container-loading').style = 'display:none;'
         }
 
     })
