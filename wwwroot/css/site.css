@@ -119,7 +119,7 @@ body {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
   }
   #btnChangeInputFileImage::before {
     content: "Tomar imagen ";
@@ -138,6 +138,20 @@ body {
   }
   #btnRegistrarLP {
     width: 100%;
+  }
+
+  #btnGuardarFiltrado{
+    width: 100%;
+  }
+
+  .card.movil{
+    border: 0;
+  }
+
+  .container-buttons-listado{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
   }
 }
 
