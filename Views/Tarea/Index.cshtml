@@ -3,18 +3,32 @@
   ViewData["Title"] = "Home Page";
 }
 
+<style>
+  .right.activo {
+    color: red !important;
+  }
+
+  .right.finalizado {
+    color: green !important;
+  }
+</style>
 
 
-<div class="card">
+
+<div class="card movil">
   <div class="card-header">Lista de patrullaje de líneas</div>
   <div class="card-body">
-    <a asp-action="GuardarCambios" asp-controller="Tarea" class="btn btn-success btn-sm" id="btnRegistrarLP">Registrar</a>
+    <div class="container-buttons-listado">
+      <a asp-action="GuardarCambios" asp-controller="Tarea" class="btn btn-success btn-sm"
+        id="btnRegistrarLP">Registrar</a>
+      <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
+    </div>
     <hr />
 
 
     <div class="container-items">
 
-      
+
       <table class="table">
         <thead>
           <tr>
@@ -34,7 +48,8 @@
               <td>@item.id_planta</td>
               <td>@item.id_linea</td>
               <td>@item.id_estacion</td>
-              <td><img src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy" style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;"></td>
+              <td><img src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
+                  style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;"></td>
               <td style="max-width: 300px;">
                 <p class="card-text-small" title="@item.comentario">
                   @item.comentario
@@ -42,40 +57,57 @@
               </td>
 
               @* <td>
-                <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id"
-                  class="btn btn-primary btn-sm">Editar</a>
-                <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id"
-                  class="btn btn-danger btn-sm">Eliminar</a>
-              </td> *@
+            <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id"
+            class="btn btn-primary btn-sm">Editar</a>
+            <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id"
+            class="btn btn-danger btn-sm">Eliminar</a>
+            </td> *@
             </tr>
           }
         </tbody>
-      </table> 
-    
+      </table>
 
-  <div class="container-card-item">
-    @foreach(var item in Model){
-      <div class="card item">
-      <img class="card-img-top" src="@item.path_imagen" alt="Card image cap" loading="lazy"/>
-      <div class="card-body">
-      <div class="container-description">
-      <p>Planta:</p>
-      <p class="right">@item.id_planta</p>
-      <p>Linea:</p>
-      <p class="right">@item.id_linea</p>
-      <p>Estación:</p>
-      <p class="right">@item.id_estacion</p>
+
+      <div class="container-card-item">
+        @if (Model.Any())
+{
+        @foreach (var item in Model)
+        {
+          <div class="card item">
+            <img class="card-img-top" src="@item.path_imagen" alt="Card image cap" loading="lazy" />
+            <div class="card-body">
+              <div class="container-description">
+                <p>Planta:</p>
+                <p class="right">@item.id_planta</p>
+                <p>Linea:</p>
+                <p class="right">@item.id_linea</p>
+                <p>Estación:</p>
+                <p class="right">@item.id_estacion</p>
+                <p>Estado:</p>
+                @if (item.estado != null)
+                {
+                  <p class="right @(item.estado.Value ? "activo" : "finalizado")">
+                    @(item.estado.Value ? "Activo" : "Finalizado")
+                  </p>
+
+                }
+
+              </div>
+              <hr>
+              <p>Comentario:</p>
+              <p class="card-text">
+                @item.comentario
+              </p>
+            </div>
+          </div>
+        }
+        }
+        else
+{
+    <p>No hay registros disponibles.</p>
+}
       </div>
-      <hr>
-      <p>Comentario:</p>
-      <p class="card-text">
-      @item.comentario
-      </p>
-      </div>
-      </div>
-      } 
-  </div>
-       
+
 
     </div>
 
@@ -100,6 +132,43 @@
   </div>
 </div>
 
+<!-- MODAL FILTRADO -->
+<div class="modal fade" id="exampleModalF" tabindex="-1" aria-labelledby="exampleModalLabelF" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Filtrar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formFiltrado">
+          <div class="mb-2">
+            <label class="form-label">Estado</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="estado">
+              <option disabled selected>Todo</option>
+              <option value="1">Activo</option>
+              <option value="2">Finalizado</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha">
+          </div>
+
+          <hr>
+
+          <div class="container-buttons">
+            <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <script>
   const $ = (selector) => document.querySelector(selector);
@@ -113,9 +182,32 @@
       modal.show();
     }
 
-     if(tagNameClick === 'p' && e.target.classList.contains("card-text-small")){
-     e.target.classList.toggle("show");
-     } 
+    if (tagNameClick === 'p' && e.target.classList.contains("card-text-small")) {
+      e.target.classList.toggle("show");
+    }
 
+  })
+
+  $('#btnFiltrar').addEventListener('click', (e) => {
+    const modal = new bootstrap.Modal($('#exampleModalF'));
+    modal.show();
+  })
+
+  $('#formFiltrado').addEventListener('submit', async (e) => {
+     e.preventDefault()
+    var formData = new FormData(e.target);
+
+    console.log(formData.get('fecha'))
+    console.log(formData.get('estado'))
+    var fechaFiltro = formData.get('fecha')
+  
+
+     @* alert('submit') *@
+
+      const response = await fetch(`/Tarea/Index?fecha=${fechaFiltro}`);
+
+      if (response.ok) {
+        @* console.log('tdbn') *@
+      }
   })
 </script>
