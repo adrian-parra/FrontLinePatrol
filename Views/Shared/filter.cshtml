@@ -1,0 +1,94 @@
+@model List<LinePatrolListado>
+<table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Planta</th>
+            <th>Linea</th>
+            <th>Estacion</th>
+            <th>Imagen</th>
+            <th>comentario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Model)
+          {
+            <tr>
+              <td>@item.id</td>
+              <td>@item.id_planta</td>
+              <td>@item.id_linea</td>
+              <td>@item.id_estacion</td>
+              <td><img src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
+                  style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;"></td>
+              <td style="max-width: 300px;">
+                <p class="card-text-small" title="@item.comentario">
+                  @item.comentario
+                </p>
+              </td>
+
+              @* <td>
+            <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id"
+            class="btn btn-primary btn-sm">Editar</a>
+            <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id"
+            class="btn btn-danger btn-sm">Eliminar</a>
+            </td> *@
+            </tr>
+          }
+        </tbody>
+      </table>
+
+
+      <div class="container-card-item">
+        @if (Model.Any())
+{
+        @foreach (var item in Model)
+        {
+          <div class="card item">
+            <img class="card-img-top" src="@item.path_imagen" alt="Card image cap" loading="lazy" />
+            <div class="card-body">
+              <div class="container-description">
+                @* <p id="idHide" style="display: none;">@item.id</p> *@
+                <p>Planta:</p>
+                <p class="right">@item.id_planta</p>
+                <p>Linea:</p>
+                <p class="right">@item.id_linea</p>
+                <p>Estación:</p>
+                <p class="right">@item.id_estacion</p>
+                <p>Estado:</p>
+                @if (item.estado != null)
+                {
+                  <p class="right @(item.estado.Value ? "activo" : "finalizado")">
+                    @(item.estado.Value ? "Activo" : "Finalizado")
+                  </p>
+
+                }
+
+              </div>
+              <hr>
+              <p>Comentario:</p>
+              <p class="card-text">
+                @item.comentario
+              </p>
+              <hr>
+              <div class="container-button-liberar">
+                @if (item.estado != null)
+                {
+                  @if(item.estado == true){
+                    <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                  }else{
+                    <button class="btn btn-secondary btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
+                    <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>
+                  }
+
+                }
+                
+              </div>
+            </div>
+          </div>
+        }
+        }
+        else
+{
+    <p>No hay registros disponibles.</p>
+}
+      </div>

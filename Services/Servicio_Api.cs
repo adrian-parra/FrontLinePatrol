@@ -7,23 +7,23 @@ namespace LinePatrol.Services;
 public class Servicio_API : IServicio_API
 {
 
-    public async Task<List<LinePatrolM>> Lista()
+    public async Task<List<LinePatrolListado>> Filter()
     {
-        List<LinePatrolM> lista = new List<LinePatrolM>();
+         List<LinePatrolListado> lista = new List<LinePatrolListado>();
 
 
 
         var cliente = new HttpClient();
         // cliente.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/todos");
         // var response = await cliente.GetAsync("https://jsonplaceholder.typicode.com/posts");
-        var response = await cliente.GetAsync("http://localhost:3000");
+        var response = await cliente.GetAsync("http://localhost:3000/api/linePatrol");
 
 
         if (response.IsSuccessStatusCode)
         {
 
             var json_respuesta = await response.Content.ReadAsStringAsync();
-            var resultado = JsonConvert.DeserializeObject<List<LinePatrol.Models.LinePatrolM>>(json_respuesta);
+            var resultado = JsonConvert.DeserializeObject<List<LinePatrol.Models.LinePatrolListado>>(json_respuesta);
 
             if (resultado != null)
             {
@@ -33,16 +33,85 @@ public class Servicio_API : IServicio_API
             {
                 // Manejar el escenario donde resultado es nulo, por ejemplo, lanzar una excepción o devolver una lista vacía
                 // Aquí un ejemplo de devolución de una lista vacía
-                return new List<LinePatrol.Models.LinePatrolM>();
+                return new List<LinePatrol.Models.LinePatrolListado>();
             }
         }else{
-            return new List<LinePatrol.Models.LinePatrolM>();
+            return new List<LinePatrol.Models.LinePatrolListado>();
+        }
+    }
+
+    public async Task<List<LinePatrolListado>> Lista()
+    {
+        List<LinePatrolListado> lista = new List<LinePatrolListado>();
+
+
+
+        var cliente = new HttpClient();
+        // cliente.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/todos");
+        // var response = await cliente.GetAsync("https://jsonplaceholder.typicode.com/posts");
+        var response = await cliente.GetAsync("http://localhost:3000/api/linePatrol");
+
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<List<LinePatrol.Models.LinePatrolListado>>(json_respuesta);
+
+            if (resultado != null)
+            {
+                return resultado;
+            }
+            else
+            {
+                // Manejar el escenario donde resultado es nulo, por ejemplo, lanzar una excepción o devolver una lista vacía
+                // Aquí un ejemplo de devolución de una lista vacía
+                return new List<LinePatrol.Models.LinePatrolListado>();
+            }
+        }else{
+            return new List<LinePatrol.Models.LinePatrolListado>();
         }
 
 
     }
 
-    public async Task<bool> Guardar(LinePatrolM objeto)
+    // public async Task<bool> Liberar(IFormFile imagenAfter ,string personaLibera , string contra){
+    //     Console.WriteLine("valor " + personaLibera);
+    //     Console.WriteLine("valor " + contra);
+
+    // }
+
+    public async Task<bool> Liberar(LinePatrolLiberar objeto){
+        bool respuesta = false;
+            objeto.imagen_after = null;
+
+             var cliente = new HttpClient();
+            // cliente.BaseAddress = new Uri(_baseUrl);
+
+            string json = JsonConvert.SerializeObject(objeto);
+        
+        // Define el contenido de la solicitud HTTP
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+
+            // var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            Console.WriteLine("El valor de respuesta es: " + content);
+
+
+            var response = await cliente.PatchAsync("http://localhost:3000/api/linePatrol/"+objeto.id, content);
+
+            
+
+            if (response.IsSuccessStatusCode)
+            {
+                respuesta = true;
+            }
+
+            return respuesta;
+    }
+
+    public async Task<bool> Guardar(LinePatrolRegister objeto)
         {
             bool respuesta = false;
             objeto.imagen = null;
@@ -65,7 +134,7 @@ public class Servicio_API : IServicio_API
             Console.WriteLine("El valor de respuesta es: " + content);
 
 
-            var response = await cliente.PostAsync("http://localhost:3000/guardar", content);
+            var response = await cliente.PostAsync("http://localhost:3000/api/linePatrol", content);
 
             
 

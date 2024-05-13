@@ -4,13 +4,12 @@ namespace LinePatrol.Services
 {
     public interface IServicio_API
     {
-        Task<List<LinePatrolM>> Lista();
+        Task<List<LinePatrolListado>> Lista();
         // Task<Tarea> Obtener(int idtarea);
+        Task<List<LinePatrolListado>> Filter();
 
-        Task<bool> Guardar(LinePatrolM objeto);
+        Task<bool> Guardar(LinePatrolRegister objeto);
+        Task<bool> Liberar(LinePatrolLiberar objeto);
 
-        // Task<bool> Editar(Tarea objeto);
-
-        // Task<bool> Eliminar(int idtarea);
     }
 }

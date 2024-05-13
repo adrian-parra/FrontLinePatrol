@@ -1,4 +1,4 @@
-@model List<LinePatrolM>
+@model List<LinePatrolListado>
 @{
   ViewData["Title"] = "Home Page";
 }
@@ -29,84 +29,7 @@
     <div class="container-items">
 
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Planta</th>
-            <th>Linea</th>
-            <th>Estacion</th>
-            <th>Imagen</th>
-            <th>comentario</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach (var item in Model)
-          {
-            <tr>
-              <td>@item.id</td>
-              <td>@item.id_planta</td>
-              <td>@item.id_linea</td>
-              <td>@item.id_estacion</td>
-              <td><img src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
-                  style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;"></td>
-              <td style="max-width: 300px;">
-                <p class="card-text-small" title="@item.comentario">
-                  @item.comentario
-                </p>
-              </td>
 
-              @* <td>
-            <a asp-action="Producto" asp-controller="Home" asp-route-idProducto="@item.id"
-            class="btn btn-primary btn-sm">Editar</a>
-            <a asp-action="Eliminar" asp-controller="Home" asp-route-idProducto="@item.id"
-            class="btn btn-danger btn-sm">Eliminar</a>
-            </td> *@
-            </tr>
-          }
-        </tbody>
-      </table>
-
-
-      <div class="container-card-item">
-        @if (Model.Any())
-{
-        @foreach (var item in Model)
-        {
-          <div class="card item">
-            <img class="card-img-top" src="@item.path_imagen" alt="Card image cap" loading="lazy" />
-            <div class="card-body">
-              <div class="container-description">
-                <p>Planta:</p>
-                <p class="right">@item.id_planta</p>
-                <p>Linea:</p>
-                <p class="right">@item.id_linea</p>
-                <p>Estación:</p>
-                <p class="right">@item.id_estacion</p>
-                <p>Estado:</p>
-                @if (item.estado != null)
-                {
-                  <p class="right @(item.estado.Value ? "activo" : "finalizado")">
-                    @(item.estado.Value ? "Activo" : "Finalizado")
-                  </p>
-
-                }
-
-              </div>
-              <hr>
-              <p>Comentario:</p>
-              <p class="card-text">
-                @item.comentario
-              </p>
-            </div>
-          </div>
-        }
-        }
-        else
-{
-    <p>No hay registros disponibles.</p>
-}
-      </div>
 
 
     </div>
@@ -146,8 +69,8 @@
             <label class="form-label">Estado</label>
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="estado">
               <option disabled selected>Todo</option>
-              <option value="1">Activo</option>
-              <option value="2">Finalizado</option>
+              <option value="true">Activo</option>
+              <option value="false">Finalizado</option>
             </select>
           </div>
 
@@ -159,7 +82,8 @@
           <hr>
 
           <div class="container-buttons">
-            <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm">Guardar</button>
+            <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm" data-bs-dismiss="modal"
+              aria-label="Close">Guardar</button>
           </div>
 
         </form>
@@ -170,11 +94,99 @@
 </div>
 
 
+<!-- MODAL LIBERAR-->
+<div class="modal fade" id="exampleModalLiberar" tabindex="-1" aria-labelledby="exampleModalLabelLiberar"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Liberar patrullaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formLiberarP">
+          <div class="mb-2">
+            <label for="imageAfter">Imagen</label>
+            <input type="file" id="imagenAfter" class="form-control form-control-sm" name="imagen_after" accept="image/*">
+          </div>
+
+          <div class="mb-2">
+            <label for="personaLibera">Persona que libera</label>
+            <input type="text" id="personaLibera" class="form-control form-control-sm" name="persona_libera">
+          </div>
+          <div class="mb-2">
+            <label for="contra">contraseña</label>
+            <input type="password" id="contra" class="form-control form-control-sm" name="contra">
+          </div>
+
+
+
+          <hr>
+
+          <div class="container-buttons">
+            <button type="submit" id="btnGuardarLiberar" class="btn btn-success btn-sm">Liberar</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO LIBERACION-->
+<div class="modal fade" id="exampleModalInfoLiberacion" tabindex="-1" aria-labelledby="exampleModalLabelIL" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelIL">Información de liberación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-2">
+            <label>Persona que liberó</label>
+            <input type="text" readonly  class="form-control form-control-sm" id="personaLibero" value="prueba">
+          </div>
+      <hr>
+
+        <img id="imagenAfterLiberacion" src="#" alt="Imagen seleccionada" style="max-width:100%;" loading="lazy">
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
+
+
   const $ = (selector) => document.querySelector(selector);
+
+  let id = null
+  let personaLibera = null
+
+  document.addEventListener('DOMContentLoaded',async   ()=> {
+    document.querySelector('.container-loading').style = 'display:flex;'
+
+    const response1 = await fetch('/Tarea/Filter', {
+      method: 'POST',
+      body: null,
+    });
+
+      const data1 = await response1.text()
+
+    $('.container-items').innerHTML = data1
+    document.querySelector('.container-loading').style = 'display:none;'
+
+
+  });
 
   $('.container-items').addEventListener('click', (e) => {
     let tagNameClick = e.target.tagName.toLowerCase()
+    let idClick = e.target.id;
+
+
+    // ? CARGAR IMAGEN EN MODAL PARA PREVIEW
     if (tagNameClick === 'img') {
       $('#imagenSeleccionada').src = e.target.src;
       // Mostrar el modal
@@ -182,8 +194,28 @@
       modal.show();
     }
 
+    if (idClick == 'btnInfoLiberarP' && tagNameClick === 'button') {
+      $('#imagenAfterLiberacion').src = e.target.getAttribute('name')
+
+      personaLibera = e.target.nextElementSibling.textContent;
+
+
+$('#personaLibero').value = e.target.nextElementSibling.textContent;
+      const modal = new bootstrap.Modal($('#exampleModalInfoLiberacion'));
+      modal.show();
+    }
+
+    // ? MOSTRAR COMETARIO COMPLETO
     if (tagNameClick === 'p' && e.target.classList.contains("card-text-small")) {
       e.target.classList.toggle("show");
+    }
+
+    // ? MOSTRAR MODAL FORM PARA LIBERAR PATRULLAJE
+    if (idClick == 'btnLiberarP' && tagNameClick === 'button') {
+      @* console.log(e.target.getAttribute('name')) *@
+        id = e.target.getAttribute('name')
+      const modal = new bootstrap.Modal($('#exampleModalLiberar'));
+      modal.show();
     }
 
   })
@@ -194,20 +226,92 @@
   })
 
   $('#formFiltrado').addEventListener('submit', async (e) => {
-     e.preventDefault()
+    e.preventDefault()
+    document.querySelector('.container-loading').style = 'display:flex;'
     var formData = new FormData(e.target);
 
     console.log(formData.get('fecha'))
     console.log(formData.get('estado'))
     var fechaFiltro = formData.get('fecha')
-  
 
-     @* alert('submit') *@
 
-      const response = await fetch(`/Tarea/Index?fecha=${fechaFiltro}`);
+    @* alert('submit') *@
 
-      if (response.ok) {
-        @* console.log('tdbn') *@
-      }
+     const response = await fetch('/Tarea/Filter', {
+      method: 'POST',
+      body: null,
+    });
+
+      const data = await response.text()
+
+    $('.container-items').innerHTML = data
+
+    document.querySelector('.container-loading').style = 'display:none;'
+
+
+  })
+
+  $('#formLiberarP').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    var formData = new FormData(e.target);
+
+    if (formData.get('contra') !== '1234') {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Password para liberar incorrecta',
+        icon: 'error'
+      });
+      return false
+    }
+
+    formData.append('id', id);
+
+    formData.delete('contra')
+    document.querySelector('.container-loading').style = 'display:flex;'
+    const response = await fetch(`/Tarea/Liberar`, {
+      method: 'PATCH',
+      body: formData,
+    });
+
+    if (response.ok) {
+      const data = await response.text();
+      console.log('Datos guardados:', data);
+      document.querySelector('.container-loading').style = 'display:none;'
+
+   
+
+      Swal.fire({
+        title: 'Exito!',
+        text: 'Patrullaje liberado',
+        icon: 'success'
+      });
+
+      e.target.reset();
+
+      const response1 = await fetch('/Tarea/Filter', {
+      method: 'POST',
+      body: null,
+    });
+
+      const data1 = await response1.text()
+
+    $('.container-items').innerHTML = data1
+
+    const modal = new bootstrap.Modal($('#exampleModalInfoLiberacion'));
+      modal.hide();
+
+    } else {
+      console.error('Error en la solicitud:', response.status);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Imagen no cargada',
+        icon: 'error'
+      });
+      // Si deseas obtener más información sobre el error, puedes acceder a response.statusText
+      document.querySelector('.container-loading').style = 'display:none;'
+    }
+
+
+    @* var fechaFiltro = formData.get('contra') *@
   })
 </script>
