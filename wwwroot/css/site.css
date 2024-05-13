@@ -169,7 +169,8 @@ body {
   flex-direction: column;
   border-radius: 7px;
   cursor:no-drop;
-  z-index: 1000;
+  z-index: 1055;
+  
 }
 
 .loader-container {

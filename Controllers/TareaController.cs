@@ -25,10 +25,86 @@ public class TareaController : Controller
 
     public async Task<IActionResult> Index()
     {
-        List<LinePatrolM> lista = await _servicioApi.Lista();
+        List<LinePatrolListado> lista = await _servicioApi.Lista();
         return View(lista);
         //return Json(lista);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Filter()
+    {
+        List<LinePatrolListado> listaFilter = await _servicioApi.Filter();
+        // return View("Index", listaFilter);
+         return PartialView("filter", listaFilter);
+        //return Json(lista);
+    }
+
+    [HttpPatch]
+    public async Task<IActionResult> Liberar(LinePatrolLiberar linePatrolLiberar){
+         Console.WriteLine("valor " + linePatrolLiberar.persona_libera);
+         Console.WriteLine("valor " + linePatrolLiberar.id);
+
+
+
+         if (linePatrolLiberar.imagen_after != null && linePatrolLiberar.imagen_after.Length > 0)
+        {
+            // Lista de extensiones de archivo válidas (en minúsculas)
+            var extensionesValidas = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
+            // Obtener la extensión de archivo de la imagen cargada
+            var extension = Path.GetExtension(linePatrolLiberar.imagen_after.FileName).ToLower();
+            // Verificar si la extensión es válida
+            if (!(extensionesValidas.Contains(extension))) { return BadRequest("La extensión del archivo de imagen no es válida."); }
+            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + RUTA_IMAGENES);
+
+            // Generar un nombre de archivo único utilizando un UUID
+            var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(linePatrolLiberar.imagen_after.FileName)}";
+
+            var rutaImagen = Path.Combine(rutaCarpeta, nombreArchivo);
+
+            linePatrolLiberar.path_imagen_after = RUTA_IMAGENES + nombreArchivo;
+            
+            // Comprimir la imagen antes de guardarla
+            using (var inputStream = linePatrolLiberar.imagen_after.OpenReadStream())
+            {
+                using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
+                {
+                    // Cargar la imagen utilizando ImageSharp
+                    using (var image = Image.Load(inputStream))
+                    {
+                        // Aplicar la compresión a la imagen
+                        image.Mutate(x => x
+                            .Resize(image.Width, image.Height)); // Ajustar el tamaño si es necesario
+
+                        // Configurar la calidad de compresión
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 70 // Ajustar la calidad de compresión según sea necesario
+                        };
+
+                        // Guardar la imagen comprimida en el sistema de archivos
+                        image.Save(outputStream, encoder);
+                    }
+                }
+            }
+
+        }else{
+            return BadRequest("No se ha seleccionado ninguna imagen.");
+        }
+
+        bool respuesta;
+
+
+        respuesta = await _servicioApi.Liberar(linePatrolLiberar);
+
+
+        if (respuesta)
+            return NoContent();
+        else
+            return NoContent();
+        
+
+    }
+    
 
 
     public async Task<IActionResult> GuardarCambios()
@@ -37,30 +113,30 @@ public class TareaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> GuardarCambios(LinePatrolM linePatrolM)
+    public async Task<IActionResult> GuardarCambios(LinePatrolRegister linePatrolRegister)
     {
-        if (linePatrolM.imagen != null && linePatrolM.imagen.Length > 0)
+        if (linePatrolRegister.imagen != null && linePatrolRegister.imagen.Length > 0)
         {
 
             // Lista de extensiones de archivo válidas (en minúsculas)
             var extensionesValidas = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
             // Obtener la extensión de archivo de la imagen cargada
-            var extension = Path.GetExtension(linePatrolM.imagen.FileName).ToLower();
+            var extension = Path.GetExtension(linePatrolRegister.imagen.FileName).ToLower();
             // Verificar si la extensión es válida
             if (!(extensionesValidas.Contains(extension))) { return BadRequest("La extensión del archivo de imagen no es válida."); }
             var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + RUTA_IMAGENES);
 
             // Generar un nombre de archivo único utilizando un UUID
-            var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(linePatrolM.imagen.FileName)}";
+            var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(linePatrolRegister.imagen.FileName)}";
 
             var rutaImagen = Path.Combine(rutaCarpeta, nombreArchivo);
 
-            linePatrolM.path_imagen = RUTA_IMAGENES + nombreArchivo;
+            linePatrolRegister.path_imagen = RUTA_IMAGENES + nombreArchivo;
 
 
 
             // Comprimir la imagen antes de guardarla
-            using (var inputStream = linePatrolM.imagen.OpenReadStream())
+            using (var inputStream = linePatrolRegister.imagen.OpenReadStream())
             {
                 using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
                 {
@@ -85,7 +161,7 @@ public class TareaController : Controller
             // Guardar la imagen en el sistema de archivos
             // using (var fileStream = new FileStream(rutaImagen, FileMode.Create))
             // {
-            //     linePatrolM.imagen.CopyTo(fileStream);
+            //     linePatrolRegister.imagen.CopyTo(fileStream);
             // }
 
             // ! Obtener la ruta completa donde se guardó la imagen
@@ -99,7 +175,7 @@ public class TareaController : Controller
         bool respuesta;
 
 
-        respuesta = await _servicioApi.Guardar(linePatrolM);
+        respuesta = await _servicioApi.Guardar(linePatrolRegister);
 
 
         if (respuesta)
