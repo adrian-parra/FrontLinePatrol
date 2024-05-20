@@ -31,12 +31,10 @@ public class TareaController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Filter()
+    public async Task<IActionResult> Filter(LinePatrolFilter linePatrolFilter)
     {
-        List<LinePatrolListado> listaFilter = await _servicioApi.Filter();
-        // return View("Index", listaFilter);
+        List<LinePatrolListado> listaFilter = await _servicioApi.Filter(linePatrolFilter);
          return PartialView("filter", listaFilter);
-        //return Json(lista);
     }
 
     [HttpPatch]
@@ -181,7 +179,7 @@ public class TareaController : Controller
         if (respuesta)
             return NoContent();
         else
-            return NoContent();
+            return BadRequest("Error al guardar los datos.");
 
     }
 

@@ -66,6 +66,50 @@
       <div class="modal-body">
         <form id="formFiltrado">
           <div class="mb-2">
+            <label class="form-label">Planta</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_planta">
+              <option disabled selected>Todo</option>
+              <option value="mch-1">mch-1</option>
+              <option value="mch-2">mch-2</option>
+              <option value="mch-3">mch-3</option>
+              <option value="mch-main">mch-main</option>
+
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Linea</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_linea">
+              <option disabled selected>Todo</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="Otra">Otra</option>
+
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Estación/Area</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion">
+              <option disabled selected>Todo</option>
+              <option value="Clips">Clips</option>
+              <option value="prueba electrica">Prueba Eléctrica</option>
+              <option value="combos">Combos</option>
+              <option value="inspeccion visual">Inspección Visual</option>
+              <option value="empaque">Empaque</option>
+              <option value="pizarron">Pizarrón</option>
+              <option value="mat. split">Mat. Split</option>
+              <option value="Embarques">Embarques</option>
+              <option value="Comunicacion">Comunicación</option>
+              <option value="Otra">Otra</option>
+
+
+            </select>
+          </div>
+
+          <div class="mb-2">
             <label class="form-label">Estado</label>
             <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="estado">
               <option disabled selected>Todo</option>
@@ -75,15 +119,20 @@
           </div>
 
           <div class="mb-2">
-            <label for="fecha">Fecha</label>
-            <input type="date" id="fecha" class="form-control form-control-sm" name="fecha">
+            <label for="fecha">Fecha inicio</label>
+            <input type="date" id="fechaInicio" class="form-control form-control-sm" name="fecha_inicio">
+          </div>
+          <div class="mb-2">
+            <label for="fecha">Fecha fin</label>
+            <input type="date" id="fechaFin" class="form-control form-control-sm" name="fecha_fin">
           </div>
 
           <hr>
 
           <div class="container-buttons">
             <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm" data-bs-dismiss="modal"
-              aria-label="Close">Guardar</button>
+              aria-label="Close">Aplicar</button>
+            <input type="reset" id="btnResetFiltrado" class="btn btn-primary btn-sm" value="Restablecer">
           </div>
 
         </form>
@@ -107,7 +156,8 @@
         <form id="formLiberarP">
           <div class="mb-2">
             <label for="imageAfter">Imagen</label>
-            <input type="file" id="imagenAfter" class="form-control form-control-sm" name="imagen_after" accept="image/*">
+            <input type="file" id="imagenAfter" class="form-control form-control-sm" name="imagen_after"
+              accept="image/*">
           </div>
 
           <div class="mb-2">
@@ -135,7 +185,8 @@
 </div>
 
 <!-- INFO LIBERACION-->
-<div class="modal fade" id="exampleModalInfoLiberacion" tabindex="-1" aria-labelledby="exampleModalLabelIL" aria-hidden="true">
+<div class="modal fade" id="exampleModalInfoLiberacion" tabindex="-1" aria-labelledby="exampleModalLabelIL"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -144,174 +195,30 @@
       </div>
       <div class="modal-body">
         <div class="mb-2">
-            <label>Persona que liberó</label>
-            <input type="text" readonly  class="form-control form-control-sm" id="personaLibero" value="prueba">
-          </div>
-      <hr>
+          <label>Persona que liberó</label>
+          <input type="text" readonly class="form-control form-control-sm" id="personaLibero" value="prueba">
+        </div>
+
+        <div class="mb-2">
+          <label>Fecha de liberación</label>
+          <input type="text" readonly class="form-control form-control-sm" id="fechaLiberacionIn" value="prueba">
+        </div>
+        <hr>
 
         <img id="imagenAfterLiberacion" src="#" alt="Imagen seleccionada" style="max-width:100%;" loading="lazy">
-      
+
       </div>
     </div>
   </div>
 </div>
 
 
-<script>
-
-
-  const $ = (selector) => document.querySelector(selector);
-
-  let id = null
-  let personaLibera = null
-
-  document.addEventListener('DOMContentLoaded',async   ()=> {
-    document.querySelector('.container-loading').style = 'display:flex;'
-
-    const response1 = await fetch('/Tarea/Filter', {
-      method: 'POST',
-      body: null,
-    });
-
-      const data1 = await response1.text()
-
-    $('.container-items').innerHTML = data1
-    document.querySelector('.container-loading').style = 'display:none;'
-
-
-  });
-
-  $('.container-items').addEventListener('click', (e) => {
-    let tagNameClick = e.target.tagName.toLowerCase()
-    let idClick = e.target.id;
-
-
-    // ? CARGAR IMAGEN EN MODAL PARA PREVIEW
-    if (tagNameClick === 'img') {
-      $('#imagenSeleccionada').src = e.target.src;
-      // Mostrar el modal
-      const modal = new bootstrap.Modal($('#exampleModal'));
-      modal.show();
-    }
-
-    if (idClick == 'btnInfoLiberarP' && tagNameClick === 'button') {
-      $('#imagenAfterLiberacion').src = e.target.getAttribute('name')
-
-      personaLibera = e.target.nextElementSibling.textContent;
-
-
-$('#personaLibero').value = e.target.nextElementSibling.textContent;
-      const modal = new bootstrap.Modal($('#exampleModalInfoLiberacion'));
-      modal.show();
-    }
-
-    // ? MOSTRAR COMETARIO COMPLETO
-    if (tagNameClick === 'p' && e.target.classList.contains("card-text-small")) {
-      e.target.classList.toggle("show");
-    }
-
-    // ? MOSTRAR MODAL FORM PARA LIBERAR PATRULLAJE
-    if (idClick == 'btnLiberarP' && tagNameClick === 'button') {
-      @* console.log(e.target.getAttribute('name')) *@
-        id = e.target.getAttribute('name')
-      const modal = new bootstrap.Modal($('#exampleModalLiberar'));
-      modal.show();
-    }
-
-  })
-
-  $('#btnFiltrar').addEventListener('click', (e) => {
-    const modal = new bootstrap.Modal($('#exampleModalF'));
-    modal.show();
-  })
-
-  $('#formFiltrado').addEventListener('submit', async (e) => {
-    e.preventDefault()
-    document.querySelector('.container-loading').style = 'display:flex;'
-    var formData = new FormData(e.target);
-
-    console.log(formData.get('fecha'))
-    console.log(formData.get('estado'))
-    var fechaFiltro = formData.get('fecha')
-
-
-    @* alert('submit') *@
-
-     const response = await fetch('/Tarea/Filter', {
-      method: 'POST',
-      body: null,
-    });
-
-      const data = await response.text()
-
-    $('.container-items').innerHTML = data
-
-    document.querySelector('.container-loading').style = 'display:none;'
-
-
-  })
-
-  $('#formLiberarP').addEventListener('submit', async (e) => {
-    e.preventDefault()
-    var formData = new FormData(e.target);
-
-    if (formData.get('contra') !== '1234') {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Password para liberar incorrecta',
-        icon: 'error'
-      });
-      return false
-    }
-
-    formData.append('id', id);
-
-    formData.delete('contra')
-    document.querySelector('.container-loading').style = 'display:flex;'
-    const response = await fetch(`/Tarea/Liberar`, {
-      method: 'PATCH',
-      body: formData,
-    });
-
-    if (response.ok) {
-      const data = await response.text();
-      console.log('Datos guardados:', data);
-      document.querySelector('.container-loading').style = 'display:none;'
-
-   
-
-      Swal.fire({
-        title: 'Exito!',
-        text: 'Patrullaje liberado',
-        icon: 'success'
-      });
-
-      e.target.reset();
-
-      const response1 = await fetch('/Tarea/Filter', {
-      method: 'POST',
-      body: null,
-    });
-
-      const data1 = await response1.text()
-
-    $('.container-items').innerHTML = data1
-
-    const modal = new bootstrap.Modal($('#exampleModalInfoLiberacion'));
-      modal.hide();
-
-    } else {
-      console.error('Error en la solicitud:', response.status);
-      Swal.fire({
-        title: 'Error!',
-        text: 'Imagen no cargada',
-        icon: 'error'
-      });
-      // Si deseas obtener más información sobre el error, puedes acceder a response.statusText
-      document.querySelector('.container-loading').style = 'display:none;'
-    }
-
-
-    @* var fechaFiltro = formData.get('contra') *@
-  })
+<script type="module">
+  import { $ } from "/js/utils.js";
+  import { obtenerDatosLinePatrol, contenedorDatos, submitFiltrarDatosLinePatrol, liberarLinePatrol } from '/js/linePatrolIndex.js'
+  document.addEventListener('DOMContentLoaded', obtenerDatosLinePatrol);
+  $('.container-items').addEventListener('click', contenedorDatos)
+  $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
+  $('#formFiltrado').addEventListener('submit', submitFiltrarDatosLinePatrol)
+  $('#formLiberarP').addEventListener('submit', liberarLinePatrol)
 </script>
