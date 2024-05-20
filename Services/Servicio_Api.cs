@@ -7,16 +7,23 @@ namespace LinePatrol.Services;
 public class Servicio_API : IServicio_API
 {
 
-    public async Task<List<LinePatrolListado>> Filter()
+    public async Task<List<LinePatrolListado>> Filter(LinePatrolFilter linePatrolFilter)
     {
-         List<LinePatrolListado> lista = new List<LinePatrolListado>();
+        List<LinePatrolListado> lista = new List<LinePatrolListado>();
 
 
 
         var cliente = new HttpClient();
         // cliente.BaseAddress = new Uri("https://jsonplaceholder.typicode.com/todos");
         // var response = await cliente.GetAsync("https://jsonplaceholder.typicode.com/posts");
-        var response = await cliente.GetAsync("http://localhost:3000/api/linePatrol");
+        string url = $"http://localhost:3000/api/linePatrol?" +
+                     $"id_planta={linePatrolFilter.id_planta}&" +
+                     $"id_linea={linePatrolFilter.id_linea}&" +
+                     $"id_estacion={linePatrolFilter.id_estacion}&" +
+                     $"estado={linePatrolFilter.estado}&" +
+                     $"fecha_inicio={linePatrolFilter.fecha_inicio}&" +
+                     $"fecha_fin={linePatrolFilter.fecha_fin}";
+        var response = await cliente.GetAsync(url);
 
 
         if (response.IsSuccessStatusCode)
@@ -35,7 +42,9 @@ public class Servicio_API : IServicio_API
                 // Aquí un ejemplo de devolución de una lista vacía
                 return new List<LinePatrol.Models.LinePatrolListado>();
             }
-        }else{
+        }
+        else
+        {
             return new List<LinePatrol.Models.LinePatrolListado>();
         }
     }
@@ -68,7 +77,9 @@ public class Servicio_API : IServicio_API
                 // Aquí un ejemplo de devolución de una lista vacía
                 return new List<LinePatrol.Models.LinePatrolListado>();
             }
-        }else{
+        }
+        else
+        {
             return new List<LinePatrol.Models.LinePatrolListado>();
         }
 
@@ -81,70 +92,71 @@ public class Servicio_API : IServicio_API
 
     // }
 
-    public async Task<bool> Liberar(LinePatrolLiberar objeto){
+    public async Task<bool> Liberar(LinePatrolLiberar objeto)
+    {
         bool respuesta = false;
-            objeto.imagen_after = null;
+        objeto.imagen_after = null;
 
-             var cliente = new HttpClient();
-            // cliente.BaseAddress = new Uri(_baseUrl);
+        var cliente = new HttpClient();
+        // cliente.BaseAddress = new Uri(_baseUrl);
 
-            string json = JsonConvert.SerializeObject(objeto);
-        
+        string json = JsonConvert.SerializeObject(objeto);
+
         // Define el contenido de la solicitud HTTP
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
 
-            // var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+        // var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
 
-            Console.WriteLine("El valor de respuesta es: " + content);
+        Console.WriteLine("El valor de respuesta es: " + content);
 
 
-            var response = await cliente.PatchAsync("http://localhost:3000/api/linePatrol/"+objeto.id, content);
+        var response = await cliente.PatchAsync("http://localhost:3000/api/linePatrol/" + objeto.id, content);
 
-            
 
-            if (response.IsSuccessStatusCode)
-            {
-                respuesta = true;
-            }
 
-            return respuesta;
+        if (response.IsSuccessStatusCode)
+        {
+            respuesta = true;
+        }
+
+        return respuesta;
     }
 
     public async Task<bool> Guardar(LinePatrolRegister objeto)
-        {
-            bool respuesta = false;
-            objeto.imagen = null;
-
-          
-            Console.WriteLine("service data : " + objeto.comentario);
+    {
+        bool respuesta = false;
+        objeto.imagen = null;
 
 
-            var cliente = new HttpClient();
-            // cliente.BaseAddress = new Uri(_baseUrl);
+        Console.WriteLine("service data : " + objeto.comentario);
 
-            string json = JsonConvert.SerializeObject(objeto);
-        
+
+        var cliente = new HttpClient();
+        // cliente.BaseAddress = new Uri(_baseUrl);
+
+        string json = JsonConvert.SerializeObject(objeto);
+
         // Define el contenido de la solicitud HTTP
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
 
-            // var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+        // var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
 
-            Console.WriteLine("El valor de respuesta es: " + content);
+        Console.WriteLine("El valor de respuesta es: " + content);
 
 
-            var response = await cliente.PostAsync("http://localhost:3000/api/linePatrol", content);
+        var response = await cliente.PostAsync("http://localhost:3000/api/linePatrol", content);
 
-            
 
-            if (response.IsSuccessStatusCode)
-            {
-                respuesta = true;
-            }
 
-            return respuesta;
+        if (response.IsSuccessStatusCode)
+        {
+            respuesta = true;
         }
+
+        return respuesta;
+    }
 
 
 

@@ -18,18 +18,23 @@
                     <label class="form-label">Planta</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_planta">
                         <option disabled selected>Seleccionar planta</option>
-                        <option value="1">mch-3</option>
-                        <option value="2">mch-2</option>
-                        <option value="3">mch-1</option>
+                        <option value="mch-1">mch-1</option>
+                        <option value="mch-2">mch-2</option>
+                        <option value="mch-3">mch-3</option>
+                        <option value="mch-main">mch-main</option>
                     </select>
                 </div>
                 <div class="mb-2">
                     <label class="form-label">Línea</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_linea">
                         <option disabled selected>Seleccionar línea</option>
-                        <option value="1">18</option>
-                        <option value="2">19</option>
-                        <option value="3">20</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="Otra">Otra</option>
                     </select>
                 </div>
 
@@ -47,9 +52,16 @@
                     <label class="form-label">Estación</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion">
                         <option disabled selected>Seleccionar estación</option>
-                        <option value="1">clips</option>
-                        <option value="2">Prueba electrica</option>
-                        <option value="3">Vision</option>
+                        <option value="Clips">Clips</option>
+                        <option value="prueba electrica">Prueba Electrica</option>
+                        <option value="combos">Combos</option>
+                        <option value="inspeccion visual">Inspeccion Visual</option>
+                        <option value="empaque">Empaque</option>
+                        <option value="pizarron">Pizarron</option>
+                        <option value="mat. split">Mat. Split</option>
+                        <option value="Embarques">Embarques</option>
+                        <option value="Comunicacion">Comunicacion</option>
+                        <option value="Otra">Otra</option>
                     </select>
                 </div>
                 <div class="mb-2">
@@ -64,7 +76,7 @@
 
             <div class="container-buttons">
                 <button type="submit" class="btn btn-success btn-sm">Guardar</button>
-                <a asp-action="Index" asp-controller="Tarea" class="btn btn-primary btn-sm">Salir sin guardar</a>
+                <a asp-action="Index" asp-controller="Tarea" class="btn btn-primary btn-sm">Cancelar</a>
             </div>
 
         </form>
@@ -91,82 +103,13 @@
     </div>
 </div>
 
-
-
-
 <script type="module">
-    const $ = (selector) => document.querySelector(selector);
-
+    import { $ } from "/js/utils.js";
+    import { formSubmitHandler, changeInputFile } from '/js/linePatrolGuardar.js'
     // SIMULAR CLICK EN BTN SELECT IMAGE
-    $('#btnChangeInputFileImage').addEventListener('click', () => {
-        $('#formFileSm').click()
-    })
-
-    // EVENTO SUBMIT PARA FORM LINE PATROL (PROCESO DE DATOS)
-    $('.form-line-patrol').addEventListener('submit', async (e) => {
-        e.preventDefault()
-
-        var formData = new FormData(e.target);
-
-        try {
-            document.querySelector('.container-loading').style = 'display:flex;'
-            const response = await fetch('/Tarea/GuardarCambios', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                // Estado de respuesta 200 (OK)
-                const data = await response.text();
-                console.log('Datos guardados:', data);
-                document.querySelector('.container-loading').style = 'display:none;'
-                Swal.fire({
-                    title: 'Exito!',
-                    text: 'Patrullaje registrada',
-                    icon: 'success'
-                });
-
-                e.target.reset();
-                $('#linkInfoImagenSelected').style.display = 'none';
-                // Hacer algo con la respuesta del servidor si es necesario
-            } else {
-                // Manejar otros estados de respuesta (por ejemplo, 404, 500, etc.)
-                console.error('Error en la solicitud:', response.status);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Imagen no cargada',
-                    icon: 'error'
-                });
-                // Si deseas obtener más información sobre el error, puedes acceder a response.statusText
-                document.querySelector('.container-loading').style = 'display:none;'
-            }
-        } catch (error) {
-            // Error de red u otro tipo de error
-            console.error('Error:', error);
-            document.querySelector('.container-loading').style = 'display:none;'
-        }
-
-    })
-
-    // Agregar un event listener para el cambio
-    $('#formFileSm').addEventListener("change", (e) => {
-        // Obtener el archivo seleccionado
-        const file = event.target.files[0];
-        $('#linkInfoImagenSelected').style.display = 'none';
-        if (file) {
-            // Habilitar descripcion de imagen
-            $('#linkInfoImagenSelected').style.display = 'flex';
-            // Crear un objeto URL para la imagen
-            const imageURL = URL.createObjectURL(file);
-            // Mostrar la imagen en el modal
-            $('#imagenSeleccionada').src = imageURL;
-            // Mostrar el modal
-            const modal = new bootstrap.Modal($('#exampleModal'));
-            modal.show();
-        }
-    });
-
-
-
-
+    $('#btnChangeInputFileImage').addEventListener('click', () => $('#formFileSm').click());
+    // PROCESAR DATOS DEL FORM
+    $('.form-line-patrol').addEventListener('submit', formSubmitHandler)
+    // AGREGAR UN EVENT PARA EL CAMBIO
+    $('#formFileSm').addEventListener("change", changeInputFile)
 </script>
