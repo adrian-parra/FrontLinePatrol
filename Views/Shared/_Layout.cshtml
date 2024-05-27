@@ -8,6 +8,7 @@
     <title>@ViewData["Title"] - LinePatrol</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/voseoIndex.css">
     <link rel="stylesheet" href="~/LinePatrol.styles.css" asp-append-version="true" />
 </head>
 
@@ -40,6 +41,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Tarea"
                                 asp-action="GuardarCambios">Registrar</a>
                         </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Voseo"
+                                asp-action="Index">Voseos</a>
+                        </li>
                         @* <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li> *@
@@ -63,6 +68,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="~/js/site.js" asp-append-version="true" defer></script>
     <script src="~/lib/swal-alert/sweetalert2.all.min.js" defer></script>
+    <script src="~/lib/chart/chart.js" defer></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
