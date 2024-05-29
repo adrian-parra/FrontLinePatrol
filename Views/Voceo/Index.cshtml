@@ -4,7 +4,7 @@
 
 <div class="card movil">
     <div class="card-header">
-        Consultar voseos
+        Consultar voceos
     </div>
     <div class="card-body">
 
@@ -81,11 +81,27 @@
         <div id="chartsContainer"></div>
         <div id="chartsContainerHoras"></div>
           `
+
         // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACION
         const dataForm = new FormData(e.target)
         // OBTENER DATOS FILTRADOS
-        const datosFilterResponse = await fetch('http://localhost:3000/api/voseo')
+   
+        @* const datosFilterResponse = await fetch('http://localhost:3000/api/voseo')
+        const datosFilter = await datosFilterResponse.text(); *@
+
+        let headersList = {
+            "Accept": "*/*",
+            "User-Agent": "Thunder Client (https://www.thunderclient.com)"
+        }
+
+        let datosFilterResponse = await fetch("http://172.30.73.72:9001/intranet/regresaVoceosCTS.php", { 
+             method: "POST",
+            body: dataForm,
+            headers: headersList
+        });
+
         const datosFilter = await datosFilterResponse.text();
+
         // MOSTRAR CANVAS PARA DIBUJAR GRÁFICAS
         $('.container-canvas').style = 'display:block;'
         // MOSTRAR DATOS EN TABLE HIDE
@@ -250,7 +266,7 @@
 
         const ctxProblemasPorFecha = document.getElementById('chartProblemasPorFecha').getContext('2d');
         new Chart(ctxProblemasPorFecha, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: fechas,
                 datasets: [{

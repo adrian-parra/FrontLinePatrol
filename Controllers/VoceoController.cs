@@ -4,7 +4,7 @@ using LinePatrol.Models;
 
 namespace LinePatrol.Controllers;
 
-public class VoseoController : Controller
+public class VoceoController : Controller
 {
      public IActionResult Index()
     {
