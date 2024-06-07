@@ -17,14 +17,21 @@ public class VoceoController : Controller
     {
 
         // Aquí puedes configurar la URL de la API externa
-    string apiUrl = "http://localhost:3000/api/voseo";
+    string apiUrl = "http://172.30.73.72:9001/intranet/regresaVoceosCTS.php";
 
     using (var client = new HttpClient())
     {
-        // Configura el contenido de la solicitud POST
-        var content = new StringContent(JsonConvert.SerializeObject(voceo), System.Text.Encoding.UTF8, "application/json");
+      // Crea un objeto FormUrlEncodedContent con los datos del formulario
+            var formData = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("fecha1", voceo.fecha1),
+                new KeyValuePair<string, string>("fecha2", voceo.fecha2),
+                new KeyValuePair<string, string>("Planta", voceo.Planta),
+                new KeyValuePair<string, string>("Departamento", voceo.Departamento),
+            });
 
-        var response = await client.PostAsync(apiUrl, content);
+            // Envía la solicitud POST con el contenido del formulario
+            var response = await client.PostAsync(apiUrl, formData);
 
         if (response.IsSuccessStatusCode)
         {
