@@ -6,9 +6,10 @@
           <tr>
             <th>Planta</th>
             <th>Linea</th>
-            <th>Estacion</th>
-            <th>Imagen</th>
-            <th>comentario</th>
+            <th>Estación</th>
+            <th>Antes</th>
+            <th>Después</th>
+            <th>Comentario</th>
             <th>Fecha</th>
             <th>Estado</th>
             <th></th>
@@ -26,13 +27,23 @@
               <td>@item.id_estacion</td>
               <td><img  src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
                   style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;border-radius:7px"></td>
+              <td>
+                @if (@item.path_imagen_after != null)
+    {
+        <img src="@item.path_imagen_after" alt="Card image cap" width="50px" height="50px" loading="lazy"
+             style="aspect-ratio: 16/9; object-fit: cover; cursor: pointer; border-radius: 7px">
+    }
+    else
+    {
+        <span></span>
+    } </td>
               <td style="max-width: 300px;">
                 <p class="card-text-small" title="@item.comentario">
                   @item.comentario
                 </p>
               </td>
               <td>
-                 <small>@item.created_at</small>
+                 <small title="@item.created_at_f">@item.created_at</small>
               </td>
               <td>
                 @if (item.estado != null)
@@ -53,7 +64,7 @@
                   }else{
                     <button class="btn btn-secondary btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
                     <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>
-                    <p style="display: none;" id="fechaLiberacion">@item.updated_at</p>
+                    <p style="display: none;" id="fechaLiberacion">@item.updated_at_f - @item.updated_at</p>
                   }
 
                  
@@ -124,10 +135,14 @@
                   }else{
                     <button class="btn btn-secondary btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
                     <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>
-                    <p style="display: none;" id="fechaLiberacion">@item.updated_at</p>
+                    <p style="display: none;" id="fechaLiberacion">@item.updated_at_f - @item.updated_at</p>
                   }
 
-                  <small>@item.created_at</small>
+                  <div style="display: flex;flex-direction:column;">
+                     <small>@item.created_at_f</small>
+                     <small style="margin-left: auto;">@item.created_at</small>
+                  </div>
+                 
 
                 }
                 

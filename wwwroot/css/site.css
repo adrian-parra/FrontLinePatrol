@@ -119,6 +119,12 @@ body {
 .container-card-item {
   display: none;
 }
+
+#formFiltrado .grid-2-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
 /** RESPONSIVE DESIGN */
 @media (max-width: 600px) {
   .form-line-patrol .container-formLP {
@@ -187,7 +193,7 @@ body {
   flex-direction: column;
   border-radius: 7px;
   cursor:no-drop;
-  z-index: 1055;
+  z-index: 1056;
   
 }
 

@@ -11,4 +11,7 @@ public class LinePatrolListado {
     public bool? estado {get; set;}
     public string? created_at {get; set;}
     public string? updated_at {get; set;}
+
+     public string? created_at_f {get; set;}
+    public string? updated_at_f {get; set;}
 }
