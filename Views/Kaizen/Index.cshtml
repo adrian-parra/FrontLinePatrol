@@ -1,0 +1,222 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .modal-dialog {
+        width:100%; 
+        max-width:1000px; 
+    }
+</style>
+
+<div class="card movil">
+    <div class="card-header">
+        Consultar kaizen
+    </div>
+    <div class="card-body">
+
+
+        <form id="formConsultarKaizen">
+            <div class="container-form-cv">
+                <div class="mb-2">
+                    <label class="form-label">Fecha inicio</label>
+                    <input type="date" name="Fecha1" class="form-control form-control-sm" id="fechaUno">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Fecha fin</label>
+                    <input type="date" name="fecha2" class="form-control form-control-sm" name="Fecha2" id="fechaDos">
+                </div>
+
+
+                <div class="mb-2">
+                    <label class="form-label">Lider</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Planta">
+                        <option disabled selected>Seleccionar lider</option>
+                        <option value="20">ADRIAN CASTORENA</option>
+                        <option value="18">CARLOS GUTIERREZ</option>
+                        <option value="3">CESAR PADILLA</option>
+                        <!-- <option value="13">CHRISTIAN SOLANO</option> -->
+                        <option value="12" selected>DAVID SOTO</option>
+                        <option value="8">DORIAN MONTES</option>
+                        <option value="1">FERNANDO GRIJALVA</option>
+                        <option value="14">GRAVIRA ACOSTA</option>
+                        <option value="21">GUILLERMO JUAREZ</option>
+                        <option value="16">OSBALDO FONG</option>
+                        <!-- <option value="7">FRECIA MORENO</option> -->
+                        <option value="22">MARIO LOYA</option>
+                        <option value="23">JENNIFER CARTAGENA</option>
+                        <option value="17">JOSE BARROZO</option>
+                        <option value="6">JULIAN ALONSO</option>
+                        <option value="11">MARISOL SALAZAR</option>
+                        <option value="2">OSWALDO HERNANDEZ</option>
+                        <option value="15">RAMON VALDEZ</option>
+                        <option value="10">RAMON VAZQUEZ</option>
+                        <!-- <option value="9">SALVADOR PEREZ</option> -->
+                        <option value="TODOS">TODOS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Consultar</button>
+            </div>
+
+        </form>
+
+    
+
+        <div class="container-table-hide" style="display: none;">
+
+        </div>
+        <div class="container-table-data">
+            <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Planta</th>
+                    <th>Id empleado</th>
+                    <th>Nombre empleado</th>
+                    <th>Departamento</th>
+                    <th>Nombre kaizen</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+
+            <tbody class="items-table">
+
+            </tbody>
+
+        </table>
+        </div>
+        
+
+
+    </div>
+
+</div>
+
+<div style="" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Documento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <embed id="pdfView" src="" type="application/pdf" width="100%" height="600px">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+
+    const host = "http://c7share.sewsus.com.mx:9001/Kaizen/"
+
+    import { $ } from '/js/utils.js'
+
+
+    // Obtener la fecha actual
+    var fechaActual = new Date();
+
+    // Formatear la fecha en el formato YYYY-MM-DD
+    var fechaFormateadaUno = fechaActual.toISOString().split('T')[0];
+
+    // Establecer el día de la fecha actual en 0 para obtener el último día del mes anterior
+    fechaActual.setDate(0);
+
+    // Formatear la fecha en el formato YYYY-MM-DD
+    var fechaFormateadaDos = fechaActual.toISOString().split('T')[0];
+
+    // Establecer los valores por defecto en los campos de entrada
+    document.getElementById('fechaUno').value = fechaFormateadaDos;
+    document.getElementById('fechaDos').value = fechaFormateadaUno;
+
+
+
+
+    $(".table").addEventListener('click', (e) => {
+        let tagNameClick = e.target.tagName.toLowerCase();
+        let idClick = e.target.id;
+        if (idClick == "btnVer" && tagNameClick === "button") {
+            var siguienteEl = e.target.nextElementSibling
+            var rutaPdf = siguienteEl.innerText
+            var embedElement = document.getElementById('pdfView');
+            var nuevoSrc = host + rutaPdf.trim();
+
+            embedElement.setAttribute('src', nuevoSrc);
+
+            const modal = new bootstrap.Modal($("#exampleModal"));
+            modal.toggle();
+
+        }
+    })
+
+    $("#formConsultarKaizen").addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        // MOSTRAR LOADER DE CARGA
+        $('.container-loading').style = 'display:flex;'
+
+        // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
+        const dataForm = new FormData(e.target)
+
+
+        let headersList = {
+            "Accept": "*/*",
+            "User-Agent": "Thunder Client (https://www.thunderclient.com)"
+        }
+
+
+
+        const datosFilterResponse = await fetch('/Kaizen/Filter', {
+            method: 'POST',
+            body: dataForm,
+        });
+
+        const datosFilter = await datosFilterResponse.text();
+
+
+    @* console.log(datosFilter) *@
+
+            // MOSTRAR CANVAS PARA DIBUJAR GRÁFICAS
+            // MOSTRAR LOADER DE CARGA
+            $('.container-loading').style = 'display:none;'
+        // MOSTRAR DATOS EN TABLE HIDE
+        $(".container-table-hide").innerHTML = datosFilter;
+
+        const table = document.querySelector('table');
+        const rows = table.querySelectorAll('tr');
+
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const cells = row.querySelectorAll('td');
+
+            //console.log(cells[11].innerHTML)
+
+            var textoEnlace = cells[11].innerHTML
+
+
+            var inicioHref = textoEnlace.indexOf('href="') + 8;
+            var finHref = textoEnlace.indexOf('"', inicioHref);
+            var valorHref = textoEnlace.substring(inicioHref, finHref);
+    @* console.log(valorHref); *@
+
+                $(".items-table").innerHTML += `
+            <tr>
+                <td> ${cells[1].innerText} </td>
+                <td> ${cells[2].innerText} </td>
+                <td> ${cells[3].innerText} </td>
+                <td> ${cells[4].innerText} </td>
+                <td> ${cells[5].innerText.toUpperCase()} </td>
+                <td> 
+                <button class="btn btn-secondary btn-sm" id="btnVer">Ver</button> <p style="display:none;"> ${valorHref.trim()} </p> 
+                </td>
+            </tr>
+            `
+        }
+
+    })
+
+</script>

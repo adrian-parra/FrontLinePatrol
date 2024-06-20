@@ -1,0 +1,12 @@
+#formConsultarKaizen .container-form-cv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    #formConsultarKaizen .container-form-cv {
+        display: flex;
+    flex-direction: column;
+    }
+}
