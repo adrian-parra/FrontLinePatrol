@@ -1,0 +1,114 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card movil">
+    <div class="card-header">
+        Ejecutar comando
+    </div>
+    <div class="card-body">
+
+        <form id="formEjecutarComando">
+            <div class="container-form-cv">
+                <div class="mb-2">
+                    <label class="form-label">Comando</label>
+                    <input type="text" class="form-control form-control-sm" name="comando">
+                </div>
+
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Ejecutar</button>
+            </div>
+
+        </form>
+
+        <div class="container-respuesta">
+            <hr>
+            <div class="respuesta">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="module">
+
+    import { $ } from '/js/utils.js'
+
+    $("#formEjecutarComando").addEventListener('submit', async (e) => {
+        e.preventDefault()
+        // MOSTRAR LOADER DE CARGA
+        $('.container-loading').style = 'display:flex;'
+        // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
+        const dataForm = new FormData(e.target)
+
+        const datosResponse = await fetch('/Cmd/Ejecutar', {
+            method: 'POST',
+            body: dataForm,
+        });
+
+        const datos = await datosResponse.text();
+
+        $('.container-loading').style = 'display:none;'
+
+
+
+
+
+
+
+        $('.container-respuesta .respuesta').innerHTML = `<pre>${recorrerCadena(datos)}</pre>`;
+
+    })
+
+    function recorrerCadena(cadena) {
+        var newCadena = ''
+        var isNotBlockRecorrido = true
+        for (let i = 0; i < cadena.length; i++) {
+
+            let caracterEnter = cadena[i] + cadena[i + 1]
+
+
+            let saltoDeLinea = caracterEnter.replace(/\\n|\\r/g, function (match) {
+                if (match === "\\n") {
+                    return "\n";
+                } else if (match === "\\r") {
+                    return "\r";
+                }
+            });
+
+
+
+
+
+
+            if (isNotBlockRecorrido) {
+                if (saltoDeLinea.charCodeAt(0) === 10 || saltoDeLinea.charCodeAt(0) === 13) {
+
+                    newCadena += '<br>'
+                    isNotBlockRecorrido = false
+
+                } else {
+
+
+
+                    newCadena += cadena[i]
+
+
+                }
+            } else {
+                isNotBlockRecorrido = true
+            }
+
+
+
+        }
+
+
+
+        return newCadena
+    }
+
+</script>
