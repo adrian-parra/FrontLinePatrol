@@ -13,11 +13,11 @@
             <div class="container-form-cv">
                 <div class="mb-2">
                     <label class="form-label">Fecha inicio</label>
-                    <input type="date" name="fecha1" class="form-control form-control-sm" id="">
+                    <input type="date" name="fecha1" class="form-control form-control-sm" id="fecha1">
                 </div>
                 <div class="mb-2">
                     <label class="form-label">Fecha fin</label>
-                    <input type="date" name="fecha2" class="form-control form-control-sm" name="fecha2" id="">
+                    <input type="date" name="fecha2" class="form-control form-control-sm" name="fecha2" id="fecha2">
                 </div>
 
 
@@ -26,7 +26,7 @@
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Planta">
                         <option disabled selected>Seleccionar planta</option>
                         <option value="MCH1">MCH1</option>
-                        <option value="MCH2">MCH2</option>
+                        <option selected value="MCH2">MCH2</option>
                         <option value="MCH3">MCH3</option>
                     </select>
                 </div>
@@ -34,7 +34,7 @@
                     <label class="form-label">Estación</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Departamento">
                         <option disabled selected>Seleccionar departamento</option>
-                        <option value="SISTEMAS">SISTEMAS</option>
+                        <option selected value="SISTEMAS">SISTEMAS</option>
                         <option value="MANTENIMIENTO">MANTENIMIENTO</option>
                     </select>
                 </div>
@@ -63,6 +63,22 @@
 <script type="module">
     import { $ } from '/js/utils.js'
 
+    // Obtener la fecha actual
+    var fechaActual = new Date();
+
+    // Formatear la fecha en el formato YYYY-MM-DD
+    var fechaFormateadaUno = fechaActual.toISOString().split('T')[0];
+
+    // Establecer el día de la fecha actual en 0 para obtener el último día del mes anterior
+    fechaActual.setDate(0);
+
+    // Formatear la fecha en el formato YYYY-MM-DD
+    var fechaFormateadaDos = fechaActual.toISOString().split('T')[0];
+
+    // Establecer los valores por defecto en los campos de entrada
+    document.getElementById('fecha1').value = fechaFormateadaDos;
+    document.getElementById('fecha2').value = fechaFormateadaUno;
+
     const backgroundColorGraficas = 'rgba(75, 192, 192, 0.2)'
 
     $('#formConsultarVoseos').addEventListener('submit', async (e) => {
@@ -86,7 +102,7 @@
         const dataForm = new FormData(e.target)
         // OBTENER DATOS FILTRADOS
 
-        @* const datosFilterResponse = await fetch('http://localhost:3000/api/voseo')
+    @* const datosFilterResponse = await fetch('http://localhost:3000/api/voseo')
             const datosFilter = await datosFilterResponse.text(); *@
 
             let headersList = {
@@ -94,7 +110,7 @@
                 "User-Agent": "Thunder Client (https://www.thunderclient.com)"
             }
 
-        @* let datosFilterResponse = await fetch("http://172.30.73.72:9001/intranet/regresaVoceosCTS.php", {
+    @* let datosFilterResponse = await fetch("http://172.30.73.72:9001/intranet/regresaVoceosCTS.php", {
             method: "POST",
             body: dataForm,
             headers: headersList
@@ -209,128 +225,128 @@
                             weight: 'bold'
                         },
                         clip: true,
-                        @* opacity: 0.8, *@
+    @* opacity: 0.8, *@
             offset: 4,
-            @* rotation: 45 *@
+    @* rotation: 45 *@
     },
-                    title: {
-                        display: true,
-                        text: 'Distribución de Problemas por Hora',
-                        font: {
-                            size: 16
-                        }
-                    },
-                    subtitle: {
-                        display: true,
-                        text: 'Número de problemas reportados por hora',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        enabled: true,
-                        mode: 'index',
-                        intersect: false,
-                        callbacks: {
-                            label: function (context) {
-                                return `Hora: ${context.label}, Problemas: ${context.raw}`;
-                            }
-                        }
-                    }
+        title: {
+        display: true,
+        text: 'Distribución de Problemas por Hora',
+        font: {
+            size: 16
+        }
+    },
+        subtitle: {
+        display: true,
+        text: 'Número de problemas reportados por hora',
+        font: {
+            size: 12
+        }
+    },
+        legend: {
+        display: true,
+        position: 'top'
+    },
+        tooltip: {
+        enabled: true,
+        mode: 'index',
+        intersect: false,
+        callbacks: {
+            label: function (context) {
+                return `Hora: ${context.label}, Problemas: ${context.raw}`;
+            }
+        }
+    }
                 },
-                responsive: true, // Hacer el gráfico responsive
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Horas',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 0,
-                            minRotation: 0
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Problemas',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            precision: 0
-                        },
-                        grid: {
-                            borderDash: [5, 5]
-                        }
-                    }
-                },
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+        responsive: true, // Hacer el gráfico responsive
+        scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Horas',
+                font: {
+                    size: 14
                 }
+            },
+            ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                minRotation: 0
+            },
+            grid: {
+                display: false
+            }
+        },
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Cantidad de Problemas',
+                font: {
+                    size: 14
+                }
+            },
+            ticks: {
+                precision: 0
+            },
+            grid: {
+                borderDash: [5, 5]
+            }
+        }
+    },
+        interaction: {
+        mode: 'index',
+        intersect: false
+    }
             }, plugins: [ChartDataLabels]
         });
 
-        // GRÁFICA LINEAL CONTEO DE PROBLEMAS POR FECHA
-        const fechas = Object.keys(problemaCountByDate);
-        const conteoProblemas = fechas.map(fecha => Object.values(problemaCountByDate[fecha]).reduce((acc, curr) => acc + curr, 0));
+    // GRÁFICA LINEAL CONTEO DE PROBLEMAS POR FECHA
+    const fechas = Object.keys(problemaCountByDate);
+    const conteoProblemas = fechas.map(fecha => Object.values(problemaCountByDate[fecha]).reduce((acc, curr) => acc + curr, 0));
 
-        const ctxProblemasPorFecha = document.getElementById('chartProblemasPorFecha').getContext('2d');
-        new Chart(ctxProblemasPorFecha, {
-            type: 'bar',
-            data: {
-                labels: fechas,
-                datasets: [{
-                    label: 'Problemas por Fecha',
-                    data: conteoProblemas,
-                    backgroundColor: fechas.map(() => getRandomColor()),
+    const ctxProblemasPorFecha = document.getElementById('chartProblemasPorFecha').getContext('2d');
+    new Chart(ctxProblemasPorFecha, {
+        type: 'bar',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Problemas por Fecha',
+                data: conteoProblemas,
+                backgroundColor: fechas.map(() => getRandomColor()),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointBorderColor: 'rgba(75, 192, 192, 1)',
+                pointBorderWidth: 1,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                barPercentage: 0.8, // Para gráficos de barras
+                categoryPercentage: 0.9, // Para gráficos de barras 
+
+            }]
+        },
+        options: {
+
+            plugins: {
+                datalabels: {
+                    anchor: 'center',
+                    align: 'center',
+                    formatter: (value) => value,
+                    backgroundColor: 'white',
+                    borderRadius: 3,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
-                    fill: true,
-                    tension: 0.3,
-                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                    pointBorderColor: 'rgba(75, 192, 192, 1)',
-                    pointBorderWidth: 1,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    barPercentage: 0.8, // Para gráficos de barras
-                    categoryPercentage: 0.9, // Para gráficos de barras 
-                    
-                }]
-            },
-            options: {
-              
-                plugins: {
-                    datalabels: {
-                        anchor: 'center',
-                        align: 'center',
-                        formatter: (value) => value,
-                        backgroundColor: 'white',
-                        borderRadius: 3,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        color: 'rgba(75, 192, 192, 1)',
-                        font: {
-                            weight: 'bold'
-                        },
-                        clip: true,
-                        @* opacity: 0.8, *@
-            offset: 4,
-            @* rotation: 45 *@
+                    color: 'rgba(75, 192, 192, 1)',
+                    font: {
+                        weight: 'bold'
+                    },
+                    clip: true,
+    @* opacity: 0.8, *@
+        offset: 4,
+    @* rotation: 45 *@
     },
         title: {
         display: true,
@@ -438,64 +454,64 @@
                             weight: 'bold'
                         },
                         clip: true,
-                        @* opacity: 0.8, *@
+    @* opacity: 0.8, *@
             offset: 4,
-            @* rotation: 45 *@
+    @* rotation: 45 *@
     },
-                    title: {
-                        display: true,
-                        text: `Problemas Reportados entre ${Number(hora)}:00 y ${Number(hora) + 1}:00`,
-                        font: {
-                            size: 16
-                        }
-                    },
-                    subtitle: {
-                        display: true,
-                        text: 'Distribución de problemas por hora',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value, context) => {
-                            return value;
-                        },
-                        font: {
-                            size: 12
-                        }
-                    }
+        title: {
+        display: true,
+        text: `Problemas Reportados entre ${Number(hora)}:00 y ${Number(hora) + 1}:00`,
+        font: {
+            size: 16
+        }
+    },
+        subtitle: {
+        display: true,
+        text: 'Distribución de problemas por hora',
+        font: {
+            size: 12
+        }
+    },
+        legend: {
+        display: true,
+        position: 'top'
+    },
+        datalabels: {
+        anchor: 'end',
+        align: 'end',
+        formatter: (value, context) => {
+            return value;
+        },
+        font: {
+            size: 12
+        }
+    }
                 },
-                responsive: true, // Hacer el gráfico responsive
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Problemas',
-                            font: {
-                                size: 14
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true, // Comenzar el eje Y en cero
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Problemas',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            precision: 0 // Para que los valores sean enteros
-                        }
-                    }
+        responsive: true, // Hacer el gráfico responsive
+        scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Problemas',
+                font: {
+                    size: 14
                 }
+            }
+        },
+        y: {
+            beginAtZero: true, // Comenzar el eje Y en cero
+            title: {
+                display: true,
+                text: 'Cantidad de Problemas',
+                font: {
+                    size: 14
+                }
+            },
+            ticks: {
+                precision: 0 // Para que los valores sean enteros
+            }
+        }
+    }
             }
         });
 
@@ -546,64 +562,64 @@
                             weight: 'bold'
                         },
                         clip: true,
-                        @* opacity: 0.8, *@
+    @* opacity: 0.8, *@
             offset: 4,
-            @* rotation: 45 *@
+    @* rotation: 45 *@
     },
-                    title: {
-                        display: true,
-                        text: `Problemas Reportados el ${fecha}`,
-                        font: {
-                            size: 16
-                        }
-                    },
-                    subtitle: {
-                        display: true,
-                        text: 'Distribución de problemas a través del día',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'end',
-                        formatter: (value, context) => {
-                            return value;
-                        },
-                        font: {
-                            size: 12
-                        }
-                    }
+        title: {
+        display: true,
+        text: `Problemas Reportados el ${fecha}`,
+        font: {
+            size: 16
+        }
+    },
+        subtitle: {
+        display: true,
+        text: 'Distribución de problemas a través del día',
+        font: {
+            size: 12
+        }
+    },
+        legend: {
+        display: true,
+        position: 'top'
+    },
+        datalabels: {
+        anchor: 'end',
+        align: 'end',
+        formatter: (value, context) => {
+            return value;
+        },
+        font: {
+            size: 12
+        }
+    }
                 },
-                responsive: true, // Hacer el gráfico responsive
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Problemas',
-                            font: {
-                                size: 14
-                            }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true, // Comenzar el eje Y en cero
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Problemas',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        ticks: {
-                            precision: 0 // Para que los valores sean enteros
-                        }
-                    }
+        responsive: true, // Hacer el gráfico responsive
+        scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Problemas',
+                font: {
+                    size: 14
                 }
+            }
+        },
+        y: {
+            beginAtZero: true, // Comenzar el eje Y en cero
+            title: {
+                display: true,
+                text: 'Cantidad de Problemas',
+                font: {
+                    size: 14
+                }
+            },
+            ticks: {
+                precision: 0 // Para que los valores sean enteros
+            }
+        }
+    }
             }
         });
 
@@ -625,83 +641,100 @@
                 data: countsProblemas, // Contamos cada problema una vez
                 backgroundColor: problemas.map(() => getRandomColor()),
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+                borderWidth: 1,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointBorderColor: 'rgba(75, 192, 192, 1)',
+                pointBorderWidth: 1,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                barPercentage: 0.8, // Para gráficos de barras
+                categoryPercentage: 0.9, // Para gráficos de barras 
             }]
         },
         options: {
             plugins: {
                 datalabels: {
-                        anchor: 'center',
-                        align: 'center',
-                        formatter: (value) => value,
-                        backgroundColor: 'white',
-                        borderRadius: 3,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        color: 'rgba(75, 192, 192, 1)',
-                        font: {
-                            weight: 'bold'
-                        },
-                        clip: true,
-                        @* opacity: 0.8, *@
-            offset: 4,
-            @* rotation: 45 *@
-    },
-                title: {
-                    display: true,
-                    text: 'Problemas Más Comunes',
+                    anchor: 'center',
+                    align: 'center',
+                    formatter: (value) => value,
+                    backgroundColor: 'white',
+                    borderRadius: 3,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    color: 'rgba(75, 192, 192, 1)',
                     font: {
-                        size: 16
-                    }
-                },
-                subtitle: {
-                    display: true,
-                    text: 'Distribución Temporal de Problemas',
-                    font: {
-                        size: 12
-                    }
-                },
-                legend: {
-                    display: true,
-                    position: 'top'
-                },
-                datalabels: {
-                    display: true,
-                    color: '#fff',
-                    font: {
-                        size: 12
+                        weight: 'bold'
                     },
-                    formatter: (value, ctx) => {
-                        const label = ctx.chart.data.labels[ctx.dataIndex];
-                        return `${label}: ${value}`;
-                    }
+                    clip: true,
+    @* opacity: 0.8, *@
+        offset: 4,
+    @* rotation: 45 *@
+    },
+        title: {
+        display: true,
+        text: 'Problemas Más Comunes',
+        font: {
+            size: 16
+        }
+    },
+        subtitle: {
+        display: true,
+        text: 'Distribución Temporal de Problemas',
+        font: {
+            size: 12
+        }
+    },
+        legend: {
+        display: true,
+        position: 'top'
+    },
+
+        datalabels: {
+        display: true,
+        color: '#fff',
+        font: {
+            size: 12
+        },
+        formatter: (value, ctx) => {
+            const label = ctx.chart.data.labels[ctx.dataIndex];
+            return `${label}: ${value}`;
+        }
+    }
+            },
+        responsive: true, // Hacer el gráfico responsive
+        scales: {
+        x: {
+            title: {
+                display: true,
+                text: 'Problemas',
+                font: {
+                    size: 14
+                }
+            }, ticks: {
+                autoSkip: true,
+                maxTicksLimit: 10
+            }
+        },
+        y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Cantidad de Problemas',
+                font: {
+                    size: 14
                 }
             },
-            responsive: true, // Hacer el gráfico responsive
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Problemas',
-                        font: {
-                            size: 14
-                        }
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Cantidad de Problemas',
-                        font: {
-                            size: 14
-                        }
-                    },
-                    ticks: {
-                        precision: 0
-                    }
-                }
+            ticks: {
+                precision: 0
             }
+        }
+    },
+        interaction: {
+        mode: 'index',
+        intersect: false
+    }
         }
     });
 
@@ -723,56 +756,56 @@
         options: {
             plugins: {
                 datalabels: {
-                        anchor: 'center',
-                        align: 'center',
-                        formatter: (value) => value,
-                        backgroundColor: 'white',
-                        borderRadius: 3,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        color: 'rgba(75, 192, 192, 1)',
-                        font: {
-                            weight: 'bold'
-                        },
-                        clip: true,
-                        @* opacity: 0.8, *@
-            offset: 4,
-            @* rotation: 45 *@
-    },
-                title: {
-                    display: true,
-                    text: 'Número de Problemas por Línea',
+                    anchor: 'center',
+                    align: 'center',
+                    formatter: (value) => value,
+                    backgroundColor: 'white',
+                    borderRadius: 3,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    color: 'rgba(75, 192, 192, 1)',
                     font: {
-                        size: 16
-                    }
-                },
-                subtitle: {
-                    display: true,
-                    text: 'Distribución de problemas a través de diferentes líneas',
-                    font: {
-                        size: 12
-                    }
-                },
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        padding: 10 // Añadir espacio entre elementos de la leyenda
-                    }
-                },
-                datalabels: {
-                    anchor: 'end',
-                    align: 'end',
-                    formatter: (value, context) => {
-                        return value;
+                        weight: 'bold'
                     },
-                    font: {
-                        size: 12
-                    }
-                }
+                    clip: true,
+    @* opacity: 0.8, *@
+        offset: 4,
+    @* rotation: 45 *@
+    },
+        title: {
+        display: true,
+        text: 'Número de Problemas por Línea',
+        font: {
+            size: 16
+        }
+    },
+        subtitle: {
+        display: true,
+        text: 'Distribución de problemas a través de diferentes líneas',
+        font: {
+            size: 12
+        }
+    },
+        legend: {
+        display: true,
+        position: 'top',
+        labels: {
+            padding: 10 // Añadir espacio entre elementos de la leyenda
+        }
+    },
+        datalabels: {
+        anchor: 'end',
+        align: 'end',
+        formatter: (value, context) => {
+            return value;
+        },
+        font: {
+            size: 12
+        }
+    }
             },
-            responsive: true, // Hacer el gráfico responsive
-        @* maintainAspectRatio: false, // Permitir que el gráfico se ajuste al contenedor *@
+        responsive: true, // Hacer el gráfico responsive
+    @* maintainAspectRatio: false, // Permitir que el gráfico se ajuste al contenedor *@
 
         scales: {
         x: {
@@ -808,7 +841,7 @@
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
-        @* return backgroundColorGraficas; *@
+    @* return backgroundColorGraficas; *@
     return backgroundColorGraficas;
     }
 
