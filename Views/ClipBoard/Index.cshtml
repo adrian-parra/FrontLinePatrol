@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+@* <pre>
+    /etc/systemd/system/
+
+    [Unit]
+Description=Abrir URL al iniciar el sistema
+After=network.target graphical.target
+
+[Service]
+ExecStart=/usr/bin/xdg-open https://www.ejemplo.com
+User=loal
+Environment=DISPLAY=:0
+
+[Install]
+WantedBy=graphical.target
+
+</pre> *@
+
+<style>
+    span {
+        color: blue;
+    }
+</style>
+<h2>Inicio en fecha y hora especifica de service (REINICIAR RASPBERRY TODOS LOS LUNES A LAS 6:50AM)</h2>
+<h3> 1. Crear el archivo de unidad del servicio </h3>
+<p>Primero, asegúrate de que el archivo de unidad del servicio esté correctamente configurado. Coloca el archivo en <span>/etc/systemd/system/restart-system.service</span>:</p>
+<pre>
+[Unit]
+Description=Reinicio del sistema
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/shutdown -r now
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
+    @* [Unit]
+    Description=Abrir URL al iniciar el sistema
+    After=network.target graphical.target
+
+    [Service]
+    ExecStart=/usr/bin/xdg-open https://www.ejemplo.com
+    User=loal <span> Cambia el usuario por el usuario actual en el sistema</span>
+    Environment=DISPLAY=:0
+
+    [Install]
+    WantedBy=graphical.target *@
+</pre>
+
+<h3> 2. Crear el archivo de unidad del temporizador </h3>
+<p>Luego, crea un archivo de unidad del temporizador que programará la ejecución del servicio. Coloca el archivo en <span>/etc/systemd/system/restart-system.timer:</span></p>
+<pre>
+    [Unit]
+    Description=Temporizador para reiniciar sistema todos los lunes  a las 5:50 AM
+
+    [Timer]
+    OnCalendar=Mon *-*-* 06:50:00
+    Unit=restart-system.service
+
+    [Install]
+    WantedBy=timers.target
+</pre>
+<p><span>OnCalendar=Mon *-*-* 06:50:00</span> especifica la fecha y hora en que deseas que el servicio se ejecute. Ajusta esta línea según la fecha y hora deseada.</p>
+<h3>3. Habilitar y activar el temporizador</h3>
+<p>Habilita y activa el temporizador para que <span>systemd</span> lo ejecute en la fecha y hora especificada.</p>
+<pre>
+    sudo systemctl daemon-reload
+    sudo systemctl enable restart-system.timer
+    sudo systemctl start restart-system.timer
+
+</pre>
+
+
+
+
+<pre>
+    timedatectl
+    journalctl -u abrir-url.timer
+    systemctl list-timers --all
+
+</pre>
+
