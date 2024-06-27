@@ -1,3 +1,43 @@
+:root{
+  /*COLOR PRINCIPAL rgb(75, 175, 79)*/
+  --ColorPrincipal: rgb(255, 255, 255);
+  
+  --ColorSecundario:rgb(23, 101, 190) ;
+  --ColorFondo:rgb(242, 242, 242);
+  
+  --ColorExtra:rgb(29, 29, 29);
+  
+  --ColorSuccess:#00C951;
+  --ColorDanger:#FF4A56;
+  --ColorWarning:#F57C00;
+
+  /*COLOR WHITE PARA FILTER EN UNA IMAGEN SVG*/
+  --ColorImgSvg:invert(100%) sepia(0%) saturate(7491%) hue-rotate(217deg) brightness(106%) contrast(101%);
+
+  
+
+  --ColorTitulo:rgb(33, 33, 33);
+  --ColorDescripcion: #827582;
+  /*rgb(206,206.206);*/
+
+  --ColorTextoPrincipal:#666666;
+  --ColorTextoSecundario:#5A5A5A;
+
+  --Padding:10px;
+  --Margin:10px;
+  --SpaseLetter:0.5px;
+  /*--Border: 1.5px;*/
+  --Border:1.5px;
+  --BorderRadius: 3px;
+
+  --SizeTitulo:1.13rem;
+  --SizeDescripcion:0.75rem;
+
+  --FontSize:16px;
+
+
+}
+
 html {
   font-size: 14px;
 }

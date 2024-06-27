@@ -3,9 +3,18 @@
 }
 
 <style>
-    .modal-dialog {
+    .modal-dialog.large {
         width:100%; 
         max-width:1000px; 
+    }
+    .semana-actual {
+        margin:0;
+        text-align:center;
+        color:var(--ColorPrincipal);
+        @* display:flex; *@
+        border-radius:50%;
+        width:25px;
+        height:25px;
     }
 </style>
 
@@ -63,13 +72,17 @@
 
         </form>
 
+
+
     
 
         <div class="container-table-hide" style="display: none;">
 
         </div>
+      
         <div class="container-table-data">
             <hr>
+             <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
         <table class="table">
             <thead>
                 <tr>
@@ -78,6 +91,7 @@
                     <th>Nombre empleado</th>
                     <th>Departamento</th>
                     <th>Nombre kaizen</th>
+                    <th>Semana</th>
                     <th></th>
 
                 </tr>
@@ -89,7 +103,7 @@
 
         </table>
         </div>
-        
+         
 
 
     </div>
@@ -97,7 +111,7 @@
 </div>
 
 <div style="" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog large">
         <div class="modal-content" >
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Documento</h5>
@@ -110,11 +124,49 @@
     </div>
 </div>
 
+<div class="modal fade" id="exampleModalF" tabindex="-1" aria-labelledby="exampleModalLabelF" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Filtrar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formFiltrado">
+          
+            <div class="mb-2">
+            <label class="form-label">Nombre Usuario</label>
+            <select  class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_usuario" id="selectNombreUsuario">
+              
+
+            </select>
+          </div>
+          
+          
+
+          <hr>
+
+          <div class="container-buttons">
+            <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm" data-bs-dismiss="modal"
+              aria-label="Close">Aplicar</button>
+            <input type="reset" id="btnResetFiltrado" class="btn btn-primary btn-sm" value="Restablecer">
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 
     const host = "http://c7share.sewsus.com.mx:9001/Kaizen/"
 
     import { $ } from '/js/utils.js'
+
+    let arrayNobreUsuariosKaizen = []
+    let arrayUniqueNobreUsuariosKaizen = []
 
 
     // Obtener la fecha actual
@@ -133,7 +185,25 @@
     document.getElementById('fechaUno').value = fechaFormateadaDos;
     document.getElementById('fechaDos').value = fechaFormateadaUno;
 
+   
 
+
+
+ $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
+
+ $('#formFiltrado').addEventListener('submit', (e)=> {
+    e.preventDefault();
+  $(".container-loading").style = "display:flex;";
+  var formData = new FormData(e.target);
+
+  console.log(formData.get("id_usuario"))
+
+  @* $(".container-items").innerHTML = data; *@
+    filtrarKaizen(formData.get("id_usuario"))
+  $(".container-loading").style = "display:none;";
+
+
+ })
 
 
     $(".table").addEventListener('click', (e) => {
@@ -189,19 +259,31 @@
         const table = document.querySelector('table');
         const rows = table.querySelectorAll('tr');
 
+        
+         $(".items-table").innerHTML = ""
         for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             const cells = row.querySelectorAll('td');
 
-            //console.log(cells[11].innerHTML)
+            @* console.log(cells[11].innerText) *@
 
             var textoEnlace = cells[11].innerHTML
+
+            arrayNobreUsuariosKaizen.push(cells[3].innerText)
 
 
             var inicioHref = textoEnlace.indexOf('href="') + 8;
             var finHref = textoEnlace.indexOf('"', inicioHref);
             var valorHref = textoEnlace.substring(inicioHref, finHref);
-    @* console.log(valorHref); *@
+
+            let colorSemanaActualAnho = ''
+            if(getNumeroSemanaAnho() == cells[10].innerText){
+                colorSemanaActualAnho = '--ColorSuccess'
+            }else{
+                colorSemanaActualAnho = '--ColorWarning'
+            }
+
+            
 
                 $(".items-table").innerHTML += `
             <tr>
@@ -210,13 +292,95 @@
                 <td> ${cells[3].innerText} </td>
                 <td> ${cells[4].innerText} </td>
                 <td> ${cells[5].innerText.toUpperCase()} </td>
+                <td> <p class="semana-actual" style="background-color:var(${colorSemanaActualAnho})">${cells[10].innerText}</p> </td>
                 <td> 
                 <button class="btn btn-secondary btn-sm" id="btnVer">Ver</button> <p style="display:none;"> ${valorHref.trim()} </p> 
                 </td>
             </tr>
             `
         }
+        arrayUniqueNobreUsuariosKaizen = Array.from(new Set(arrayNobreUsuariosKaizen));
+         $("#selectNombreUsuario").innerHTML = ""
+        for (let i = 0; i < arrayUniqueNobreUsuariosKaizen.length; i++) {
+  let elemento = arrayUniqueNobreUsuariosKaizen[i];
+  console.log($("#selectNombreUsuario"))
+  // Hacer algo con cada elemento
+  $("#selectNombreUsuario").innerHTML += `
+              <option value="${elemento}">${elemento}</option>
+            `
+}
 
     })
+
+    // FUNCTION PARA SACAR EL NUMERO DE SEMANA ACTUAL DEL ANHO
+    const getNumeroSemanaAnho = () => {
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const diff = now - startOfYear;
+    const oneWeek = 1000 * 60 * 60 * 24 * 7;
+    const weekNumber = Math.ceil(diff / oneWeek);
+
+    @* console.log("El número de semana actual es: " + weekNumber); *@
+    return weekNumber
+    }
+
+
+    // FUNCTION PARA FILTRAR DATOS POR NOMBRE DE USUARIO
+
+    const filtrarKaizen = (nombreUsuario = null) => {
+        const table = document.querySelector('table');
+        const rows = table.querySelectorAll('tr');
+
+        //let arrayNobreUsuariosKaizen = []
+        //let arrayUniqueNobreUsuariosKaizen = []
+        $(".items-table").innerHTML = ""
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const cells = row.querySelectorAll('td');
+
+            //console.log(cells[11].innerHTML)
+
+            var textoEnlace = cells[11].innerHTML
+
+            //arrayNobreUsuariosKaizen.push(cells[3].innerText)
+
+
+            var inicioHref = textoEnlace.indexOf('href="') + 8;
+            var finHref = textoEnlace.indexOf('"', inicioHref);
+            var valorHref = textoEnlace.substring(inicioHref, finHref);
+
+            if(nombreUsuario == cells[3].innerText && nombreUsuario != null){
+
+
+               let colorSemanaActualAnho = ''
+            if(getNumeroSemanaAnho() == cells[10].innerText){
+                colorSemanaActualAnho = '--ColorSuccess'
+            }else{
+                colorSemanaActualAnho = '--ColorWarning'
+            }
+
+            
+
+                $(".items-table").innerHTML += `
+            <tr>
+                <td> ${cells[1].innerText} </td>
+                <td> ${cells[2].innerText} </td>
+                <td> ${cells[3].innerText} </td>
+                <td> ${cells[4].innerText} </td>
+                <td> ${cells[5].innerText.toUpperCase()} </td>
+                <td> <p class="semana-actual" style="background-color:var(${colorSemanaActualAnho})">${cells[10].innerText}</p> </td>
+                <td> 
+                <button class="btn btn-secondary btn-sm" id="btnVer">Ver</button> <p style="display:none;"> ${valorHref.trim()} </p> 
+                </td>
+            </tr>
+            `
+            
+            }
+
+
+
+                
+        }
+    }
 
 </script>
