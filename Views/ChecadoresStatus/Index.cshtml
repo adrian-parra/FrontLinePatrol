@@ -1,0 +1,97 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .circulo-status {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .container-result {
+        display: flex;
+        flex-direction: row;
+        gap: var(--Margin);
+        align-items: center;
+        @* justify-content: center; *@
+    }
+    .container-result p {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<div class="card movil">
+    <div class="card-header">
+        Estado de checadores
+    </div>
+    <div class="card-body">
+
+        <form id="formEjecutarComando">
+            <div class="container-form-cv">
+                @* <div class="mb-2">
+                    <label class="form-label">Comando</label>
+                    <input type="text" class="form-control form-control-sm" name="comando">
+                </div> *@
+
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Consultar estado</button>
+            </div>
+
+        </form>
+
+        <div class="container-respuesta">
+            <hr>
+            <div class="respuesta">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="module">
+
+    import { $ } from '/js/utils.js'
+
+    $("#formEjecutarComando").addEventListener('submit', async (e) => {
+        e.preventDefault()
+        // MOSTRAR LOADER DE CARGA
+        $('.container-loading').style = 'display:flex;'
+        // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
+
+        const datosResponse = await fetch('/ChecadoresStatus/ConsultarEstadoChecadores', {
+            method: 'POST',
+            body: null,
+        });
+
+        const datos = await datosResponse.json();
+
+        @* console.log(datos) *@
+$('.container-respuesta .respuesta').innerHTML = ""
+        datos.forEach((dato) => {
+  // Realiza alguna operación con cada dato
+  console.log(dato.host);
+
+  if(dato.status == "fallido"){
+    $('.container-respuesta .respuesta').innerHTML += `<div class="container-result"><p>${dato.host}</p> <div title="INACTIVO" class="circulo-status" style="background-color:var(--ColorDanger);"></div></div>`;
+  }else{
+    $('.container-respuesta .respuesta').innerHTML += `<div class="container-result"><p>${dato.host}</p> <div title="ACTIVO" class="circulo-status" style="background-color:var(--ColorSuccess);"></div></div>`;
+  }
+   
+});
+
+        $('.container-loading').style = 'display:none;'
+
+
+
+
+
+
+
+        @* $('.container-respuesta .respuesta').innerHTML = `<pre>${datos}</pre>`; *@
+
+    })
+    </script>
