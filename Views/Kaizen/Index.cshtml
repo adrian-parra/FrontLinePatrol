@@ -4,17 +4,75 @@
 
 <style>
     .modal-dialog.large {
-        width:100%; 
-        max-width:1000px; 
+        width: 100%;
+        max-width: 1000px;
     }
+
     .semana-actual {
-        margin:0;
-        text-align:center;
-        color:var(--ColorPrincipal);
-        @* display:flex; *@
-        border-radius:50%;
-        width:25px;
-        height:25px;
+        margin: 0;
+        text-align: center;
+        color: var(--ColorPrincipal);
+    @*display:flex;*@border-radius: 50%;
+        width: 25px;
+        height: 25px;
+    }
+
+    .container-sms {
+        @* background-color: red !important; *@
+        padding: var(--Padding);
+        padding-left: 0;
+    }
+    .container-sms p {
+        margin: 0;
+        color:var(--ColorDanger);
+        font-weight: bold;
+    }
+    .conatainer-filter {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        @* background-color: red; *@
+        @* border: 1px solid var(--ColorSecundario); *@
+        padding: var(--Padding);
+        border-radius: var(--BorderRadius);
+        background-color: rgba(0, 0, 0, .03);
+    }
+    .contador-k {
+        display: flex;
+        flex-direction: row;
+        gap:var(--Margin);
+        align-items: center;
+        margin: 0;
+    }
+    .contador-k .valor-k {
+        background-color: var(--ColorDanger);
+        padding: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        
+    }
+    .contador-k p {
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .table {
+        background-color: rgba(0, 0, 0, .03);
+        @* border: 2.5px solid black; *@
+        margin-top: var(--Margin);
+         border-radius: var(--BorderRadius);
+          padding: var(--Padding);
+    }
+    .container-contador-k {
+        display: flex;
+        flex-direction: row;
+        gap: var(--Margin);
     }
 </style>
 
@@ -74,36 +132,49 @@
 
 
 
-    
+
 
         <div class="container-table-hide" style="display: none;">
 
         </div>
-      
-        <div class="container-table-data">
+
+        <div class="container-table-data" style="display: none;">
             <hr>
-             <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Planta</th>
-                    <th>Id empleado</th>
-                    <th>Nombre empleado</th>
-                    <th>Departamento</th>
-                    <th>Nombre kaizen</th>
-                    <th>Semana</th>
-                    <th></th>
+            <div class="conatainer-filter">
+                <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
 
-                </tr>
-            </thead>
+                <div class="container-contador-k">
+                    <input class="form-control mr-sm-2" type="search" id="searchKaizen" placeholder="Buscar">
+                    <div class="contador-k"><p class="valor-k" id="valorKaizen">100</p><p>Kaizen</p></div>
+                </div>
+            </div>
+            @* <hr> *@
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Planta</th>
+                        <th>Id em.</th>
+                        <th>Nombre empleado</th>
+                        <th>Departamento</th>
+                        <th>Nombre kaizen</th>
+                        <th>Semana</th>
+                        <th></th>
 
-            <tbody class="items-table">
+                    </tr>
+                </thead>
 
-            </tbody>
+                <tbody class="items-table">
 
-        </table>
+                </tbody>
+
+            </table>
         </div>
-         
+
+        <div class="container-sms" style="display: none;">
+            <hr>
+            <p>No se encontraron kaizen en las fechas indicadas.</p>
+        </div>
+
 
 
     </div>
@@ -112,7 +183,7 @@
 
 <div style="" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog large">
-        <div class="modal-content" >
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Documento</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -125,38 +196,39 @@
 </div>
 
 <div class="modal fade" id="exampleModalF" tabindex="-1" aria-labelledby="exampleModalLabelF" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Filtrar</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formFiltrado">
-          
-            <div class="mb-2">
-            <label class="form-label">Nombre Usuario</label>
-            <select  class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_usuario" id="selectNombreUsuario">
-              
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Filtrar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFiltrado">
 
-            </select>
-          </div>
-          
-          
+                    <div class="mb-2">
+                        <label class="form-label">Nombre Usuario</label>
+                        <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+                            name="id_usuario" id="selectNombreUsuario">
 
-          <hr>
 
-          <div class="container-buttons">
-            <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm" data-bs-dismiss="modal"
-              aria-label="Close">Aplicar</button>
-            <input type="reset" id="btnResetFiltrado" class="btn btn-primary btn-sm" value="Restablecer">
-          </div>
+                        </select>
+                    </div>
 
-        </form>
 
-      </div>
+
+                    <hr>
+
+                    <div class="container-buttons">
+                        <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm"
+                            data-bs-dismiss="modal" aria-label="Close">Aplicar</button>
+                        <input type="reset" id="btnResetFiltrado" class="btn btn-primary btn-sm" value="Restablecer">
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script type="module">
@@ -185,25 +257,34 @@
     document.getElementById('fechaUno').value = fechaFormateadaDos;
     document.getElementById('fechaDos').value = fechaFormateadaUno;
 
-   
 
 
 
- $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
 
- $('#formFiltrado').addEventListener('submit', (e)=> {
-    e.preventDefault();
-  $(".container-loading").style = "display:flex;";
-  var formData = new FormData(e.target);
-
-  console.log(formData.get("id_usuario"))
-
-  @* $(".container-items").innerHTML = data; *@
-    filtrarKaizen(formData.get("id_usuario"))
-  $(".container-loading").style = "display:none;";
+    $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
 
 
- })
+    $("#searchKaizen").addEventListener("input", (e)=>{
+        console.log("entro")
+        const searchTerm = event.target.value.toLowerCase();
+
+        filtrarKaizen(null , searchTerm)
+
+    })
+
+    $('#formFiltrado').addEventListener('submit', (e) => {
+        e.preventDefault();
+        $(".container-loading").style = "display:flex;";
+        var formData = new FormData(e.target);
+
+        @* console.log(formData.get("id_usuario")) *@
+
+    @* $(".container-items").innerHTML = data; *@
+            filtrarKaizen(formData.get("id_usuario"))
+        $(".container-loading").style = "display:none;";
+
+
+    })
 
 
     $(".table").addEventListener('click', (e) => {
@@ -232,40 +313,43 @@
         // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
         const dataForm = new FormData(e.target)
 
-
-        let headersList = {
-            "Accept": "*/*",
-            "User-Agent": "Thunder Client (https://www.thunderclient.com)"
-        }
-
-
-
         const datosFilterResponse = await fetch('/Kaizen/Filter', {
             method: 'POST',
             body: dataForm,
         });
 
         const datosFilter = await datosFilterResponse.text();
-        console.log(datosFilter);
 
-    @* console.log(datosFilter) *@
+      
 
-            // MOSTRAR CANVAS PARA DIBUJAR GRÁFICAS
-            // MOSTRAR LOADER DE CARGA
-            $('.container-loading').style = 'display:none;'
+
+        
+
+        $('.container-loading').style = 'display:none;'
         // MOSTRAR DATOS EN TABLE HIDE
         $(".container-table-hide").innerHTML = datosFilter;
-
         const table = document.querySelector('table');
         const rows = table.querySelectorAll('tr');
 
-        
-         $(".items-table").innerHTML = ""
+        const rowsLength = rows.length
+
+     
+
+        if(rowsLength == 1){
+            $(".container-sms").style = 'display:block;'
+             $('.container-table-data').style = 'display:none'
+        }else{
+            $('.container-table-data').style = 'display:block'
+            $("#valorKaizen").innerText = rowsLength - 1
+            $(".container-sms").style = 'display:none;'
+
+        }
+
+
+        $(".items-table").innerHTML = ""
         for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             const cells = row.querySelectorAll('td');
-
-            @* console.log(cells[11].innerText) *@
 
             var textoEnlace = cells[11].innerHTML
 
@@ -277,15 +361,15 @@
             var valorHref = textoEnlace.substring(inicioHref, finHref);
 
             let colorSemanaActualAnho = ''
-            if(getNumeroSemanaAnho() == cells[10].innerText){
+            if (getNumeroSemanaAnho() == cells[10].innerText) {
                 colorSemanaActualAnho = '--ColorSuccess'
-            }else{
+            } else {
                 colorSemanaActualAnho = '--ColorWarning'
             }
 
-            
 
-                $(".items-table").innerHTML += `
+
+            $(".items-table").innerHTML += `
             <tr>
                 <td> ${cells[1].innerText} </td>
                 <td> ${cells[2].innerText} </td>
@@ -300,25 +384,25 @@
             `
         }
         arrayUniqueNobreUsuariosKaizen = Array.from(new Set(arrayNobreUsuariosKaizen));
-         $("#selectNombreUsuario").innerHTML = ""
+        $("#selectNombreUsuario").innerHTML = ""
         for (let i = 0; i < arrayUniqueNobreUsuariosKaizen.length; i++) {
-  let elemento = arrayUniqueNobreUsuariosKaizen[i];
-  console.log($("#selectNombreUsuario"))
-  // Hacer algo con cada elemento
-  $("#selectNombreUsuario").innerHTML += `
+            let elemento = arrayUniqueNobreUsuariosKaizen[i];
+            console.log($("#selectNombreUsuario"))
+            // Hacer algo con cada elemento
+            $("#selectNombreUsuario").innerHTML += `
               <option value="${elemento}">${elemento}</option>
             `
-}
+        }
 
     })
 
     // FUNCTION PARA SACAR EL NUMERO DE SEMANA ACTUAL DEL ANHO
     const getNumeroSemanaAnho = () => {
-    const now = new Date();
-    const startOfYear = new Date(now.getFullYear(), 0, 1);
-    const diff = now - startOfYear;
-    const oneWeek = 1000 * 60 * 60 * 24 * 7;
-    const weekNumber = Math.ceil(diff / oneWeek);
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const diff = now - startOfYear;
+        const oneWeek = 1000 * 60 * 60 * 24 * 7;
+        const weekNumber = Math.ceil(diff / oneWeek);
 
     @* console.log("El número de semana actual es: " + weekNumber); *@
     return weekNumber
@@ -327,13 +411,14 @@
 
     // FUNCTION PARA FILTRAR DATOS POR NOMBRE DE USUARIO
 
-    const filtrarKaizen = (nombreUsuario = null) => {
+    const filtrarKaizen = (nombreUsuario = null ,descripcionKaizen = null) => {
         const table = document.querySelector('table');
         const rows = table.querySelectorAll('tr');
 
         //let arrayNobreUsuariosKaizen = []
         //let arrayUniqueNobreUsuariosKaizen = []
         $(".items-table").innerHTML = ""
+        let contadorKaizen = 0;
         for (let i = 1; i < rows.length; i++) {
             const row = rows[i];
             const cells = row.querySelectorAll('td');
@@ -349,17 +434,17 @@
             var finHref = textoEnlace.indexOf('"', inicioHref);
             var valorHref = textoEnlace.substring(inicioHref, finHref);
 
-            if(nombreUsuario == cells[3].innerText && nombreUsuario != null){
+            if(cells[5].innerText.toLowerCase().includes(descripcionKaizen) && descripcionKaizen != null){
+                contadorKaizen++;
+
+                let colorSemanaActualAnho = ''
+                if (getNumeroSemanaAnho() == cells[10].innerText) {
+                    colorSemanaActualAnho = '--ColorSuccess'
+                } else {
+                    colorSemanaActualAnho = '--ColorWarning'
+                }
 
 
-               let colorSemanaActualAnho = ''
-            if(getNumeroSemanaAnho() == cells[10].innerText){
-                colorSemanaActualAnho = '--ColorSuccess'
-            }else{
-                colorSemanaActualAnho = '--ColorWarning'
-            }
-
-            
 
                 $(".items-table").innerHTML += `
             <tr>
@@ -374,13 +459,42 @@
                 </td>
             </tr>
             `
-            
+            }
+
+            if (nombreUsuario == cells[3].innerText && nombreUsuario != null) {
+                contadorKaizen++;
+
+                let colorSemanaActualAnho = ''
+                if (getNumeroSemanaAnho() == cells[10].innerText) {
+                    colorSemanaActualAnho = '--ColorSuccess'
+                } else {
+                    colorSemanaActualAnho = '--ColorWarning'
+                }
+
+
+
+                $(".items-table").innerHTML += `
+            <tr>
+                <td> ${cells[1].innerText} </td>
+                <td> ${cells[2].innerText} </td>
+                <td> ${cells[3].innerText} </td>
+                <td> ${cells[4].innerText} </td>
+                <td> ${cells[5].innerText.toUpperCase()} </td>
+                <td> <p class="semana-actual" style="background-color:var(${colorSemanaActualAnho})">${cells[10].innerText}</p> </td>
+                <td> 
+                <button class="btn btn-secondary btn-sm" id="btnVer">Ver</button> <p style="display:none;"> ${valorHref.trim()} </p> 
+                </td>
+            </tr>
+            `
+
             }
 
 
 
-                
+
         }
+
+        $("#valorKaizen").innerText = contadorKaizen
     }
 
 </script>
