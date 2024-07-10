@@ -236,11 +236,9 @@ body {
     align-items: center;
   }
 
-  /* ! TABLE KAIZEN MOVIL*/
-  .table.show {
-
+   /* ! TABLE KAIZEN MOVIL*/
+   .table.show {
     display: flex;
-
     flex-direction: column;
     gap: var(--Margin);
   }
@@ -420,4 +418,16 @@ body {
   100% {
     transform: scale(1);
   }
+}
+
+a.navbar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:calc(var(--Margin) / 2);
+}
+
+a.navbar-brand P {
+  margin: 0;
+  padding: 0;
 }

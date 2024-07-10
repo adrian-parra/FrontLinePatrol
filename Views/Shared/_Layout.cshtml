@@ -4,8 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/favicon1.ico" type="image/x-icon" />
+    <link rel="icon" href="~/favicon1.ico" type="image/ico" />
 
-    <title>@ViewData["Title"] - LinePatrol</title>
+
+    <title>@ViewData["Title"] - LOAL</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/voseoIndex.css">
@@ -27,7 +30,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LinePatrol</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Tarea" asp-action="Index"><p>LOAL</p> <img src="~/images/general/a.png" alt="images" width="20" height="20" srcset=""></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -36,12 +39,12 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Tarea"
-                                asp-action="Index">Listado</a>
+                                asp-action="Index">Line patrol</a>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Tarea"
                                 asp-action="GuardarCambios">Registrar</a>
-                        </li>
+                        </li> *@
                          <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Voceo"
                                 asp-action="Index">Voceos</a>
