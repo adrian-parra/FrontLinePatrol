@@ -1,39 +1,39 @@
-:root{
+:root {
   /*COLOR PRINCIPAL rgb(75, 175, 79)*/
   --ColorPrincipal: rgb(255, 255, 255);
-  
-  --ColorSecundario:rgb(23, 101, 190) ;
-  --ColorFondo:rgb(242, 242, 242);
-  
-  --ColorExtra:rgb(29, 29, 29);
-  
-  --ColorSuccess:#00C951;
-  --ColorDanger:#FF4A56;
-  --ColorWarning:#F57C00;
+
+  --ColorSecundario: rgb(23, 101, 190);
+  --ColorFondo: rgb(242, 242, 242);
+
+  --ColorExtra: rgb(29, 29, 29);
+
+  --ColorSuccess: #00C951;
+  --ColorDanger: #FF4A56;
+  --ColorWarning: #F57C00;
 
   /*COLOR WHITE PARA FILTER EN UNA IMAGEN SVG*/
-  --ColorImgSvg:invert(100%) sepia(0%) saturate(7491%) hue-rotate(217deg) brightness(106%) contrast(101%);
+  --ColorImgSvg: invert(100%) sepia(0%) saturate(7491%) hue-rotate(217deg) brightness(106%) contrast(101%);
 
-  
 
-  --ColorTitulo:rgb(33, 33, 33);
+
+  --ColorTitulo: rgb(33, 33, 33);
   --ColorDescripcion: #827582;
   /*rgb(206,206.206);*/
 
-  --ColorTextoPrincipal:#666666;
-  --ColorTextoSecundario:#5A5A5A;
+  --ColorTextoPrincipal: #666666;
+  --ColorTextoSecundario: #5A5A5A;
 
-  --Padding:10px;
-  --Margin:10px;
-  --SpaseLetter:0.5px;
+  --Padding: 10px;
+  --Margin: 10px;
+  --SpaseLetter: 0.5px;
   /*--Border: 1.5px;*/
-  --Border:1.5px;
+  --Border: 1.5px;
   --BorderRadius: 3px;
 
-  --SizeTitulo:1.13rem;
-  --SizeDescripcion:0.75rem;
+  --SizeTitulo: 1.13rem;
+  --SizeDescripcion: 0.75rem;
 
-  --FontSize:16px;
+  --FontSize: 16px;
 
 
 }
@@ -56,7 +56,7 @@ html {
 body {
   margin-bottom: 60px;
   margin-top: 60px;
-  
+
 }
 
 .navbar {
@@ -95,9 +95,11 @@ body {
   flex-direction: row;
   gap: 5px;
 }
+
 #linkInfoImagenSelected::before {
   content: "Imagen seleccionada";
 }
+
 #linkInfoImagenSelected::after {
   content: "\2713";
 }
@@ -113,15 +115,16 @@ body {
 
 .card.item .card-img-top {
   aspect-ratio: 16/9;
-  object-fit:cover;
+  object-fit: cover;
 }
 
 .card.item .card-body p {
   padding: 0;
   margin: 0;
 }
+
 .card.item .card-body .card-text {
-  color:#555555;
+  color: #555555;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -129,18 +132,21 @@ body {
   text-overflow: ellipsis;
   user-select: none;
 }
+
 .card.item .card-body .card-text:hover {
   display: flex;
 }
+
 /* .card.item .card-body .card-text.show{
   display: flex;
 } */
-.card.item .card-body .container-description{
+.card.item .card-body .container-description {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 .card.item .card-body .container-description p.right {
-  color:#555555;
+  color: #555555;
   text-align: right;
 }
 
@@ -152,6 +158,7 @@ body {
   text-overflow: ellipsis;
   user-select: none;
 }
+
 .card-text-small.show {
   display: flex;
 }
@@ -165,49 +172,58 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+
 /** RESPONSIVE DESIGN */
 @media (max-width: 600px) {
   .form-line-patrol .container-formLP {
     display: flex;
     flex-direction: column;
   }
-  .form-line-patrol .container-buttons ,#formFiltrado .container-buttons {
+
+  .form-line-patrol .container-buttons,
+  #formFiltrado .container-buttons {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
+
   #btnChangeInputFileImage::before {
     content: "Tomar imagen ";
   }
+
   #btnChangeInputFileImage::after {
     content: "\1F4F7";
   }
+
   #linkInfoImagenSelected::before {
     content: "Imagen capturada";
   }
+
   .container-card-item {
     display: block;
   }
+
   .table {
     display: none;
   }
 
-  
+
   #btnRegistrarLP {
     width: 100%;
   }
 
-  #btnGuardarFiltrado , #btnResetFiltrado{
+  #btnGuardarFiltrado,
+  #btnResetFiltrado {
     width: 100%;
   }
 
 
-  .card.movil{
+  .card.movil {
     border: 0;
   }
 
-  .container-buttons-listado{
+  .container-buttons-listado {
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -222,7 +238,7 @@ body {
 
   /* ! TABLE KAIZEN MOVIL*/
   .table.show {
-   
+
     display: flex;
 
     flex-direction: column;
@@ -232,73 +248,82 @@ body {
   .table.show .header-table {
     display: none !important;
   }
+
   .items-table {
     display: flex;
     flex-direction: column;
     gap: var(--Margin);
-}
-.items-table tr {
+  }
+
+  .items-table tr {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-bottom:3px solid var(--ColorSecundario);
-}
+    border-bottom: 3px solid var(--ColorSecundario);
+  }
 
-.items-table tr td {
+  .items-table tr td {
     display: flex;
-   flex-direction: row;    
-   gap: var(--Margin);
-   border: 0;
-   align-items: center;
-  
-}
+    flex-direction: row;
+    gap: var(--Margin);
+    border: 0;
+    align-items: center;
 
-.items-table tr td:nth-last-of-type(3) ,.items-table tr td:nth-last-of-type(5) {
-     grid-column: span 2;
-}
+  }
+
+  .items-table tr td:nth-last-of-type(3),
+  .items-table tr td:nth-last-of-type(5) {
+    grid-column: span 2;
+  }
 
 
-.items-table tr td:nth-last-of-type(1)::before{
+  .items-table tr td:nth-last-of-type(1)::before {
     content: "PDF: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(2)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(2)::before {
     content: "SEMANA: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(3)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(3)::before {
     content: "DESCRIPCION: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(4)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(4)::before {
     content: "DEPARTAMENTO: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(5)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(5)::before {
     content: "USUARIO: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(6)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(6)::before {
     content: "RELOJ: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
-.items-table tr td:nth-last-of-type(7)::before{
+
+  }
+
+  .items-table tr td:nth-last-of-type(7)::before {
     content: "PLANTA: ";
     color: var(--ColorSecundario);
     font-weight: bold;
-    
-}
+
+  }
 }
 
 /** LOADER DE CARGA*/
@@ -314,9 +339,9 @@ body {
   display: none;
   flex-direction: column;
   border-radius: 7px;
-  cursor:no-drop;
+  cursor: no-drop;
   z-index: 1056;
-  
+
 }
 
 .loader-container {
@@ -339,15 +364,17 @@ body {
   0% {
     width: 0%;
   }
+
   50% {
     width: 50%;
   }
+
   100% {
     width: 100%;
   }
 }
 
-.conatiner-loading-spinner{
+.conatiner-loading-spinner {
   padding: 10px;
   background-color: white;
   margin: auto;
@@ -359,6 +386,7 @@ body {
   border-radius: 7px;
   /*border-radius: 50%;*/
 }
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -372,8 +400,24 @@ body {
   0% {
     transform: rotate(0);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
+
+/* ANIMATIONS */
+@keyframes crecer_encoger {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
