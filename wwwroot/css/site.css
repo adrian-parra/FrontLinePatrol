@@ -192,6 +192,8 @@ body {
   .table {
     display: none;
   }
+
+  
   #btnRegistrarLP {
     width: 100%;
   }
@@ -217,6 +219,86 @@ body {
     justify-content: space-between;
     align-items: center;
   }
+
+  /* ! TABLE KAIZEN MOVIL*/
+  .table.show {
+   
+    display: flex;
+
+    flex-direction: column;
+    gap: var(--Margin);
+  }
+
+  .table.show .header-table {
+    display: none !important;
+  }
+  .items-table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--Margin);
+}
+.items-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom:3px solid var(--ColorSecundario);
+}
+
+.items-table tr td {
+    display: flex;
+   flex-direction: row;    
+   gap: var(--Margin);
+   border: 0;
+   align-items: center;
+  
+}
+
+.items-table tr td:nth-last-of-type(3) ,.items-table tr td:nth-last-of-type(5) {
+     grid-column: span 2;
+}
+
+
+.items-table tr td:nth-last-of-type(1)::before{
+    content: "PDF: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(2)::before{
+    content: "SEMANA: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(3)::before{
+    content: "DESCRIPCION: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(4)::before{
+    content: "DEPARTAMENTO: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(5)::before{
+    content: "USUARIO: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(6)::before{
+    content: "RELOJ: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
+.items-table tr td:nth-last-of-type(7)::before{
+    content: "PLANTA: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+    
+}
 }
 
 /** LOADER DE CARGA*/

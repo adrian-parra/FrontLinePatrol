@@ -15,36 +15,40 @@
     @*display:flex;*@border-radius: 50%;
         width: 25px;
         height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .container-sms {
-        @* background-color: red !important; *@
-        padding: var(--Padding);
+    @*background-color:red!important;*@padding: var(--Padding);
         padding-left: 0;
     }
+
     .container-sms p {
         margin: 0;
-        color:var(--ColorDanger);
+        color: var(--ColorDanger);
         font-weight: bold;
     }
+
     .conatainer-filter {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        @* background-color: red; *@
-        @* border: 1px solid var(--ColorSecundario); *@
-        padding: var(--Padding);
+    @*background-color:red;*@@*border:1pxsolidvar(--ColorSecundario);*@padding: var(--Padding);
         border-radius: var(--BorderRadius);
         background-color: rgba(0, 0, 0, .03);
     }
+
     .contador-k {
         display: flex;
         flex-direction: row;
-        gap:var(--Margin);
+        gap: var(--Margin);
         align-items: center;
         margin: 0;
     }
+
     .contador-k .valor-k {
         background-color: var(--ColorDanger);
         padding: 10px;
@@ -55,8 +59,9 @@
         align-items: center;
         justify-content: center;
         color: white;
-        
+
     }
+
     .contador-k p {
         margin: 0;
         font-weight: bold;
@@ -64,16 +69,21 @@
 
     .table {
         background-color: rgba(0, 0, 0, .03);
-        @* border: 2.5px solid black; *@
-        margin-top: var(--Margin);
-         border-radius: var(--BorderRadius);
-          padding: var(--Padding);
+    @*border:2.5pxsolidblack;*@margin-top: var(--Margin);
+        border-radius: var(--BorderRadius);
+        padding: var(--Padding);
+
+        
+        @* background-color: blue; *@
+
     }
+
     .container-contador-k {
         display: flex;
         flex-direction: row;
         gap: var(--Margin);
     }
+   
 </style>
 
 <div class="card movil">
@@ -144,13 +154,16 @@
                 <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
 
                 <div class="container-contador-k">
-                    <input class="form-control mr-sm-2" type="search" id="searchKaizen" placeholder="Buscar">
-                    <div class="contador-k"><p class="valor-k" id="valorKaizen">100</p><p>Kaizen</p></div>
+                    <input class="form-control mr-sm-2" type="search" id="searchKaizen" placeholder="Buscar por nombre Kaizen">
+                    <div class="contador-k">
+                        <p class="valor-k" id="valorKaizen">100</p>
+                        <p>Kaizen</p>
+                    </div>
                 </div>
             </div>
             @* <hr> *@
-            <table class="table">
-                <thead>
+            <table class="table show">
+                <thead class="header-table">
                     <tr>
                         <th>Planta</th>
                         <th>Id em.</th>
@@ -254,39 +267,36 @@
     var fechaFormateadaDos = fechaActual.toISOString().split('T')[0];
 
     // Establecer los valores por defecto en los campos de entrada
-    document.getElementById('fechaUno').value = fechaFormateadaDos;
-    document.getElementById('fechaDos').value = fechaFormateadaUno;
+    $('#fechaUno').value = fechaFormateadaDos;
+    $('#fechaDos').value = fechaFormateadaUno;
 
 
-
-
-
+    // EVENTO CLICK DE BTN FILTRAR PARA ABRIR MODAL DE FORM FILTRADO
     $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
 
-
-    $("#searchKaizen").addEventListener("input", (e)=>{
-        console.log("entro")
+    // EVENTO INPUT PARA INPUT DE BUSQUEDA POR NOMBRE KAIZEN
+    $("#searchKaizen").addEventListener("input", (e) => {
+        $('.container-loading').style = 'display:flex;'
         const searchTerm = event.target.value.toLowerCase();
 
-        filtrarKaizen(null , searchTerm)
+        filtrarKaizen(null, searchTerm)
+        $('.container-loading').style = 'display:none;'
 
     })
 
+    // EVENTO SUBMIT PARA FORM FILTRADO (APLICA EL FILTRADO DE LOS KAIZEN Y LOS MUESTRA EN LA TABLA)
     $('#formFiltrado').addEventListener('submit', (e) => {
         e.preventDefault();
         $(".container-loading").style = "display:flex;";
         var formData = new FormData(e.target);
 
-        @* console.log(formData.get("id_usuario")) *@
-
-    @* $(".container-items").innerHTML = data; *@
-            filtrarKaizen(formData.get("id_usuario"))
+        filtrarKaizen(formData.get("id_usuario"))
         $(".container-loading").style = "display:none;";
-
 
     })
 
 
+    // EVENTO CLICK EXPANDED EN TODA LA TABLE PARA PODER OBTENBER EL TARGET EN DONDE EL USUARIO DIO CLICK
     $(".table").addEventListener('click', (e) => {
         let tagNameClick = e.target.tagName.toLowerCase();
         let idClick = e.target.id;
@@ -304,14 +314,26 @@
         }
     })
 
+
+    // EVENTO SUBMIT DE FORM PRINCIPAL DONDE SE CONSULTA KAIZEN POR FECHA INICIO ,FECHA FIN Y LIDER
     $("#formConsultarKaizen").addEventListener('submit', async (e) => {
         e.preventDefault()
 
-        // MOSTRAR LOADER DE CARGA
-        $('.container-loading').style = 'display:flex;'
-
         // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
         const dataForm = new FormData(e.target)
+
+        getKaizen(dataForm)
+
+    })
+
+    /*
+        APARTADO DE FUNCIONES
+    */
+
+    // FUNCION PARA CONSULTAR KAIZEN 
+    const getKaizen = async (dataForm) => {
+        // MOSTRAR LOADER DE CARGA
+        $('.container-loading').style = 'display:flex;'
 
         const datosFilterResponse = await fetch('/Kaizen/Filter', {
             method: 'POST',
@@ -320,10 +342,6 @@
 
         const datosFilter = await datosFilterResponse.text();
 
-      
-
-
-        
 
         $('.container-loading').style = 'display:none;'
         // MOSTRAR DATOS EN TABLE HIDE
@@ -333,12 +351,12 @@
 
         const rowsLength = rows.length
 
-     
 
-        if(rowsLength == 1){
+
+        if (rowsLength == 1) {
             $(".container-sms").style = 'display:block;'
-             $('.container-table-data').style = 'display:none'
-        }else{
+            $('.container-table-data').style = 'display:none'
+        } else {
             $('.container-table-data').style = 'display:block'
             $("#valorKaizen").innerText = rowsLength - 1
             $(".container-sms").style = 'display:none;'
@@ -387,14 +405,17 @@
         $("#selectNombreUsuario").innerHTML = ""
         for (let i = 0; i < arrayUniqueNobreUsuariosKaizen.length; i++) {
             let elemento = arrayUniqueNobreUsuariosKaizen[i];
-            console.log($("#selectNombreUsuario"))
+
             // Hacer algo con cada elemento
             $("#selectNombreUsuario").innerHTML += `
               <option value="${elemento}">${elemento}</option>
             `
         }
+    }
 
-    })
+    let data = new FormData($("#formConsultarKaizen"))
+
+    getKaizen(data)
 
     // FUNCTION PARA SACAR EL NUMERO DE SEMANA ACTUAL DEL ANHO
     const getNumeroSemanaAnho = () => {
@@ -404,14 +425,14 @@
         const oneWeek = 1000 * 60 * 60 * 24 * 7;
         const weekNumber = Math.ceil(diff / oneWeek);
 
-    @* console.log("El número de semana actual es: " + weekNumber); *@
-    return weekNumber
+
+        return weekNumber
     }
 
 
     // FUNCTION PARA FILTRAR DATOS POR NOMBRE DE USUARIO
 
-    const filtrarKaizen = (nombreUsuario = null ,descripcionKaizen = null) => {
+    const filtrarKaizen = (nombreUsuario = null, descripcionKaizen = null) => {
         const table = document.querySelector('table');
         const rows = table.querySelectorAll('tr');
 
@@ -423,7 +444,7 @@
             const row = rows[i];
             const cells = row.querySelectorAll('td');
 
-            //console.log(cells[11].innerHTML)
+
 
             var textoEnlace = cells[11].innerHTML
 
@@ -434,7 +455,7 @@
             var finHref = textoEnlace.indexOf('"', inicioHref);
             var valorHref = textoEnlace.substring(inicioHref, finHref);
 
-            if(cells[5].innerText.toLowerCase().includes(descripcionKaizen) && descripcionKaizen != null){
+            if (cells[5].innerText.toLowerCase().includes(descripcionKaizen) && descripcionKaizen != null) {
                 contadorKaizen++;
 
                 let colorSemanaActualAnho = ''
