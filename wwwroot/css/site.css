@@ -173,8 +173,16 @@ body {
   gap: 10px;
 }
 
+#btnFiltrar::before {
+  content: 'Filtrar';
+  
+}
+
 /** RESPONSIVE DESIGN */
 @media (max-width: 600px) {
+  #btnFiltrar::before {
+    content: '';
+  }
   .form-line-patrol .container-formLP {
     display: flex;
     flex-direction: column;

@@ -26,8 +26,8 @@
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Planta">
                         <option disabled selected>Seleccionar planta</option>
                         <option value="MCH1">MCH1</option>
-                        <option selected value="MCH2">MCH2</option>
-                        <option value="MCH3">MCH3</option>
+                        <option value="MCH2">MCH2</option>
+                        <option selected value="MCH3">MCH3</option>
                     </select>
                 </div>
                 <div class="mb-2">
@@ -79,11 +79,56 @@
     document.getElementById('fecha1').value = fechaFormateadaDos;
     document.getElementById('fecha2').value = fechaFormateadaUno;
 
-    const backgroundColorGraficas = 'rgba(75, 192, 192, 0.2)'
+  
+
+
+    const getRandomColorManual = () => {
+        var colores = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FFA500", "#800080", "#FFC0CB", "#808080", "#8B0000", "#198754", "#006400", "#00008B", "#FFD700", "#FF8C00", "#4B0082", "#FF69B4", "#A9A9A9", " #000080", "#808000"];
+
+        // Generar un índice aleatorio
+        var indiceAleatorio = Math.floor(Math.random() * colores.length);
+
+        // Obtener el color aleatorio
+        return colores[indiceAleatorio];
+    }
+
+    var backgroundColorGraficas = getRandomColorManual();
+
+
+
 
     $('#formConsultarVoseos').addEventListener('submit', async (e) => {
         e.preventDefault()
-        // MOSTRAR LOADER DE CARGA
+
+        // var backgroundColorGraficas = getRandomColorManual();
+       
+
+        getGraficas()
+        
+
+    })
+
+    
+   
+
+    // Función para generar un color aleatorio
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+    @* return backgroundColorGraficas; *@
+    return backgroundColorGraficas;
+    }
+
+
+   
+
+const getGraficas = async ()=>{
+        backgroundColorGraficas = getRandomColorManual()
+
+         // MOSTRAR LOADER DE CARGA
         $('.container-loading').style = 'display:flex;'
 
         // LIMPIAR Y AGREGAR CANVAS EN CONTAINER
@@ -99,32 +144,19 @@
           `
 
         // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
-        const dataForm = new FormData(e.target)
+        // const dataForm = new FormData(e.target)
         // OBTENER DATOS FILTRADOS
-
-    @* const datosFilterResponse = await fetch('http://localhost:3000/api/voseo')
-            const datosFilter = await datosFilterResponse.text(); *@
-
-            let headersList = {
-                "Accept": "*/*",
-                "User-Agent": "Thunder Client (https://www.thunderclient.com)"
-            }
-
-    @* let datosFilterResponse = await fetch("http://172.30.73.72:9001/intranet/regresaVoceosCTS.php", {
-            method: "POST",
+        
+         const dataForm = new FormData($('#formConsultarVoseos'))
+        const datosFilterResponse = await fetch('/Voceo/Filter', {
+            method: 'POST',
             body: dataForm,
-            headers: headersList
-            }); *@
-
-         const datosFilterResponse = await fetch('/Voceo/Filter', {
-                method: 'POST',
-                body: dataForm,
-            });
+        });
 
         const datosFilter = await datosFilterResponse.text();
 
 
-        console.log(datosFilter)
+
 
         // MOSTRAR CANVAS PARA DIBUJAR GRÁFICAS
         $('.container-canvas').style = 'display:block;'
@@ -225,217 +257,531 @@
                             weight: 'bold'
                         },
                         clip: true,
-    @* opacity: 0.8, *@
-            offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: 'Distribución de Problemas por Hora',
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Número de problemas reportados por hora',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top'
-    },
-        tooltip: {
-        enabled: true,
-        mode: 'index',
-        intersect: false,
-        callbacks: {
-            label: function (context) {
-                return `Hora: ${context.label}, Problemas: ${context.raw}`;
-            }
-        }
-    }
-                },
-        responsive: true, // Hacer el gráfico responsive
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Horas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                autoSkip: false,
-                maxRotation: 0,
-                minRotation: 0
-            },
-            grid: {
-                display: false
-            }
-        },
-        y: {
-            beginAtZero: true,
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                precision: 0
-            },
-            grid: {
-                borderDash: [5, 5]
-            }
-        }
-    },
-        interaction: {
-        mode: 'index',
-        intersect: false
-    }
-            }, plugins: [ChartDataLabels]
-        });
 
-    // GRÁFICA LINEAL CONTEO DE PROBLEMAS POR FECHA
-    const fechas = Object.keys(problemaCountByDate);
-    const conteoProblemas = fechas.map(fecha => Object.values(problemaCountByDate[fecha]).reduce((acc, curr) => acc + curr, 0));
+                        offset: 4,
 
-    const ctxProblemasPorFecha = document.getElementById('chartProblemasPorFecha').getContext('2d');
-    new Chart(ctxProblemasPorFecha, {
-        type: 'bar',
-        data: {
-            labels: fechas,
-            datasets: [{
-                label: 'Problemas por Fecha',
-                data: conteoProblemas,
-                backgroundColor: fechas.map(() => getRandomColor()),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: true,
-                tension: 0.3,
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                pointBorderColor: 'rgba(75, 192, 192, 1)',
-                pointBorderWidth: 1,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                barPercentage: 0.8, // Para gráficos de barras
-                categoryPercentage: 0.9, // Para gráficos de barras 
-
-            }]
-        },
-        options: {
-
-            plugins: {
-                datalabels: {
-                    anchor: 'center',
-                    align: 'center',
-                    formatter: (value) => value,
-                    backgroundColor: 'white',
-                    borderRadius: 3,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    color: 'rgba(75, 192, 192, 1)',
-                    font: {
-                        weight: 'bold'
                     },
-                    clip: true,
-    @* opacity: 0.8, *@
-        offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: 'Distribución de Problemas por Fecha',
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Número de problemas reportados cada día',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top'
-    },
-        tooltip: {
-        enabled: true,
-        mode: 'index',
-        intersect: false,
-        callbacks: {
-            label: function (context) {
-                return `Fecha: ${context.label}, Problemas: ${context.raw}`;
-            }
-        }
-    }
+                    title: {
+                        display: true,
+                        text: 'Distribución de Problemas por Hora',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Número de problemas reportados por hora',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function (context) {
+                                return `Hora: ${context.label}, Problemas: ${context.raw}`;
+                            }
+                        }
+                    }
                 },
-        responsive: true, // Hacer el gráfico responsive
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Fechas',
-                font: {
-                    size: 14
+                responsive: true, // Hacer el gráfico responsive
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Horas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 0,
+                            minRotation: 0
+                        },
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Problemas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        },
+                        grid: {
+                            borderDash: [5, 5]
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
                 }
-            },
-            ticks: {
-                autoSkip: true,
-                maxTicksLimit: 10
-            }
-        },
-        y: {
-            beginAtZero: true,
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                precision: 0
-            }
-        }
-    },
-        interaction: {
-        mode: 'index',
-        intersect: false
-    }
             }, plugins: [ChartDataLabels]
         });
 
-    // GRÁFICA DE BARRAS CONTEO DE PROBLEMAS POR CADA HORA (UNA GRÁFICA POR HORA)
-    const chartsContainerHora = document.getElementById('chartsContainerHoras');
-    chartsContainerHora.innerHTML = '';
+        // GRÁFICA LINEAL CONTEO DE PROBLEMAS POR FECHA
+        const fechas = Object.keys(problemaCountByDate);
+        const conteoProblemas = fechas.map(fecha => Object.values(problemaCountByDate[fecha]).reduce((acc, curr) => acc + curr, 0));
 
-    Object.keys(problemaCountByHour).forEach(hora => {
-        const problemas = Object.keys(problemaCountByHour[hora]);
-        const counts = Object.values(problemaCountByHour[hora]);
+        const ctxProblemasPorFecha = document.getElementById('chartProblemasPorFecha').getContext('2d');
+        new Chart(ctxProblemasPorFecha, {
+            type: 'bar',
+            data: {
+                labels: fechas,
+                datasets: [{
+                    label: 'Problemas por Fecha',
+                    data: conteoProblemas,
+                    backgroundColor: fechas.map(() => getRandomColor()),
+                    borderColor: 'white',
+                    borderWidth: 1,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    barPercentage: 0.8, // Para gráficos de barras
+                    categoryPercentage: 0.9, // Para gráficos de barras 
 
-        const canvas = document.createElement('canvas');
-        canvas.width = 400;
-        canvas.height = 200;
-        chartsContainerHora.appendChild(canvas);
+                }]
+            },
+            options: {
 
-        const ctxChartDateHora = canvas.getContext('2d');
-        new Chart(ctxChartDateHora, {
+                plugins: {
+                    datalabels: {
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: (value) => value,
+                        backgroundColor: 'white',
+                        borderRadius: 3,
+                        borderColor: 'white',
+                        borderWidth: 1,
+                        color: 'rgba(75, 192, 192, 1)',
+                        font: {
+                            weight: 'bold'
+                        },
+                        clip: true,
+
+                        offset: 4,
+
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Problemas por Fecha',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Número de problemas reportados cada día',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function (context) {
+                                return `Fecha: ${context.label}, Problemas: ${context.raw}`;
+                            }
+                        }
+                    }
+                },
+                responsive: true, // Hacer el gráfico responsive
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Fechas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 10
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Problemas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }, plugins: [ChartDataLabels]
+        });
+
+        // GRÁFICA DE BARRAS CONTEO DE PROBLEMAS POR CADA HORA (UNA GRÁFICA POR HORA)
+        const chartsContainerHora = document.getElementById('chartsContainerHoras');
+        chartsContainerHora.innerHTML = '';
+
+        Object.keys(problemaCountByHour).forEach(hora => {
+            const problemas = Object.keys(problemaCountByHour[hora]);
+            const counts = Object.values(problemaCountByHour[hora]);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 200;
+            chartsContainerHora.appendChild(canvas);
+
+            const ctxChartDateHora = canvas.getContext('2d');
+            new Chart(ctxChartDateHora, {
+                type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
+                data: {
+                    labels: problemas, // Usamos los problemas como etiquetas del eje X
+                    datasets: [{
+                        label: `# de Problemas (${Number(hora)}:00 A ${Number(hora) + 1}:00)`,
+                        data: counts, // Contamos cada problema una vez
+                        backgroundColor: problemas.map(() => getRandomColor()), // Colores aleatorios para cada barra
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'center',
+                            align: 'center',
+                            formatter: (value) => value,
+                            backgroundColor: 'white',
+                            borderRadius: 3,
+                            borderColor: 'white',
+                            borderWidth: 1,
+                            color: 'rgba(75, 192, 192, 1)',
+                            font: {
+                                weight: 'bold'
+                            },
+                            clip: true,
+
+                            offset: 4,
+
+                        },
+                        title: {
+                            display: true,
+                            text: `Problemas Reportados entre ${Number(hora)}:00 y ${Number(hora) + 1}:00`,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        subtitle: {
+                            display: true,
+                            text: 'Distribución de problemas por hora',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            formatter: (value, context) => {
+                                return value;
+                            },
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    responsive: true, // Hacer el gráfico responsive
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Problemas',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true, // Comenzar el eje Y en cero
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Problemas',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                precision: 0 // Para que los valores sean enteros
+                            }
+                        }
+                    }
+                }
+            });
+
+        })
+
+
+
+        // GRÁFICAS DE BARRAS POR CADA FECHA
+        const chartsContainer = document.getElementById('chartsContainer');
+        chartsContainer.innerHTML = '';
+
+
+
+        Object.keys(problemaCountByDate).forEach(fecha => {
+            const problemas = Object.keys(problemaCountByDate[fecha]);
+            const counts = Object.values(problemaCountByDate[fecha]);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 200;
+            chartsContainer.appendChild(canvas);
+
+            const ctxChartDate = canvas.getContext('2d');
+            new Chart(ctxChartDate, {
+                type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
+                data: {
+                    labels: problemas, // Usamos los problemas como etiquetas del eje X
+                    datasets: [{
+                        label: `# de Problemas (${fecha})`,
+                        data: counts, // Contamos cada problema una vez
+                        backgroundColor: problemas.map(() => getRandomColor()), // Colores aleatorios para cada barra
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'center',
+                            align: 'center',
+                            formatter: (value) => value,
+                            backgroundColor: 'white',
+                            borderRadius: 3,
+                            borderColor: 'white',
+                            borderWidth: 1,
+                            color: 'rgba(75, 192, 192, 1)',
+                            font: {
+                                weight: 'bold'
+                            },
+                            clip: true,
+
+                            offset: 4,
+
+                        },
+                        title: {
+                            display: true,
+                            text: `Problemas Reportados el ${fecha}`,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        subtitle: {
+                            display: true,
+                            text: 'Distribución de problemas a través del día',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            formatter: (value, context) => {
+                                return value;
+                            },
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    responsive: true, // Hacer el gráfico responsive
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Problemas',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true, // Comenzar el eje Y en cero
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Problemas',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                precision: 0 // Para que los valores sean enteros
+                            }
+                        }
+                    }
+                }
+            });
+
+        })
+
+        // GRÁFICA DE BARRAS POR PROBLEMA
+        const problemas = Object.keys(problemaCount);
+        const countsProblemas = Object.values(problemaCount);
+        const lineas = Object.keys(lineaCount);
+        const countsLineas = Object.values(lineaCount);
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
             type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
             data: {
                 labels: problemas, // Usamos los problemas como etiquetas del eje X
                 datasets: [{
-                    label: `# de Problemas (${Number(hora)}:00 A ${Number(hora) + 1}:00)`,
-                    data: counts, // Contamos cada problema una vez
-                    backgroundColor: problemas.map(() => getRandomColor()), // Colores aleatorios para cada barra
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    label: '# de Problemas',
+                    data: countsProblemas, // Contamos cada problema una vez
+                    backgroundColor: problemas.map(() => getRandomColor()),
+                    borderColor: 'white',
+                    borderWidth: 1,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    barPercentage: 0.8, // Para gráficos de barras
+                    categoryPercentage: 0.9, // Para gráficos de barras 
+                }]
+            },
+            options: {
+                plugins: {
+                    datalabels: {
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: (value) => value,
+                        backgroundColor: 'white',
+                        borderRadius: 3,
+                        borderColor: 'white',
+                        borderWidth: 1,
+                        color: 'rgba(75, 192, 192, 1)',
+                        font: {
+                            weight: 'bold'
+                        },
+                        clip: true,
+
+                        offset: 4,
+
+                    },
+                    title: {
+                        display: true,
+                        text: 'Problemas Más Comunes',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Distribución Temporal de Problemas',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        font: {
+                            size: 12
+                        },
+                        formatter: (value, ctx) => {
+                            const label = ctx.chart.data.labels[ctx.dataIndex];
+                            return `${label}: ${value}`;
+                        }
+                    }
+                },
+                responsive: true, // Hacer el gráfico responsive
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Problemas',
+                            font: {
+                                size: 14
+                            }
+                        }, ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 10
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Problemas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                }
+            }
+        });
+
+
+        // Crear un gráfico con Chart.js
+        const ctxLineas = document.getElementById('chartLineas').getContext('2d');
+        new Chart(ctxLineas, {
+            type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
+            data: {
+                labels: lineas, // Usamos las líneas como etiquetas del eje X
+                datasets: [{
+                    label: '# de Lineas',
+                    data: countsLineas, // Contamos cada línea una vez
+                    backgroundColor: lineas.map(() => getRandomColor()), // Colores aleatorios para cada barra
+                    borderColor: 'white',
                     borderWidth: 1
                 }]
             },
@@ -447,407 +793,96 @@
                         formatter: (value) => value,
                         backgroundColor: 'white',
                         borderRadius: 3,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'white',
                         borderWidth: 1,
                         color: 'rgba(75, 192, 192, 1)',
                         font: {
                             weight: 'bold'
                         },
                         clip: true,
-    @* opacity: 0.8, *@
-            offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: `Problemas Reportados entre ${Number(hora)}:00 y ${Number(hora) + 1}:00`,
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Distribución de problemas por hora',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top'
-    },
-        datalabels: {
-        anchor: 'end',
-        align: 'end',
-        formatter: (value, context) => {
-            return value;
-        },
-        font: {
-            size: 12
-        }
-    }
-                },
-        responsive: true, // Hacer el gráfico responsive
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Problemas',
-                font: {
-                    size: 14
-                }
-            }
-        },
-        y: {
-            beginAtZero: true, // Comenzar el eje Y en cero
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                precision: 0 // Para que los valores sean enteros
-            }
-        }
-    }
-            }
-        });
 
-    })
+                        offset: 4,
 
-
-
-    // GRÁFICAS DE BARRAS POR CADA FECHA
-    const chartsContainer = document.getElementById('chartsContainer');
-    chartsContainer.innerHTML = '';
-
-
-
-    Object.keys(problemaCountByDate).forEach(fecha => {
-        const problemas = Object.keys(problemaCountByDate[fecha]);
-        const counts = Object.values(problemaCountByDate[fecha]);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = 400;
-        canvas.height = 200;
-        chartsContainer.appendChild(canvas);
-
-        const ctxChartDate = canvas.getContext('2d');
-        new Chart(ctxChartDate, {
-            type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
-            data: {
-                labels: problemas, // Usamos los problemas como etiquetas del eje X
-                datasets: [{
-                    label: `# de Problemas (${fecha})`,
-                    data: counts, // Contamos cada problema una vez
-                    backgroundColor: problemas.map(() => getRandomColor()), // Colores aleatorios para cada barra
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                plugins: {
+                    },
+                    title: {
+                        display: true,
+                        text: 'Número de Problemas por Línea',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    subtitle: {
+                        display: true,
+                        text: 'Distribución de problemas a través de diferentes líneas',
+                        font: {
+                            size: 12
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            padding: 10 // Añadir espacio entre elementos de la leyenda
+                        }
+                    },
                     datalabels: {
-                        anchor: 'center',
-                        align: 'center',
-                        formatter: (value) => value,
-                        backgroundColor: 'white',
-                        borderRadius: 3,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        color: 'rgba(75, 192, 192, 1)',
-                        font: {
-                            weight: 'bold'
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: (value, context) => {
+                            return value;
                         },
-                        clip: true,
-    @* opacity: 0.8, *@
-            offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: `Problemas Reportados el ${fecha}`,
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Distribución de problemas a través del día',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top'
-    },
-        datalabels: {
-        anchor: 'end',
-        align: 'end',
-        formatter: (value, context) => {
-            return value;
-        },
-        font: {
-            size: 12
-        }
-    }
+                        font: {
+                            size: 12
+                        }
+                    }
                 },
-        responsive: true, // Hacer el gráfico responsive
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Problemas',
-                font: {
-                    size: 14
-                }
-            }
-        },
-        y: {
-            beginAtZero: true, // Comenzar el eje Y en cero
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                precision: 0 // Para que los valores sean enteros
-            }
-        }
-    }
-            }
-        });
+                responsive: true, // Hacer el gráfico responsive
+    
 
-    })
-
-    // GRÁFICA DE BARRAS POR PROBLEMA
-    const problemas = Object.keys(problemaCount);
-    const countsProblemas = Object.values(problemaCount);
-    const lineas = Object.keys(lineaCount);
-    const countsLineas = Object.values(lineaCount);
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
-        data: {
-            labels: problemas, // Usamos los problemas como etiquetas del eje X
-            datasets: [{
-                label: '# de Problemas',
-                data: countsProblemas, // Contamos cada problema una vez
-                backgroundColor: problemas.map(() => getRandomColor()),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: true,
-                tension: 0.3,
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-                pointBorderColor: 'rgba(75, 192, 192, 1)',
-                pointBorderWidth: 1,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                barPercentage: 0.8, // Para gráficos de barras
-                categoryPercentage: 0.9, // Para gráficos de barras 
-            }]
-        },
-        options: {
-            plugins: {
-                datalabels: {
-                    anchor: 'center',
-                    align: 'center',
-                    formatter: (value) => value,
-                    backgroundColor: 'white',
-                    borderRadius: 3,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    color: 'rgba(75, 192, 192, 1)',
+            scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Líneas',
                     font: {
-                        weight: 'bold'
-                    },
-                    clip: true,
-    @* opacity: 0.8, *@
-        offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: 'Problemas Más Comunes',
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Distribución Temporal de Problemas',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top'
-    },
-
-        datalabels: {
-        display: true,
-        color: '#fff',
-        font: {
-            size: 12
-        },
-        formatter: (value, ctx) => {
-            const label = ctx.chart.data.labels[ctx.dataIndex];
-            return `${label}: ${value}`;
-        }
-    }
-            },
-        responsive: true, // Hacer el gráfico responsive
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Problemas',
-                font: {
-                    size: 14
-                }
-            }, ticks: {
-                autoSkip: true,
-                maxTicksLimit: 10
-            }
-        },
-        y: {
-            beginAtZero: true,
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
+                        size: 14
+                    }
                 }
             },
-            ticks: {
-                precision: 0
-            }
-        }
-    },
-        interaction: {
-        mode: 'index',
-        intersect: false
-    }
-        }
-    });
-
-
-    // Crear un gráfico con Chart.js
-    const ctxLineas = document.getElementById('chartLineas').getContext('2d');
-    new Chart(ctxLineas, {
-        type: 'bar', // Tipo de gráfico: 'bar', 'line', 'pie', etc.
-        data: {
-            labels: lineas, // Usamos las líneas como etiquetas del eje X
-            datasets: [{
-                label: '# de Lineas',
-                data: countsLineas, // Contamos cada línea una vez
-                backgroundColor: lineas.map(() => getRandomColor()), // Colores aleatorios para cada barra
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            plugins: {
-                datalabels: {
-                    anchor: 'center',
-                    align: 'center',
-                    formatter: (value) => value,
-                    backgroundColor: 'white',
-                    borderRadius: 3,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    color: 'rgba(75, 192, 192, 1)',
+            y: {
+                beginAtZero: true, // Comenzar el eje Y en cero
+                title: {
+                    display: true,
+                    text: 'Cantidad de Problemas',
                     font: {
-                        weight: 'bold'
-                    },
-                    clip: true,
-    @* opacity: 0.8, *@
-        offset: 4,
-    @* rotation: 45 *@
-    },
-        title: {
-        display: true,
-        text: 'Número de Problemas por Línea',
-        font: {
-            size: 16
-        }
-    },
-        subtitle: {
-        display: true,
-        text: 'Distribución de problemas a través de diferentes líneas',
-        font: {
-            size: 12
-        }
-    },
-        legend: {
-        display: true,
-        position: 'top',
-        labels: {
-            padding: 10 // Añadir espacio entre elementos de la leyenda
-        }
-    },
-        datalabels: {
-        anchor: 'end',
-        align: 'end',
-        formatter: (value, context) => {
-            return value;
-        },
-        font: {
-            size: 12
-        }
-    }
-            },
-        responsive: true, // Hacer el gráfico responsive
-    @* maintainAspectRatio: false, // Permitir que el gráfico se ajuste al contenedor *@
-
-        scales: {
-        x: {
-            title: {
-                display: true,
-                text: 'Líneas',
-                font: {
-                    size: 14
+                        size: 14
+                    }
+                },
+                ticks: {
+                    precision: 0 // Para que los valores sean enteros
                 }
             }
-        },
-        y: {
-            beginAtZero: true, // Comenzar el eje Y en cero
-            title: {
-                display: true,
-                text: 'Cantidad de Problemas',
-                font: {
-                    size: 14
-                }
-            },
-            ticks: {
-                precision: 0 // Para que los valores sean enteros
-            }
         }
-    }
     }
 });
 
-    // Función para generar un color aleatorio
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-    @* return backgroundColorGraficas; *@
-    return backgroundColorGraficas;
-    }
+  
+
+    
 
     // OCULTAR LOADING DE CARGA
     $('.container-loading').style = 'display:none;'
 
+    }
 
-    })
+
+
+     document.addEventListener("DOMContentLoaded", async function() {
+        // Tu código aquí
+        
+        await getGraficas()
+    });
+
+    
+ 
 </script>
