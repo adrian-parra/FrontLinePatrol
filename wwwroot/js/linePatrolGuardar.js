@@ -30,10 +30,18 @@ export const formSubmitHandler = async (e) => {
                 text: 'Patrullaje registrado',
                 icon: 'success'
             }).then(() => {
-                window.location.href = '../';
+                // window.location.href = '../';
+
             });
 
-            e.target.reset();
+           // e.target.reset();
+
+            $('#floatingTextarea2').value = ""
+            $("#formFileSm").value = ""
+            $("#selectEstacion").selectedIndex = 0;
+            $("#linkInfoImagenSelected").style.display = "none"
+            
+
         } else { // RESPUESTA DEL SERVER ERROR
 
             const errorMessage = await response.text();
