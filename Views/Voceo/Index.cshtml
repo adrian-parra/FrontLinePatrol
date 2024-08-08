@@ -23,15 +23,17 @@
 
                 <div class="mb-2">
                     <label class="form-label">Planta</label>
-                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Planta">
+                    <select class="form-select form-select-sm" id="planta" aria-label=".form-select-sm example"
+                        name="Planta">
                         <option disabled selected>Seleccionar planta</option>
                         <option value="MCH1">MCH1</option>
                         <option value="MCH2">MCH2</option>
                         <option selected value="MCH3">MCH3</option>
+                        <option value="TODAS">TODAS</option>
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Estación</label>
+                    <label class="form-label">Departamento</label>
                     <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="Departamento">
                         <option disabled selected>Seleccionar departamento</option>
                         <option selected value="SISTEMAS">SISTEMAS</option>
@@ -79,7 +81,7 @@
     document.getElementById('fecha1').value = fechaFormateadaDos;
     document.getElementById('fecha2').value = fechaFormateadaUno;
 
-  
+
 
 
     const getRandomColorManual = () => {
@@ -101,15 +103,15 @@
         e.preventDefault()
 
         // var backgroundColorGraficas = getRandomColorManual();
-       
+
 
         getGraficas()
-        
+
 
     })
 
-    
-   
+
+
 
     // Función para generar un color aleatorio
     function getRandomColor() {
@@ -123,16 +125,131 @@
     }
 
 
-   
 
-const getGraficas = async ()=>{
+
+    const getGraficas = async () => {
         backgroundColorGraficas = getRandomColorManual()
 
-         // MOSTRAR LOADER DE CARGA
+        // MOSTRAR LOADER DE CARGA
         $('.container-loading').style = 'display:flex;'
 
         // LIMPIAR Y AGREGAR CANVAS EN CONTAINER
         $('.container-canvas').innerHTML = ''
+        $('.container-canvas').innerHTML = `
+        <hr>
+         <canvas id="chartPorPlanta" width="400" height="200"></canvas>
+          `
+
+        const dataForm = new FormData($('#formConsultarVoseos'))
+
+        // PORCION DE CODIGO QUE SOLO SE EJECUTARA CUANDO SE SELECCIONE TODAS LAS PLANTAS
+        if ($("#planta").value == "TODAS") {
+            $
+            dataForm.set('Planta', 'MCH3');
+            const datosFilterResponseMch3 = await fetch('/Voceo/Filter', {
+                method: 'POST',
+                body: dataForm,
+            });
+            const datosFilterMch3 = await datosFilterResponseMch3.text();
+
+            // MOSTRAR CANVAS PARA DIBUJAR GRÁFICAS
+            $('.container-canvas').style = 'display:block;'
+            // MOSTRAR DATOS EN TABLE HIDE
+            $(".container-table-datos").innerHTML = datosFilterMch3;
+            // OBTENER DATOS DE TABLE Y MOSTRAR GRÁFICAS CON CHART JS *
+            let table = document.querySelector('table');
+            let rows = table.querySelectorAll('tr');
+
+            var countPlanta3 = rows.length - 1
+
+
+
+            dataForm.set('Planta', 'MCH2');
+            const datosFilterResponseMch2 = await fetch('/Voceo/Filter', {
+                method: 'POST',
+                body: dataForm,
+            });
+            const datosFilterMch2 = await datosFilterResponseMch2.text();
+
+
+            // MOSTRAR DATOS EN TABLE HIDE
+            $(".container-table-datos").innerHTML = datosFilterMch2;
+            // OBTENER DATOS DE TABLE Y MOSTRAR GRÁFICAS CON CHART JS *
+            table = document.querySelector('table');
+            rows = table.querySelectorAll('tr');
+
+            var countPlanta2 = rows.length - 1
+
+
+
+
+            dataForm.set('Planta', 'MCH1');
+            const datosFilterResponseMch1 = await fetch('/Voceo/Filter', {
+                method: 'POST',
+                body: dataForm,
+            });
+            const datosFilterMch1 = await datosFilterResponseMch1.text();
+
+            // MOSTRAR DATOS EN TABLE HIDE
+            $(".container-table-datos").innerHTML = datosFilterMch1;
+            // OBTENER DATOS DE TABLE Y MOSTRAR GRÁFICAS CON CHART JS *
+            table = document.querySelector('table');
+            rows = table.querySelectorAll('tr');
+
+            var countPlanta1 = rows.length - 1
+
+
+
+
+            const labels = ['MOCHIS 1', 'MOCHIS 2', 'MOCHIS 3'];
+            const data = [countPlanta1, countPlanta2, countPlanta3];
+
+            const ctx = document.getElementById('chartPorPlanta').getContext('2d');
+            const miGrafico = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cantidad',
+                        data: data,
+                        backgroundColor: labels.map(() => getRandomColor()),
+                       
+                        @* borderColor: 'rgba(75, 192, 192, 1)', *@
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        datalabels: {
+                            anchor: 'center',
+                        align: 'center',
+                        formatter: (value) => value,
+                        backgroundColor: 'white',
+                        borderRadius: 3,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        color: 'rgba(75, 192, 192, 1)',
+                        font: {
+                            weight: 'bold'
+                        },
+                        clip: true,
+
+                        offset: 4,
+                        }
+                    }
+                }, plugins: [ChartDataLabels]
+            });
+
+            $('.container-loading').style = 'display:none;'
+            return false
+        }
+
         $('.container-canvas').innerHTML = `
         <hr>
         <canvas id="myChart" width="400" height="200"></canvas>
@@ -143,15 +260,15 @@ const getGraficas = async ()=>{
         <div id="chartsContainerHoras"></div>
           `
 
-        // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
-        // const dataForm = new FormData(e.target)
-        // OBTENER DATOS FILTRADOS
-        
-         const dataForm = new FormData($('#formConsultarVoseos'))
+
+
+
         const datosFilterResponse = await fetch('/Voceo/Filter', {
             method: 'POST',
             body: dataForm,
         });
+
+
 
         const datosFilter = await datosFilterResponse.text();
 
@@ -837,52 +954,52 @@ const getGraficas = async ()=>{
                     }
                 },
                 responsive: true, // Hacer el gráfico responsive
-    
 
-            scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Líneas',
-                    font: {
-                        size: 14
+
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Líneas',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true, // Comenzar el eje Y en cero
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Problemas',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        ticks: {
+                            precision: 0 // Para que los valores sean enteros
+                        }
                     }
-                }
-            },
-            y: {
-                beginAtZero: true, // Comenzar el eje Y en cero
-                title: {
-                    display: true,
-                    text: 'Cantidad de Problemas',
-                    font: {
-                        size: 14
-                    }
-                },
-                ticks: {
-                    precision: 0 // Para que los valores sean enteros
                 }
             }
-        }
-    }
-});
+        });
 
-  
 
-    
 
-    // OCULTAR LOADING DE CARGA
-    $('.container-loading').style = 'display:none;'
+
+
+        // OCULTAR LOADING DE CARGA
+        $('.container-loading').style = 'display:none;'
 
     }
 
 
 
-     document.addEventListener("DOMContentLoaded", async function() {
+    document.addEventListener("DOMContentLoaded", async function () {
         // Tu código aquí
-        
+
         await getGraficas()
     });
 
-    
- 
+
+
 </script>
