@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+
+    .scaner {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    #msg {
+        display: none;
+        transition: .3s all;
+        opacity: 0;
+        color: var(--ColorWarning);
+        font-weight: bold;
+    }
+    #codigoBarrasValue:not(:focus) + #msg {
+         
+        opacity: 1;
+    }
+
+</style>
+
+<div class="card movil scaner">
+    <div class="card-header">
+        <h4>Escanea el código de barras</h4>
+    </div>
+    <div class="card-body">
+
+        <div id="formEjecutarComando">
+            <div class="container-form-cv">
+                @* <div class="mb-2">
+                <label class="form-label">Comando</label>
+                <input type="text" class="form-control form-control-sm" name="comando">
+                </div> *@
+                <input type="text" class="form-control form-control-sm" id="codigoBarrasValue" placeholder="Escanea aquí...">
+                <p id="msg"></p>
+            </div>
+
+            <div class="container-buttons">
+                @* <button type="submit" class="btn btn-success btn-sm">Consultar estado</button> *@
+               
+                
+            </div>
+
+        </div>
+
+        <div class="container-respuesta">
+            <hr>
+            <div class="respuesta">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    window.addEventListener('load', function() {
+            document.getElementById('codigoBarrasValue').focus();
+            document.querySelector("#msg").textContent  = "Ingrese el cursor en el campo de texto."
+             document.querySelector("#msg").style.display = "block";
+        });
+
+    document.querySelector("#codigoBarrasValue").addEventListener('keypress', (e) => {
+     
+         if (e.key === 'Enter') {
+                // Aquí puedes manejar el evento cuando se presiona Enter
+                const codigoBarras = e.target.value;
+                e.target.value = ""
+                console.log('Código de barras ingresado:', codigoBarras);
+                // Puedes agregar más lógica aquí, como enviar el valor a un servidor o procesarlo
+            }
+    })
+
+    document.querySelector('#codigoBarrasValue').addEventListener('blur' , ()=> {
+         console.log('El input ha perdido el foco.');
+        // document.querySelector("#msg").textContent  = "Ingrese cursor en el campo de texto."
+    })
+
+    document.querySelector('#codigoBarrasValue').addEventListener('focus' , ()=> {
+         console.log('El input ha iniciado focus.');
+            document.getElementById('codigoBarrasValue').value = "";
+          
+    })  
+</script>
