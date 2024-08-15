@@ -5,7 +5,7 @@
 <style>
 
     .scaner {
-        max-width: 600px;
+        max-width: 700px;
         margin: auto;
     }
 
@@ -15,17 +15,42 @@
         opacity: 0;
         color: var(--ColorWarning);
         font-weight: bold;
+        margin: 0;
+    }
+
+    #codigoBarrasValue {
+        height: 80px;
+        font-size: 2rem;
+        text-align: center;
     }
     #codigoBarrasValue:not(:focus) + #msg {
          
         opacity: 1;
     }
 
+    .container-respuesta {
+       max-width: 9%00px;
+       margin: auto;
+    }
+
+    .container-respuesta .respuesta {
+        display: none;
+        
+    }
+    .container-respuesta .respuesta img {
+        object-fit: cover;
+        width: 100%;
+        @* border: 2px solid #DEE2E6; *@
+    }
+
+    
+
 </style>
 
 <div class="card movil scaner">
     <div class="card-header">
         <h4>Escanea el código de barras</h4>
+        
     </div>
     <div class="card-body">
 
@@ -47,15 +72,31 @@
 
         </div>
 
-        <div class="container-respuesta">
-            <hr>
-            <div class="respuesta">
-
-            </div>
-        </div>
+        
     </div>
 
+    
+
 </div>
+
+<br>
+
+<div class="card movil container-respuesta">
+
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;" class="card-header">
+                 <h4>Imagen</h4>
+                 <i><img style="cursor: pointer;" width="30" height="30" src="/images/general/871.png" alt="" srcset=""></i>
+            </div>
+
+            <div class="card-body">
+                @* <hr> *@
+            <div class="respuesta">
+                @* <label>Imagen defecto</label> *@
+                <img src="" alt="" srcset="" id="imgDefecto">
+            </div>
+            </div>
+            
+        </div>
 
 <script>
 
@@ -63,6 +104,8 @@
             document.getElementById('codigoBarrasValue').focus();
             document.querySelector("#msg").textContent  = "Ingrese el cursor en el campo de texto."
              document.querySelector("#msg").style.display = "block";
+             // Llama a la función con la ruta de la imagen que deseas consultar
+//obtenerImagen();
         });
 
     document.querySelector("#codigoBarrasValue").addEventListener('keypress', (e) => {
@@ -71,6 +114,7 @@
                 // Aquí puedes manejar el evento cuando se presiona Enter
                 const codigoBarras = e.target.value;
                 e.target.value = ""
+                obtenerImagen(codigoBarras + ".png")
                 console.log('Código de barras ingresado:', codigoBarras);
                 // Puedes agregar más lógica aquí, como enviar el valor a un servidor o procesarlo
             }
@@ -86,4 +130,39 @@
             document.getElementById('codigoBarrasValue').value = "";
           
     })  
+
+    async function obtenerImagen(nombreImagen) {
+    try {
+        console.log(nombreImagen)
+        let formData = new FormData();
+
+        formData.append('valor', nombreImagen);
+        const response = await fetch('/Prueba/ConsultarImagen', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al consultar la imagen: ' + response.statusText);
+        }
+
+        const blob = await response.blob(); // Obtiene la imagen como un blob
+        const url = URL.createObjectURL(blob); // Crea una URL para el blob
+
+        // Muestra la imagen en un elemento <img>
+       // const imgElement = document.createElement('img');
+       // imgElement.src = url;
+       // document.body.appendChild(imgElement); // Agrega la imagen al cuerpo del documento
+
+        document.querySelector("#imgDefecto").src = url
+
+        document.querySelector(".container-respuesta .respuesta").style.display = "block"
+        
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
 </script>
