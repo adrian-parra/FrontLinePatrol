@@ -5,6 +5,9 @@ const undoButton = wrapper.querySelector("[data-action=undo]");
 const savePNGButton = wrapper.querySelector("[data-action=save-png]");
 const saveJPGButton = wrapper.querySelector("[data-action=save-jpg]");
 const saveSVGButton = wrapper.querySelector("[data-action=save-svg]");
+
+const btnGuardarFirma = document.querySelector("#btnGuardarFirma");
+
 const canvas = wrapper.querySelector("canvas");
 const signaturePad = new SignaturePad(canvas, {
   // It's Necessary to use an opaque color when saving image as JPEG;
@@ -39,6 +42,51 @@ function resizeCanvas() {
 window.onresize = resizeCanvas;
 resizeCanvas();
 
+btnGuardarFirma.addEventListener('click', async ()=>{
+  if(signaturePad.isEmpty()){
+    alert("Dibuja firma")
+    return false
+  }
+
+    document.querySelector('.container-loading').style = 'display:flex;'
+  const dataURL = signaturePad.toDataURL("image/png");
+
+  const blob =  dataURLToBlob(dataURL);
+
+
+  const file = new File([blob], 'firma.png', { type: 'image/png' });
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+//    fetch('/Signature/SubirImagen', {
+//     method: 'POST',
+//     body: formData
+// })
+
+const datosResponse = await fetch('/Signature/SubirImagen', {
+ method: 'POST',
+ body: formData,
+});
+
+const datos = await datosResponse.text();
+
+
+  console.log(datos)
+
+  document.querySelector('.container-loading').style = 'display:none;'
+
+  Swal.fire({
+    text: 'La firma se ha guardado exitosamente.',
+    icon: 'success'
+})
+
+
+})
+
+
+
+
 function download(dataURL, filename) {
   const blob = dataURLToBlob(dataURL);
   const url = window.URL.createObjectURL(blob);
@@ -71,6 +119,7 @@ function dataURLToBlob(dataURL) {
   return new Blob([uInt8Array], { type: contentType });
 }
 
+
 clearButton.addEventListener("click", () => {
   signaturePad.clear();
 });
@@ -82,26 +131,65 @@ undoButton.addEventListener("click", () => {
     data.pop(); // remove the last dot or line
     signaturePad.fromData(data);
   }
+
+  
 });
 
-changeColorButton.addEventListener("click", () => {
-  const r = Math.round(Math.random() * 255);
-  const g = Math.round(Math.random() * 255);
-  const b = Math.round(Math.random() * 255);
-  const color = "rgb(" + r + "," + g + "," + b +")";
 
-  signaturePad.penColor = color;
-});
+// ! SE DESHABILITO EN EL HTML
+// changeColorButton.addEventListener("click", () => {
+//   const r = Math.round(Math.random() * 255);
+//   const g = Math.round(Math.random() * 255);
+//   const b = Math.round(Math.random() * 255);
+//   const color = "rgb(" + r + "," + g + "," + b +")";
 
-savePNGButton.addEventListener("click", () => {
+//   signaturePad.penColor = color;
+// });
+
+savePNGButton.addEventListener("click",async () => {
   if (signaturePad.isEmpty()) {
     alert("Pon tu firma!!!");
   } else {
   
-    $file = "upload/signature.png";
-   const dataURL = signaturePad.toDataFile();
-   // const dataURL = signaturePad.toDataURL();
-   download(file="upload", "signature.png");
+    //$file = "upload/signature.png";
+   //const dataURL = signaturePad.toDataFile();
+
+  // console.log(dataURL)
+   const dataURL = signaturePad.toDataURL("image/png");
+
+   const blob =  dataURLToBlob(dataURL);
+
+
+   const file = new File([blob], 'firma.png', { type: 'image/png' });
+
+   const formData = new FormData();
+   formData.append('image', file);
+
+//    fetch('/Signature/SubirImagen', {
+//     method: 'POST',
+//     body: formData
+// })
+
+const datosResponse = await fetch('/Signature/SubirImagen', {
+  method: 'POST',
+  body: formData,
+});
+
+const datos = await datosResponse.text();
+
+
+   console.log(datos)
+
+
+   //console.log(dataURL)
+
+  //  const link = document.createElement('a');
+  //   link.href = dataURL;
+  //   link.download = 'firma.png'; // Nombre del archivo
+  //   document.body.appendChild(link);
+  //   link.click(); // Simula un clic en el enlace para iniciar la descarga
+  //   document.body.removeChild(link);
+   //download(file="upload", "signature.png");
   }
 });
 
