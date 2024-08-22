@@ -10,6 +10,7 @@
             <th>Antes</th>
             <th>Después</th>
             <th>Comentario</th>
+            <th>Responsable</th>
             <th>Fecha</th>
             <th>Estado</th>
             <th></th>
@@ -22,7 +23,7 @@
           @foreach (var item in Model)
           {
             <tr>
-              <td>@item.id_planta</td>
+              <td>@item.id_planta?.ToUpper()</td>
               <td>@item.id_linea</td>
               <td>@item.id_estacion</td>
               <td><img  src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
@@ -40,6 +41,11 @@
               <td style="max-width: 300px;">
                 <p class="card-text-small" title="@item.comentario">
                   @item.comentario
+                </p>
+              </td>
+              <td style="max-width: 150px;">
+                <p  class="card-text-small" title="@item.responsable">
+                  @item.responsable
                 </p>
               </td>
               <td>
@@ -111,6 +117,8 @@
                 <p class="right">@item.id_linea</p>
                 <p>Estación:</p>
                 <p class="right">@item.id_estacion</p>
+                <p>Responsable</p>
+                <p class="right">@item.responsable</p>
                 <p>Estado:</p>
                 @if (item.estado != null)
                 {
@@ -120,8 +128,11 @@
 
                 }
 
+                
+
               </div>
               <hr>
+              
               <p>Comentario:</p>
               <p class="card-text">
                 @item.comentario

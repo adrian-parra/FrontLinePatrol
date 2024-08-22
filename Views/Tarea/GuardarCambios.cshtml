@@ -4,6 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .card {
+        max-width: 900px;
+        margin: auto;
+    }
+</style>
+
 
 <div class="card movil">
     <div class="card-header">
@@ -76,7 +83,8 @@
                         <option value="Embarques">Embarques</option>
                         <option value="Comunicacion">Comunicacion</option>
                         <option value="Clips 2">Clips 2</option>
-                        <option value="torque">torque</option>
+                        <option value="torque">Torque</option>
+                        <option value="dockaudit">Dockaudit</option>
 
 
                         <option value="Otra">Otra</option>
@@ -89,6 +97,10 @@
                             style="height: 100px" name="comentario"></textarea>
                         <label for="floatingTextarea2">Comentario u observación</label>
                     </div>
+                </div>
+                <div class="mb-2">
+                <label class="form-label">Responsable</label>
+                <input type="text" class="form-control form-control-sm" name="responsable" placeholder="Ingrese persona responsable">
                 </div>
             </div>
 

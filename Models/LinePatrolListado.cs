@@ -6,6 +6,8 @@ public class LinePatrolListado {
     public string id_estacion { get; set; }
     public string? path_imagen { get; set; }
     public string? comentario { get; set; }
+
+    public string? responsable { get; set; }
     public string? persona_libera { get; set; }
     public string? path_imagen_after { get; set; }
     public bool? estado {get; set;}

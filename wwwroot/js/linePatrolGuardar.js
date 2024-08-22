@@ -48,6 +48,10 @@ export const formSubmitHandler = async (e) => {
         errores.push(iconError + "El campo <span> comentario </span> no puede estar vacío.");
     }
 
+    if (formData.get("responsable") === "") {
+        errores.push(iconError + "El campo <span> responsable </span> no puede estar vacío.");
+    }
+
 
     if (errores.length > 0) {
         swal.fire({
@@ -59,7 +63,9 @@ export const formSubmitHandler = async (e) => {
 
         return false
     } 
-   
+    
+
+    console.log(formData.get("responsable"))
 
 
 

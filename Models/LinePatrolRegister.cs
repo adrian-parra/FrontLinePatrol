@@ -7,4 +7,6 @@ public class LinePatrolRegister {
     public IFormFile imagen {get;set;}
     public string? path_imagen { get; set; }
     public string? comentario { get; set; }
+
+    public string? responsable { get; set; }
 }
