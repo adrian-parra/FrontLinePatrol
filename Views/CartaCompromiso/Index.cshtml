@@ -1,0 +1,229 @@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .form-carta-compromiso .container-step1 .container-datos {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .hidden {
+        @*display:none;*@transition: .3s all;
+        opacity: 0;
+        position: fixed;
+        pointer-events: none;
+    }
+
+    label {
+        font-size: 14px;
+    }
+</style>
+
+<div class="card movil signature">
+    <div class="card-header">
+        <label style="font-size: 22px;" for="">Carta de compromiso</label>
+    </div>
+    <div class="card-body">
+        @* <label>Ingreso de Números de Reloj</label> *@
+        <form class="form-carta-compromiso">
+            <div class="container-step1" id="step1">
+                <div class="container-datos">
+                    <div class="mb-2">
+                        <label class="form-label">Número de Reloj del Operador:</label>
+                        <input type="text" name="reloj-operador" class="form-control form-control-sm" id="operatorId">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Número de Reloj del Entrenador/Seguimiento:</label>
+                        <input type="text" name="reloj-persona-seguimiento" class="form-control form-control-sm"
+                            id="trainerId">
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" type="button" id="btnSiguienteForm">Siguiente</button>
+            </div>
+            <div class="container-step2 hidden" id="step2">
+                <div class="container-datos">
+
+                    <label id="commitmentText" style="color:#444746;"></label>
+
+
+
+                    <div class="mb-2">
+                        <label class="form-label">Observaciones por parte del operador:</label>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Ingrese comentarios" id="operatorObservations"
+                                style=" height: 100px" name="comentario"></textarea>
+                            <label for="floatingTextarea2">Observación</label>
+                        </div>
+                    </div>
+
+
+                    <div id="signature-pad" class="signature-pad">
+
+                        <label>Firma Auditor de seguimiento:</label>
+                        <div class="signature-pad--body">
+                            <canvas id="canvasFirmaAuditor"></canvas>
+                        </div>
+                        <div class="signature-pad--footer">
+
+                            <div class="signature-pad--actions">
+                                <div>
+                                </div>
+                                <div>
+
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="clear"><i
+                                            class="fa fa-eraser"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="undo"> <i
+                                            class="fa fa-undo"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="redo"> <i
+                                            class="fa fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="signature-pad-firma-operador" class="signature-pad">
+
+                        <label>Firma del operador:</label>
+                        <div class="signature-pad--body">
+                            <canvas id="canvasFirmaOperador"></canvas>
+                        </div>
+                        <div class="signature-pad--footer">
+
+                            <div class="signature-pad--actions">
+                                <div>
+                                </div>
+                                <div>
+
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="clear"><i
+                                            class="fa fa-eraser"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="undo"> <i
+                                            class="fa fa-undo"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-action="redo"> <i
+                                            class="fa fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* <label>Firma Operador:</label>
+                    <div class="signature-area"></div> *@
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="commitmentCheck">
+                        <label class="form-check-label" for="flexCheckChecked" style="color:#444746;">
+                            He leído y estoy comprometido con la calidad
+                        </label>
+                    </div>
+
+                    <button class="btn btn-secondary btn-sm" type="button" id="btnRegresarForm">Regresar</button>
+                    <button type="submit" class="btn btn-success btn-sm" id="btnGuardarFirma">Aceptar</button>
+
+                    <label id="securityCode"></label>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src='/lib/signature/signature_pad.umd.js'></script>
+
+<script src='/js/signatureIndex.js'></script>
+<script>
+
+
+    document.querySelector('#btnSiguienteForm').addEventListener('click', () => {
+        const operatorId = document.getElementById('operatorId').value;
+        const trainerId = document.getElementById('trainerId').value;
+
+        if (operatorId && trainerId) {
+
+            document.getElementById('step1').classList.add('hidden')
+            document.getElementById('step2').classList.remove('hidden')
+
+            resizeCanvas();
+
+            const commitmentText = `Al leer este acuerdo, “${operatorId}”, con número de Reloj “${operatorId}” acepta los siguientes términos:
+            • Confirmado el método de operación
+            • Compromiso con la realización correcta de la actividad
+            Así mismo manifiesta haber recibido y despejado cualquier duda de operación en la estación asignada como seguimiento por parte de “${trainerId}”.`;
+            document.getElementById('commitmentText').innerText = commitmentText;
+
+            const securityCode = `DC16082024001`;
+            document.getElementById('securityCode').innerText = securityCode;
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor, ingresa ambos números de reloj.',
+            });
+        }
+    })
+
+    document.querySelector('.form-carta-compromiso').addEventListener('submit', async (e) => {
+        e.preventDefault()
+
+        if (signaturePad.isEmpty()) {
+    alert("Dibuja firma");
+    return false;
+  }
+
+  document.querySelector(".container-loading").style = "display:flex;";
+  const dataURL = signaturePad.toDataURL("image/png");
+
+  const blob = dataURLToBlob(dataURL);
+
+  const file = new File([blob], "firma.png", { type: "image/png" });
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  //    fetch('/Signature/SubirImagen', {
+  //     method: 'POST',
+  //     body: formData
+  // })
+
+  const datosResponse = await fetch("/Signature/SubirImagen", {
+    method: "POST",
+    body: formData,
+  });
+
+  const datos = await datosResponse.text();
+
+  console.log(datos);
+
+  document.querySelector(".container-loading").style = "display:none;";
+
+  Swal.fire({
+    text: "La firma se ha guardado exitosamente.",
+    icon: "success",
+  });
+    })
+
+    document.querySelector("#btnRegresarForm").addEventListener("click", () => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Perderás todos los cambios realizados.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, regresar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Lógica para regresar al paso anterior
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('step1').classList.remove('hidden');
+            }
+        });
+
+    })
+</script>
