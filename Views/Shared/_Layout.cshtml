@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="~/css/kaizenIndex.css">
     <link rel="stylesheet" href="~/css/signature-pad.css">
     <link rel="stylesheet" href="~/LinePatrol.styles.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>

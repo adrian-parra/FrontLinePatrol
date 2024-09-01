@@ -2,7 +2,7 @@
   /*COLOR PRINCIPAL rgb(75, 175, 79) rgb(23, 101, 190)*/
   --ColorPrincipal: rgb(255, 255, 255);
 
-  --ColorSecundario: rgb(23, 101, 190);
+  --ColorSecundario: #FF6529; /* rgb(23, 101, 190);*/
   --ColorFondo: rgb(242, 242, 242);
 
   --ColorExtra: rgb(29, 29, 29);  
@@ -54,7 +54,6 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
   margin-top: 60px;
 
 }
@@ -67,8 +66,14 @@ body {
 
 }
 
-/** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
+.card .card-header ,
+.modal .modal-dialog .modal-content .modal-header{
+  background-color:var(--ColorSecundario);
+  color: var(--ColorPrincipal);
+  border: 1px solid var(--ColorSecundario);
+}
 
+/** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
 .form-line-patrol .container-formLP {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,6 +1,6 @@
 namespace LinePatrol.Models;
 public class LinePatrolListado {
-   public string? id { get; set; }
+   public int? id { get; set; }
     public string id_planta { get; set; }
     public string id_linea { get; set; }
     public string id_estacion { get; set; }

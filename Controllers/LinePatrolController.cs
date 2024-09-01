@@ -34,13 +34,12 @@ public class LinePatrolController : Controller
     public async Task<IActionResult> Filter(LinePatrolFilter linePatrolFilter)
     {
         List<LinePatrolListado> listaFilter = await _servicioApi.Filter(linePatrolFilter);
-         return PartialView("filter", listaFilter);
+        var registrosOrdenados = listaFilter.OrderByDescending(r => r.id).ToList();
+        return PartialView("filter", registrosOrdenados);
     }
 
     [HttpPatch]
     public async Task<IActionResult> Liberar(LinePatrolLiberar linePatrolLiberar){
-         Console.WriteLine("valor " + linePatrolLiberar.persona_libera);
-         Console.WriteLine("valor " + linePatrolLiberar.id);
 
 
 
