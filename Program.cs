@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IServicio_API, Servicio_API>();
+builder.Services.AddSignalR();
 
 
 var app = builder.Build();
@@ -29,5 +30,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=LinePatrol}/{action=Index}/{id?}");
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();
