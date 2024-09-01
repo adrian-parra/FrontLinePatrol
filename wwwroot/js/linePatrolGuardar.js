@@ -75,7 +75,7 @@ export const formSubmitHandler = async (e) => {
 
     try {
         $('.container-loading').style = 'display:flex;' // MUESTRA LOADING DE CARGA MIENTRAS GUARDA LOS DATOS
-        const response = await fetch('/Tarea/GuardarCambios', {
+        const response = await fetch('/LinePatrol/GuardarCambios', {
             method: 'POST',
             body: formData,
         });

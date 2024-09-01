@@ -5,7 +5,7 @@ let personaLibera = null;
 export const obtenerDatosLinePatrol = async () => {
   $(".container-loading").style = "display:flex;";
 
-  const response1 = await fetch("/Tarea/Filter", {
+  const response1 = await fetch("/LinePatrol/Filter", {
     method: "POST",
     body: null,
   });
@@ -59,7 +59,7 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
   $(".container-loading").style = "display:flex;";
   var formData = new FormData(e.target);
 
-  const response = await fetch("/Tarea/Filter", {
+  const response = await fetch("/LinePatrol/Filter", {
     method: "POST",
     body: formData,
   });
@@ -87,7 +87,7 @@ export const liberarLinePatrol = async (e) => {
 
   formData.delete("contra");
   $(".container-loading").style = "display:flex;";
-  const response = await fetch(`/Tarea/Liberar`, {
+  const response = await fetch(`/LinePatrol/Liberar`, {
     method: "PATCH",
     body: formData,
   });
@@ -103,7 +103,7 @@ export const liberarLinePatrol = async (e) => {
 
     e.target.reset();
 
-    const response1 = await fetch("/Tarea/Filter", {
+    const response1 = await fetch("/LinePatrol/Filter", {
       method: "POST",
       body: null,
     });

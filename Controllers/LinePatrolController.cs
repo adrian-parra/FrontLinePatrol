@@ -13,12 +13,12 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace LinePatrol.Controllers;
 
-public class TareaController : Controller
+public class LinePatrolController : Controller
 {
     private IServicio_API _servicioApi;
     private const string RUTA_IMAGENES = "images/linePatrol/";
 
-    public TareaController(IServicio_API servicioApi)
+    public LinePatrolController(IServicio_API servicioApi)
     {
         _servicioApi = servicioApi;
     }

@@ -1,15 +1,16 @@
 @model List<LinePatrolListado>
 @{
-  ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Listado";
+  Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
   .right.activo {
-    color: red !important;
+    color: var(--ColorDanger) !important;
   }
 
   .right.finalizado {
-    color: green !important;
+    color: var(--ColorSuccess) !important;
   }
 </style>
 
@@ -19,7 +20,7 @@
   <div class="card-header">Lista de recorrido de líneas</div>
   <div class="card-body">
     <div class="container-buttons-listado">
-      <a asp-action="GuardarCambios" asp-controller="Tarea" class="btn btn-success btn-sm"
+      <a asp-action="GuardarCambios" asp-controller="LinePatrol" class="btn btn-success btn-sm"
         id="btnRegistrarLP">Registrar</a>
       <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
     </div>
