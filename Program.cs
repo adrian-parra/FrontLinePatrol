@@ -32,5 +32,7 @@ app.MapControllerRoute(
     pattern: "{controller=LinePatrol}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chathub");
+app.MapHub<LineMonitoringHub>("/linemonitoringhub");
+
 
 app.Run();
