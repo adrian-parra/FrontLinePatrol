@@ -2,6 +2,58 @@
     ViewData["Title"] = "Index";
 }
 
+<style>
+    .container-opciones-grid {
+    }
+    .container-opciones{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--Margin);
+    }
+    .opcion {
+        border: 1px solid #CED4DA;
+        border-radius: var(--BorderRadius);
+        transition: .3s all;
+    }
+    .opcion:hover {
+        cursor: pointer;
+        background-color: #ced4da;
+    }
+
+   .opcion .opcion-head {
+         display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .opcion .opcion-body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .opcion .opcion-body i {
+     color: var(--ColorSecundario);
+        
+    }
+
+    .container-message{
+        border-radius: var(--BorderRadius);
+        background-color: var(--ColorDanger);
+        padding: var(--Padding);
+        margin-bottom: var(--Margin);
+        display:none;
+        
+    }
+    .container-message .message {
+
+    }
+    .container-message .message p {
+        color: var(--ColorPrincipal);
+        margin:0;
+    }
+</style>
+
 <div class="card movil">
     <div class="card-header">
         Ejecutar comando
@@ -28,6 +80,49 @@
             <div class="respuesta">
 
             </div>
+
+            <div class="container-message">
+                <div class="message">
+                    <p>Esta sección de la página está diseñada para funcionar en Windows. Algunas funcionalidades pueden no estar disponibles en tu sistema operativo.</p>
+                </div>
+            </div>
+
+            <div class="container-opciones-grid">
+                <div class="container-opciones">
+                    <div class="opcion">
+                        <div class="opcion-head">
+                            <p>Abrir correo</p>
+                        </div>
+                        <div class="opcion-body">
+                            <i class="fa fa-envelope fa-10x"></i>
+                        </div>
+                    </div>
+                    <div class="opcion">
+                        <div class="opcion-head">
+                            <p>Cerrar correo</p>
+                        </div>
+                        <div class="opcion-body">
+                            <i class="fa fa-envelope fa-10x"></i>
+                        </div>
+                    </div>
+                    <div class="opcion">
+                        <div class="opcion-head">
+                            <p>Abrir google chrome</p>
+                        </div>
+                        <div class="opcion-body">
+                            <i class="fa fa-chrome fa-10x"></i>
+                        </div>
+                    </div>
+                     <div class="opcion">
+                        <div class="opcion-head">
+                            <p>Cerra google chrome</p>
+                        </div>
+                        <div class="opcion-body">
+                            <i class="fa fa-chrome fa-10x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -36,6 +131,8 @@
 <script type="module">
 
     import { $ } from '/js/utils.js'
+
+
 
     $("#formEjecutarComando").addEventListener('submit', async (e) => {
         e.preventDefault()
@@ -110,5 +207,26 @@
 
         return newCadena
     }
+
+    function showWarningIfNotWindows() {
+        if (isNonWindowsOS()) {
+            $(".container-message").style.display = "flex"
+        }
+    }
+
+
+    // ? DETECTAR SI EL CLIENTE NO ES WINDOWS
+    function isNonWindowsOS() {
+    // Obtén el userAgent del navegador
+    const userAgent = navigator.userAgent.toLowerCase();
+    
+    // Verifica si el userAgent contiene "windows"
+    const isWindows = userAgent.includes("windows");
+
+    // Retorna true si no es Windows, false si es Windows
+    return !isWindows;
+}
+
+window.onload = showWarningIfNotWindows;
 
 </script>
