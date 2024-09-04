@@ -1,4 +1,12 @@
 import { $ } from "./utils.js";
+
+    
+    
+const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/linemonitoringhub")
+        .build();
+connection.start()
+
 export const changeInputFile = async (e) => {
     const file = e.target.files[0];
     $('#linkInfoImagenSelected').style.display = 'none';
@@ -83,13 +91,27 @@ export const formSubmitHandler = async (e) => {
         if (response.ok) {
             const data = await response.text();
             $('.container-loading').style = 'display:none;'
-            Swal.fire({
-                text: 'Recorrido registrado',
-                icon: 'success'
-            }).then(() => {
-                // window.location.href = '../';
 
-            });
+            Swal.fire({
+                position: "center", 
+                icon: "success",
+                text: 'Recorrido registrado',
+                showConfirmButton: false,
+                timer: 1500
+              });
+
+                formData.get("id_planta")
+                formData.get("id_linea")
+                formData.get("id_estacion")
+                formData.get("comentario")
+
+                let msg = `Estacion: ${ formData.get("id_estacion")} \n Comentario: ${formData.get("comentario")}`
+
+
+        // Ahora puedes invocar métodos en el Hub
+        connection.invoke("NotifyNewRecord", "linea "+ formData.get("id_linea"), msg)
+            .catch(err => console.error(err.toString()));
+    
 
             // e.target.reset();
 

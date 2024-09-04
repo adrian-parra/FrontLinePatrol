@@ -217,10 +217,33 @@
 @* <a href="raspberry/autostar.zip" download>Descargar archivo .zip</a> *@
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
 
 <script type="module">
   import { $ } from "/js/utils.js";
   import { obtenerDatosLinePatrol, contenedorDatos, submitFiltrarDatosLinePatrol, liberarLinePatrol } from '/js/linePatrolIndex.js'
+  
+  const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/linemonitoringhub")
+    .build();
+
+    connection.start().catch(function (err) {
+        return console.error(err.toString());
+    });
+
+connection.on("ReceiveNotification", function (lineId, message) {
+    Swal.fire({
+  position: "bottom-end", // Cambia la posición a "bottom-end" para mostrarlo en la esquina inferior derecha
+  @* icon: "success", *@
+  text: `Nuevo recorrido en ${lineId}: ${message}`,
+  showConfirmButton: false,
+  timer: 6000
+
+  
+});
+obtenerDatosLinePatrol()
+});
+  
   document.addEventListener('DOMContentLoaded', obtenerDatosLinePatrol);
   $('.container-items').addEventListener('click', contenedorDatos)
   $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
