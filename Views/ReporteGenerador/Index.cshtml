@@ -1,0 +1,176 @@
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+
+    /** ESTILOS PARA INPUT FILE IMAGE */
+.mb-2 button[type="button"] {
+     text-align: left;
+}
+
+.mb-2 button[type="button"]::before {
+  content: "Adjuntar imagen ";
+}
+
+.mb-2 button[type="button"]::after {
+  content: "\1F4C2";
+}
+
+/** FIN ESTILOS PARA INPUT FILE IMAGE */
+
+/** ESTILOS PARA LINK INFO IMAGE FILE*/
+.mb-2 a {
+  flex-direction: row;
+  gap: 5px;
+}
+
+.mb-2 a::before {
+  content: "Imagen seleccionada";
+}
+
+.mb-2 a::after {
+  content: "\2713";
+}
+
+/** FIN ESTILOS PARA LINK INFO IMAGE FILE*/
+</style>
+
+<div class="card movil">
+    <div class="card-header">
+        Reporte de generador
+    </div>
+    <div class="card-body">
+
+
+        <form class="form-line-patrol">
+            <div class="container-formLP">
+                <div class="mb-2">
+                    <label class="form-label">Numero de reloj</label>
+                    <input type="text" class="form-control form-control-sm" name="responsable"
+                        placeholder="Ingrese numero de reloj">
+                </div>
+
+
+
+
+                <div class="mb-2">
+                    <label class="form-label">Imagen (Horas trabajadas)</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Imagen (Status de bateria)</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileImageStatusBateria" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageStatusBateria"></button>
+                    <a href="#" id="linkInfoImagenSelectedImageStatusBateria" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Imagen (Nivel anticongelante)</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Imagen (Nivel diesel)</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Imagen (Nivel aceite)</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Observación</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
+                            style="height: 100px" name="comentario"></textarea>
+                        <label for="floatingTextarea2">Comentario u observación</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+                <a asp-action="Index" asp-controller="LinePatrol" class="btn btn-primary btn-sm">Cancelar</a>
+            </div>
+
+        </form>
+
+
+
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Imagen seleccionada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { $ } from "/js/utils.js";
+
+    // ? IMAGEN HORAS TRABAJADAS
+     $('#btnChangeInputFileImage').addEventListener('click', () => $('#formFileSm').click());
+    $('#formFileSm').addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        $('#linkInfoImagenSelected').style.display = 'none';
+        if (file) {
+            $('#linkInfoImagenSelected').style.display = 'flex';
+            const imageURL = URL.createObjectURL(file);
+            $('#imagenSeleccionada').src = imageURL;
+            const modal = new bootstrap.Modal($('#exampleModal'));
+            modal.show();
+        }
+    })
+    // ? IMAGEN STATUS BATERIA
+     $('#btnChangeInputFileImageStatusBateria').addEventListener('click', () => $('#inputFileImageStatusBateria').click());
+     $('#inputFileImageStatusBateria').addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        $('#linkInfoImagenSelectedImageStatusBateria').style.display = 'none';
+        if (file) {
+            $('#linkInfoImagenSelectedImageStatusBateria').style.display = 'flex';
+            const imageURL = URL.createObjectURL(file);
+            $('#imagenSeleccionada').src = imageURL;
+            const modal = new bootstrap.Modal($('#exampleModal'));
+            modal.show();
+        }
+    })
+
+
+
+
+</script>
