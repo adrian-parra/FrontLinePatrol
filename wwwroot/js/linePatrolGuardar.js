@@ -83,13 +83,14 @@ export const formSubmitHandler = async (e) => {
         if (response.ok) {
             const data = await response.text();
             $('.container-loading').style = 'display:none;'
-            Swal.fire({
-                text: 'Recorrido registrado',
-                icon: 'success'
-            }).then(() => {
-                // window.location.href = '../';
 
-            });
+            Swal.fire({
+                position: "center", 
+                icon: "success",
+                text: 'Recorrido registrado',
+                showConfirmButton: false,
+                timer: 1500
+              });
 
             // e.target.reset();
 

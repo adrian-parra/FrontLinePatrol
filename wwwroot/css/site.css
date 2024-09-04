@@ -2,7 +2,7 @@
   /*COLOR PRINCIPAL rgb(75, 175, 79) rgb(23, 101, 190)*/
   --ColorPrincipal: rgb(255, 255, 255);
 
-  --ColorSecundario: #FF6529; /* rgb(23, 101, 190);*/
+  --ColorSecundario:#004A93; /* #FF6529; */ /* rgb(23, 101, 190);*/
   --ColorFondo: rgb(242, 242, 242);
 
   --ColorExtra: rgb(29, 29, 29);  
@@ -450,7 +450,7 @@ a.navbar-brand P {
 } */
 .nav-link:hover {
   transition: .3s all;
-  color: #FF6529 !important;
+  color: var(--ColorSecundario) !important;
 }
 
 /* .nav-pills .nav-link.active {

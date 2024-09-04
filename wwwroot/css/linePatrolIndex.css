@@ -13,19 +13,19 @@
     margin: 0 !important;
   }
   .table tbody tr {
-    font-size: var(--SizeDescripcion);
+    font-size:calc(var(--SizeDescripcion) + 2px);
   }
 
   .table thead tr{
-    color: var(--ColorPrincipal);
-    background-color: rgba(0, 0, 0, .03);
-    background-color:#0d6efd;
+    /* color: var(--ColorPrincipal); */
+    /* background-color: rgba(0, 0, 0, .03); */
+    /* background-color:#0d6efd; */
     font-size: .8rem;
   }
 
   .table {
     color: var(--ColorExtra);
-    background-color: rgba(0, 0, 0, .03);
+    /* background-color: rgba(0, 0, 0, .03); */
     margin-top: var(--Margin);
     border-radius: var(--BorderRadius);
     padding: var(--Padding);
