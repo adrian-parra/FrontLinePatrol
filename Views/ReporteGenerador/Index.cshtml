@@ -31,6 +31,36 @@
         content: "\2713";
     }
 
+    .container-inputs-file {
+        position: relative;
+    }
+    label {
+        margin: 0 !important;
+    }
+
+    .container-inputs-file > a {
+         transition: .5s all;
+        position: absolute;
+        color: var(--ColorSuccess);
+        font-size: .8rem;
+        padding: 2px;
+        text-decoration: none;
+        background-color: var(--ColorSuccess);
+        color: white;
+        border-radius: var(--BorderRadius);
+        top: 0;
+        right: 0;
+    }
+    .container-inputs-file > a:hover {
+        opacity: .8;
+        
+    }
+
+    .loal-ocultar-o-mostrar {
+        opacity: 0;
+        pointer-events: none;
+    }
+
     /** FIN ESTILOS PARA LINK INFO IMAGE FILE*/
 </style>
 
@@ -52,48 +82,48 @@
 
 
 
-                <div class="mb-2">
+                <div class="container-inputs-file mb-2">
                     <label class="form-label">Horas trabajadas</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileHorasTrabajadas"
                         type="file" name="imagen" accept="image/*">
                     <button type="button" class="form-control form-control-sm"
                         id="btnChangeInputFileImageHorasTrabajadas"></button>
-                    <a href="#" id="linkInfoImagenSelectedHoras" style="display: none;"
+                    <a href="#" id="linkInfoImagenSelectedHoras" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
                 </div>
 
-                <div class="mb-2">
+                <div class="container-inputs-file mb-2">
                     <label class="form-label">Status de bateria</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileImageStatusBateria"
                         type="file" name="imagen" accept="image/*">
                     <button type="button" class="form-control form-control-sm"
                         id="btnChangeInputFileImageStatusBateria"></button>
-                    <a href="#" id="linkInfoImagenSelectedBateria" style="display: none;"
+                    <a href="#" id="linkInfoImagenSelectedBateria" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
                 </div>
 
-                <div class="mb-2">
+                <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel anticongelante</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAnticongelante" type="file"
                         name="imagen" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAnticongelante"></button>
-                    <a href="#" id="linkInfoImagenSelectedAnticongelante" style="display: none;"
+                    <a href="#" id="linkInfoImagenSelectedAnticongelante" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
                 </div>
-                <div class="mb-2">
+                <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel diesel</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelDiesel" type="file"
                         name="imagen" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelDiesel"></button>
-                    <a href="#" id="linkInfoImagenSelectedDiesel" style="display: none;"
+                    <a href="#" id="linkInfoImagenSelectedDiesel" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
                 </div>
-                <div class="mb-2">
+                <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel aceite</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAceite" type="file"
                         name="imagen" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAceite"></button>
-                    <a href="#" id="linkInfoImagenSelectedAceite" style="display: none;"
+                    <a href="#" id="linkInfoImagenSelectedAceite" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
                 </div>
 
@@ -169,8 +199,8 @@ function handleFileInputChange(inputId, linkId, key) {
         const link = $(linkId);
         
         // Ocultamos el link inicialmente
-        link.style.display = 'none';
-
+        //link.style.display = 'none';
+         link.classList.add("loal-ocultar-o-mostrar");
         // Si hay un archivo seleccionado, guardamos la URL y mostramos el link
         if (file) {
             const imageURL = URL.createObjectURL(file);
@@ -178,7 +208,8 @@ function handleFileInputChange(inputId, linkId, key) {
             const modal = new bootstrap.Modal($('#exampleModal'));
             modal.show();
             imageUrls[key] = imageURL; // Guardamos la URL de la imagen seleccionada
-            link.style.display = 'flex'; // Mostramos el link
+           // link.style.display = 'flex'; // Mostramos el link
+            link.classList.toggle("loal-ocultar-o-mostrar");
         }
     });
 
