@@ -5,11 +5,6 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/reporteGeneradorIndex.css" />
 }
-<style>
-    
-
-    /** FIN ESTILOS PARA LINK INFO IMAGE FILE*/
-</style>
 
 <div class="card movil">
     <div class="card-header">
@@ -18,8 +13,8 @@
     <div class="card-body">
 
 
-        <form class="form-line-patrol">
-            <div class="container-formLP">
+        <form class="loal-form">
+            <div class="loal-container-form">
                 <div class="mb-2">
                     <label class="form-label">Numero de reloj</label>
                     <input type="text" class="form-control form-control-sm" name="responsable"
@@ -118,7 +113,7 @@
     import { $ } from "/js/utils.js";
 
     // ? EVENTO CLICK EN CONTAINER DE FORM
-    $('.container-formLP').addEventListener("click", (e) => {
+    $('.loal-container-form').addEventListener("click", (e) => {
         const target = e.target;
 
         // Mapeamos los botones a sus inputs correspondientes

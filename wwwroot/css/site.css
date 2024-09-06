@@ -74,7 +74,7 @@ body {
 }
 
 /** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
-.form-line-patrol .container-formLP {
+.loal-form .loal-container-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
@@ -188,12 +188,12 @@ body {
   #btnFiltrar::before {
     content: '';
   }
-  .form-line-patrol .container-formLP {
+  .loal-form .loal-container-form {
     display: flex;
     flex-direction: column;
   }
 
-  .form-line-patrol .container-buttons,
+  .loal-form .container-buttons,
   #formFiltrado .container-buttons {
     margin-top: 10px;
     display: flex;
