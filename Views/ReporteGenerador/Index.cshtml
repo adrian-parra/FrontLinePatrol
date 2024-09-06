@@ -13,11 +13,11 @@
     <div class="card-body">
 
 
-        <form class="loal-form">
+        <form class="loal-form" id="formReporteGenerador">
             <div class="loal-container-form">
                 <div class="mb-2">
                     <label class="form-label">Numero de reloj</label>
-                    <input type="text" class="form-control form-control-sm" name="responsable"
+                    <input type="text" class="form-control form-control-sm" name="reloj"
                         placeholder="Ingrese numero de reloj">
                 </div>
 
@@ -27,7 +27,7 @@
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Horas trabajadas</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileHorasTrabajadas"
-                        type="file" name="imagen" accept="image/*">
+                        type="file" name="imagen_horas_trabajadas" accept="image/*">
                     <button type="button" class="form-control form-control-sm"
                         id="btnChangeInputFileImageHorasTrabajadas"></button>
                     <a href="#" id="linkInfoImagenSelectedHoras" class="loal-ocultar-o-mostrar"
@@ -37,7 +37,7 @@
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Status de bateria</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileImageStatusBateria"
-                        type="file" name="imagen" accept="image/*">
+                        type="file" name="imagen_status_bateria" accept="image/*">
                     <button type="button" class="form-control form-control-sm"
                         id="btnChangeInputFileImageStatusBateria"></button>
                     <a href="#" id="linkInfoImagenSelectedBateria" class="loal-ocultar-o-mostrar"
@@ -47,7 +47,7 @@
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel anticongelante</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAnticongelante" type="file"
-                        name="imagen" accept="image/*">
+                        name="imagen_nivel_anticongelante" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAnticongelante"></button>
                     <a href="#" id="linkInfoImagenSelectedAnticongelante" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
@@ -55,7 +55,7 @@
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel diesel</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelDiesel" type="file"
-                        name="imagen" accept="image/*">
+                        name="imagen_nivel_diesel" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelDiesel"></button>
                     <a href="#" id="linkInfoImagenSelectedDiesel" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
@@ -63,7 +63,7 @@
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Nivel aceite</label>
                     <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAceite" type="file"
-                        name="imagen" accept="image/*">
+                        name="imagen_nivel_aceite" accept="image/*">
                     <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAceite"></button>
                     <a href="#" id="linkInfoImagenSelectedAceite" class="loal-ocultar-o-mostrar"
                         class="btn-link text-success text-decoration-underline small"></a>
@@ -111,6 +111,3 @@
 @section Scripts {
     <script src="~/js/reporteGeneradorIndex.js" type='module'></script>
 }
-
-<script type="module">
-</script>
