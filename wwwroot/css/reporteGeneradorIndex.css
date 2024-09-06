@@ -1,0 +1,58 @@
+/** ESTILOS PARA INPUT FILE IMAGE */
+.mb-2 button[type="button"] {
+    text-align: left;
+}
+
+.mb-2 button[type="button"]::before {
+    content: "Adjuntar imagen ";
+}
+
+.mb-2 button[type="button"]::after {
+    content: "\1F4C2";
+}
+
+/** FIN ESTILOS PARA INPUT FILE IMAGE */
+
+/** ESTILOS PARA LINK INFO IMAGE FILE*/
+.mb-2 a {
+    flex-direction: row;
+    gap: 5px;
+}
+
+.mb-2 a::before {
+    content: "Imagen seleccionada";
+}
+
+.mb-2 a::after {
+    content: "\2713";
+}
+
+.container-inputs-file {
+    position: relative;
+}
+label {
+    margin: 0 !important;
+}
+
+.container-inputs-file > a {
+     transition: .5s all;
+    position: absolute;
+    color: var(--ColorSuccess);
+    font-size: .8rem;
+    padding: 2px;
+    text-decoration: none;
+    background-color: var(--ColorSuccess);
+    color: white;
+    border-radius: var(--BorderRadius);
+    top: 0;
+    right: 0;
+}
+.container-inputs-file > a:hover {
+    opacity: .8;
+    
+}
+
+.loal-ocultar-o-mostrar {
+    opacity: 0;
+    pointer-events: none;
+}
