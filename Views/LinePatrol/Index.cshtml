@@ -14,7 +14,7 @@
   <div class="card-header">Lista de recorrido de líneas</div>
   <div class="card-body">
     <div class="container-buttons-listado">
-      <a asp-action="GuardarCambios" asp-controller="LinePatrol" class="btn btn-success btn-sm"
+      <a class="btn btn-success btn-sm"
         id="btnRegistrarLP">Registrar</a>
       <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
     </div>
@@ -34,9 +34,128 @@
   </div>
 </div>
 
+<!-- Modal FORM GURADAR RECORRIDO-->
+<div class="modal fade" id="exampleModalFormRegistrarRecorrido" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registrar recorrido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="loal-form form-line-patrol">
+            <div class="loal-container-form container-formLP">
+                <div class="mb-2">
+                    <label class="form-label">Planta</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_planta">
+                        <option disabled selected>Seleccionar planta</option>
+                        <option value="mch-1">mch-1</option>
+                        <option value="mch-2">mch-2</option>
+                        <option value="mch-3">mch-3</option>
+                        <option value="mch-main">mch-main</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Línea</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_linea">
+                        <option disabled selected>Seleccionar línea</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                </div>
+
+
+                <div class="mb-2">
+                    <label class="form-label">Imagen</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                        name="imagen" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+                    <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                        class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal"></a>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Estación</label>
+                    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion" id="selectEstacion">
+                        <option disabled selected>Seleccionar estación</option>
+                        <option value="Clips">Clips</option>
+                        <option value="prueba electrica">Prueba Electrica</option>
+                        <option value="combos">Combos</option>
+                        <option value="inspeccion visual">Inspeccion Visual</option>
+                        <option value="empaque">Empaque</option>
+                        <option value="pizarron">Pizarron</option>
+                        <option value="mat. split">Mat. Split</option>
+                        <option value="Embarques">Embarques</option>
+                        <option value="Comunicacion">Comunicacion</option>
+                        <option value="Clips 2">Clips 2</option>
+                        <option value="torque">Torque</option>
+                        <option value="dockaudit">Dockaudit</option>
+
+
+                        <option value="Otra">Otra</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Comentario</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
+                            style="height: 100px" name="comentario"></textarea>
+                        <label for="floatingTextarea2">Comentario u observación</label>
+                    </div>
+                </div>
+                <div class="mb-2">
+                <label class="form-label">Responsable</label>
+                <input type="text" class="form-control form-control-sm" name="responsable" placeholder="Ingrese persona responsable">
+                </div>
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+                <a data-bs-dismiss="modal" aria-label="Close" class="btn btn-primary btn-sm">Cancelar</a>
+            </div>
+
+        </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal PREVIEW IMAGEN -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Imagen seleccionada</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -48,7 +167,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> *@
 
 <!-- MODAL FILTRADO -->
 <div class="modal fade" id="exampleModalF" tabindex="-1" aria-labelledby="exampleModalLabelF" aria-hidden="true">
@@ -214,16 +333,13 @@
   </div>
 </div>
 
+
+
+
 @* <a href="raspberry/autostar.zip" download>Descargar archivo .zip</a> *@
 
 
+@section Scripts {
+    <script src="~/js/linePatrolMainIndex.js" type="module"></script>
+}
 
-<script type="module">
-  import { $ } from "/js/utils.js";
-  import { obtenerDatosLinePatrol, contenedorDatos, submitFiltrarDatosLinePatrol, liberarLinePatrol } from '/js/linePatrolIndex.js'
-  document.addEventListener('DOMContentLoaded', obtenerDatosLinePatrol);
-  $('.container-items').addEventListener('click', contenedorDatos)
-  $('#btnFiltrar').addEventListener('click', () => new bootstrap.Modal($('#exampleModalF')).show());
-  $('#formFiltrado').addEventListener('submit', submitFiltrarDatosLinePatrol)
-  $('#formLiberarP').addEventListener('submit', liberarLinePatrol)
-</script>
