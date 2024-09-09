@@ -1,10 +1,13 @@
 using LinePatrol.Models;
+using LinePatrol.Services.Interfaces;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace LinePatrol.Services;
-public class Servicio_API : IServicio_API
+
+
+namespace LinePatrol.Services.Implementations;
+public class LinePatrolImp : ILinePatrol
 {
 
     public async Task<List<LinePatrolListado>> Filter(LinePatrolFilter linePatrolFilter)
