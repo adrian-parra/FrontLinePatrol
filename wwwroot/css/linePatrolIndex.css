@@ -43,3 +43,234 @@ p {
 
 .items-table {
 }
+
+
+.card.item {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.card.item .card-img-top {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.card.item .card-body p {
+  padding: 0;
+  margin: 0;
+}
+
+.card.item .card-body .card-text {
+  color: #555555;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+.card.item .card-body .card-text:hover {
+  display: flex;
+}
+
+/* .card.item .card-body .card-text.show{
+  display: flex;
+} */
+.card.item .card-body .container-description {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.card.item .card-body .container-description p.right {
+  color: #555555;
+  text-align: right;
+}
+
+.card-text-small {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+
+.card-text-small.show {
+  display: flex;
+}
+
+.container-card-item {
+  display: none;
+}
+
+#formFiltrado .grid-2-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#btnFiltrar::before {
+  content: 'Filtrar';
+  
+}
+
+
+/* ESTILOS BUTTON FLOTANTE PLANTA EN DONDE SE ENCUANTRA REALIZANDO EL RECORRIDO */
+.loal-container-button-flotante-planta {
+  transition: .3s all;
+  background-color: var(--ColorSecundario);
+  position:fixed;
+  top:120px;
+  right:0;
+  z-index: 1001;
+  border-top-left-radius: var(--Padding);      /* Esquina superior izquierda redondeada */
+  border-bottom-left-radius: var(--Padding);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:var(--Padding);
+}
+.loal-container-button-flotante-planta:hover{
+  cursor:pointer;
+  opacity:.8;
+}
+
+.loal-container-button-flotante-planta .loal-button-flotante-planta {
+  /* padding:var(--Padding); */
+  background-color:transparent;
+  border:0;
+  color:white;
+}
+.loal-container-button-flotante-planta p {
+  margin:0;
+  color:white;
+  text-align:center;
+  
+}
+.loal-hidden {
+  opacity: 0;
+  pointer-events:none;
+}
+
+
+
+/*FIN ESTILOS BUTTON FLOTANTE PLANTA EN DONDE SE ENCUANTRA REALIZANDO EL RECORRIDO */
+
+/** ESTILOS PARA INPUT FILE IMAGE */
+#btnChangeInputFileImage {
+  text-align: left;
+}
+
+#btnChangeInputFileImage::before {
+  content: "Adjuntar imagen ";
+}
+
+#btnChangeInputFileImage::after {
+  content: "\1F4C2";
+}
+
+/** FIN ESTILOS PARA INPUT FILE IMAGE */
+
+
+/** ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
+.loal-form .loal-container-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/** ESTILOS PARA LINK INFO IMAGE FILE*/
+#linkInfoImagenSelected {
+  flex-direction: row;
+  gap: 5px;
+}
+
+#linkInfoImagenSelected::before {
+  content: "Imagen seleccionada";
+}
+
+#linkInfoImagenSelected::after {
+  content: "\2713";
+}
+
+/** FIN ESTILOS PARA LINK INFO IMAGE FILE*/
+
+/** FIN ESTILOS PARA FORM REGISTRO DE LINE PATROL*/
+
+
+@media (max-width:600px){
+  .loal-container-button-flotante-planta {
+    top:150px;
+  }
+
+  #btnFiltrar::before {
+    content: '';
+  }
+  .loal-form .loal-container-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .loal-form .container-buttons,
+  #formFiltrado .container-buttons {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #btnChangeInputFileImage::before {
+    content: "Tomar imagen ";
+  }
+
+  #btnChangeInputFileImage::after {
+    content: "\1F4F7";
+  }
+
+  #linkInfoImagenSelected::before {
+    content: "Imagen capturada";
+  }
+
+  .container-card-item {
+    display: block;
+  }
+
+  .table {
+    display: none;
+  }
+
+
+  #btnRegistrarLP {
+    width: 100%;
+  }
+
+  #btnGuardarFiltrado,
+  #btnResetFiltrado {
+    width: 100%;
+  }
+
+
+  .card.movil {
+    border: 0;
+  }
+
+  .container-buttons-listado {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  .container-button-liberar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* BUTTON GUARDAR LIBERAR */
+  #btnGuardarLiberar {
+    width:100%;
+  }
+  /* FIN BUTTON GUARDAR LIBERAR */
+}

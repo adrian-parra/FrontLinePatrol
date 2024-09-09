@@ -10,6 +10,7 @@ using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using System.Net;
 
 namespace LinePatrol.Controllers;
 
@@ -35,6 +36,25 @@ public class LinePatrolController : Controller
     {
         List<LinePatrolListado> listaFilter = await linePatrol.Filter(linePatrolFilter);
         var registrosOrdenados = listaFilter.OrderByDescending(r => r.id).ToList();
+          var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
+
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"La IP del cliente es: {ipAddress}, Hostname: {hostName}");
+     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message}");
+            }
+        }
+
+        
         return PartialView("filter", registrosOrdenados);
     }
 

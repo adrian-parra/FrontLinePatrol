@@ -139,6 +139,41 @@
     </div>
 </div>
 
+<div class="loal-container-button-flotante-planta">
+  @* <button class="loal-button-flotante-planta" data-toggle="modal" data-target="#exampleModalPlantaRecorrido"> Planta mochis 3</button> *@
+  <p>Ubicacion</p>
+  <button class="loal-button-flotante-planta" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPlantaRecorrido">
+  Desconocida
+</button>
+</div>
+
+<div class="modal fade" id="exampleModalPlantaRecorrido" tabindex="-1" aria-labelledby="exampleModalPlantaRecorrido" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">En que planta se encuantra?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               
+                <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectPlanta">
+              <option value="" disabled selected>Seleccione planta</option>
+              <option value="mch-1">mch-1</option>
+              <option value="mch-2">mch-2</option>
+              <option value="mch-3">mch-3</option>
+              <option value="mch-main">mch-main</option>
+            </select>
+          </div>
+          <div class="container-buttons">
+            <button type="submit" id="BtnconfirmarPlanta" class="btn btn-success btn-sm">Confirmar</button>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal PREVIEW IMAGEN -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

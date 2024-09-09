@@ -265,3 +265,61 @@ export const formSubmitHandler = async (e) => {
     $(".container-loading").style = "display:none"; // OCULTA EL LOADING DE CARGA
   }
 };
+
+/* EVENTO SCROLL */
+ // Seleccionamos el menú flotante
+ const floatingMenu = $('.loal-container-button-flotante-planta');
+
+ // Guardamos la posición anterior del scroll
+  let lastScrollTop = 0;
+export const showAndHideButtonFlotantePlantaRecorrido = ()=>{
+ 
+const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+  // Si el scroll baja, ocultamos el menú
+  if (currentScroll > lastScrollTop) {
+    floatingMenu.classList.add('loal-hidden');
+  } else {
+    // Si el scroll sube, mostramos el menú
+    floatingMenu.classList.remove('loal-hidden');
+  }
+
+  // Actualizamos la 
+}
+export const confirmarPlantaRecorrido = ()=>{
+  const plantaSeleccionada = $("#selectPlanta").value;
+    if (plantaSeleccionada) {
+      localStorage.setItem("plantaSeleccionada", plantaSeleccionada);
+      $(".loal-button-flotante-planta").textContent = `Planta ${plantaSeleccionada}`
+      $("#selectPlanta").value = plantaSeleccionada
+      $("#exampleModalPlantaRecorrido .btn-close").click();
+      // obtenerDatosLinePatrol();
+      obtenerRecorridosPorPlanta({id_planta:plantaSeleccionada})
+
+    } else {
+      Swal.fire({
+        icon:"error",
+        text:"Por favor, selecciona una planta."
+      })
+    }
+}
+
+export const obtenerRecorridosPorPlanta = async ({id_planta})=>{
+  $(".container-loading").style = "display:flex;";
+  var formData = new FormData();
+
+
+  formData.append("id_planta", id_planta);
+
+
+  const response = await fetch("/LinePatrol/Filter", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.text();
+
+  $(".container-items").innerHTML = data;
+
+  $(".container-loading").style = "display:none;";
+}
