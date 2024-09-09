@@ -1,8 +1,8 @@
 using LinePatrol.Models;
 
-namespace LinePatrol.Services
+namespace LinePatrol.Services.Interfaces
 {
-    public interface IServicio_API
+    public interface ILinePatrol
     {
         Task<List<LinePatrolListado>> Lista();
         // Task<Tarea> Obtener(int idtarea);

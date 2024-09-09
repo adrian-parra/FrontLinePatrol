@@ -1,4 +1,5 @@
-using LinePatrol.Services;
+using LinePatrol.Services.Implementations;
+using LinePatrol.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IServicio_API, Servicio_API>();
+builder.Services.AddScoped<ILinePatrol, LinePatrolImp>();
+
 
 
 var app = builder.Build();

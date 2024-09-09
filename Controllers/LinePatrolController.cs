@@ -3,29 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
 using System.Text;
 using Newtonsoft.Json;
-using LinePatrol.Services;
+using LinePatrol.Services.Interfaces;
 
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using System.Net;
 
 namespace LinePatrol.Controllers;
 
 public class LinePatrolController : Controller
 {
-    private IServicio_API _servicioApi;
+     private readonly ILinePatrol linePatrol;
     private const string RUTA_IMAGENES = "images/linePatrol/";
 
-    public LinePatrolController(IServicio_API servicioApi)
+    public LinePatrolController(ILinePatrol linePatrol)
     {
-        _servicioApi = servicioApi;
+        this.linePatrol = linePatrol;
     }
 
     public async Task<IActionResult> Index()
     {
-        List<LinePatrolListado> lista = await _servicioApi.Lista();
+        List<LinePatrolListado> lista = await linePatrol.Lista();
         return View(lista);
         //return Json(lista);
     }
@@ -33,8 +34,27 @@ public class LinePatrolController : Controller
     [HttpPost]
     public async Task<IActionResult> Filter(LinePatrolFilter linePatrolFilter)
     {
-        List<LinePatrolListado> listaFilter = await _servicioApi.Filter(linePatrolFilter);
+        List<LinePatrolListado> listaFilter = await linePatrol.Filter(linePatrolFilter);
         var registrosOrdenados = listaFilter.OrderByDescending(r => r.id).ToList();
+          var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
+
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"La IP del cliente es: {ipAddress}, Hostname: {hostName}");
+     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message}");
+            }
+        }
+
+        
         return PartialView("filter", registrosOrdenados);
     }
 
@@ -91,7 +111,7 @@ public class LinePatrolController : Controller
         bool respuesta;
 
 
-        respuesta = await _servicioApi.Liberar(linePatrolLiberar);
+        respuesta = await linePatrol.Liberar(linePatrolLiberar);
 
 
         if (respuesta)
@@ -172,7 +192,7 @@ public class LinePatrolController : Controller
         bool respuesta;
 
 
-        respuesta = await _servicioApi.Guardar(linePatrolRegister);
+        respuesta = await linePatrol.Guardar(linePatrolRegister);
 
 
         if (respuesta)

@@ -1,11 +1,52 @@
 using LinePatrol.Models;
+using LinePatrol.Services.Interfaces;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace LinePatrol.Services;
-public class Servicio_API : IServicio_API
+
+
+namespace LinePatrol.Services.Implementations;
+public class LinePatrolImp : ILinePatrol
 {
+
+    private string conexionApi;
+
+    public LinePatrolImp(IConfiguration configuration)
+    {
+        conexionApi = configuration.GetConnectionString("conApi");
+    }
+
+    public async Task<List<MdPlanta>> GetPlants()
+    {
+        var res = new List<MdPlanta>();
+        ///LinePatrol/GetPlants
+        ///
+        string path = $"{conexionApi}LinePatrol/GetPlants";
+        try
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(path);
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var json = await httpResponseMessage.Content.ReadAsStringAsync();
+                    res = JsonConvert.DeserializeObject<List<MdPlanta>>(json);
+                }
+            }
+
+
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
+        return res;
+    }
 
     public async Task<List<LinePatrolListado>> Filter(LinePatrolFilter linePatrolFilter)
     {
