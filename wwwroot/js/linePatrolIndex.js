@@ -221,8 +221,9 @@ export const liberarLinePatrol = async (e) => {
       $("#exampleModalLiberar .modal-dialog .modal-content .modal-header .btn-close").click();
 
       // ACTUALIZAR INTERFAZ DE USUARIO
-      const updatedItems = await fetch("/LinePatrol/Filter", { method: "POST" }).then(res => res.text());
-      $(".container-items").innerHTML = updatedItems;
+      const plantaGuardada = localStorage.getItem("plantaSeleccionada");
+      obtenerRecorridosPorPlanta({ id_planta: plantaGuardada });
+     
     } else {
       // MANEJAR RESPUESTA DE ERROR
       Swal.fire({
@@ -306,6 +307,9 @@ export const formSubmitHandler = async (e) => {
   // CREAR UNA INSTANCIA DE FormData A PARTIR DEL FORMULARIO
   const formData = new FormData(e.target);
 
+  formData.append("id_planta", localStorage.getItem("plantaSeleccionada"));
+
+
   // VALIDACIÓN DE FORMULARIO
   let errores = []; // ARRAY PARA ACUMULAR ERRORES
 
@@ -378,13 +382,8 @@ export const formSubmitHandler = async (e) => {
       });
 
       // ACTUALIZAR INTERFAZ DE USUARIO CON NUEVOS DATOS
-      const response1 = await fetch("/LinePatrol/Filter", {
-        method: "POST",
-        body: null,
-      });
-
-      const data1 = await response1.text();
-      $(".container-items").innerHTML = data1;
+      const plantaGuardada = localStorage.getItem("plantaSeleccionada");
+      obtenerRecorridosPorPlanta({ id_planta: plantaGuardada })
 
       // LIMPIAR CAMPOS DEL FORMULARIO
       $("#floatingTextarea2").value = "";
@@ -480,6 +479,10 @@ export const confirmarPlantaRecorrido = async () => {
 
     // MANTENER LA SELECCIÓN EN EL SELECTOR
     $("#selectPlanta").value = plantaSeleccionada;
+
+    $("#selectPlantaRegistroRecorrido").value = plantaSeleccionada;
+
+    $("#selectPlantaRegistroRecorrido").disabled = true
 
     // LLAMADA A LA FUNCIÓN PARA OBTENER LOS RECORRIDOS POR PLANTA
     await obtenerRecorridosPorPlanta({ id_planta: plantaSeleccionada });

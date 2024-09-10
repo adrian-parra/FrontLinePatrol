@@ -26,6 +26,8 @@ const $formLiberarP = $("#formLiberarP");
 const $formLinePatrol = $(".form-line-patrol");
 const $btnConfirmarPlanta = $("#BtnconfirmarPlanta");
 const $loalContainerButton = $(".loal-container-button-flotante-planta");
+const $selectPlanta = $("#selectPlantaRegistroRecorrido");
+
 
 // FUNCIONES AUXILIARES
 const showModal = (modal) => new bootstrap.Modal(modal).show();
@@ -39,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (plantaGuardada) {
     $(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
     $("#selectPlanta").value = plantaGuardada;
+    $selectPlanta.value = plantaGuardada;
+    $selectPlanta.disabled = true
     obtenerRecorridosPorPlanta({ id_planta: plantaGuardada });
   } else {
     showModal($modalPlantaRecorrido);

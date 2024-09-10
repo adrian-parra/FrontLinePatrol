@@ -50,7 +50,7 @@ public class LinePatrolController : Controller
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener el hostname: {ex.Message}");
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message} :IP: {ipAddress}");
             }
         }
 
