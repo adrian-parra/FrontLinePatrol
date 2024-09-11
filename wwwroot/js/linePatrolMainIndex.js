@@ -8,7 +8,8 @@ import {
   changeInputFile,
   showAndHideButtonFlotantePlantaRecorrido,
   confirmarPlantaRecorrido,
-  obtenerRecorridosPorPlanta
+  obtenerRecorridosPorPlanta,
+  corregirHallazgo
 } from "/js/linePatrolIndex.js";
 
 // SELECTORES COMUNES
@@ -27,6 +28,8 @@ const $formLinePatrol = $(".form-line-patrol");
 const $btnConfirmarPlanta = $("#BtnconfirmarPlanta");
 const $loalContainerButton = $(".loal-container-button-flotante-planta");
 const $selectPlanta = $("#selectPlantaRegistroRecorrido");
+const $formCorregirHallazgo = $("#formCorregirHallazgoP");
+
 
 
 // FUNCIONES AUXILIARES
@@ -55,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $btnRegistrarLP.addEventListener("click", () => showModal($modalRegistrarRecorrido));
   $formFiltrado.addEventListener("submit", submitFiltrarDatosLinePatrol);
   $formLiberarP.addEventListener("submit", liberarLinePatrol);
+  $formCorregirHallazgo.addEventListener("submit", corregirHallazgo);
   
   $btnChangeInputFileImage.addEventListener("click", () => $formFileSm.click());
   $formLinePatrol.addEventListener("submit", formSubmitHandler);

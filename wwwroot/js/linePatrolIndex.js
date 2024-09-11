@@ -103,6 +103,12 @@ export const contenedorDatos = (e) => {
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
     new bootstrap.Modal($("#exampleModalLiberar")).toggle();
   }
+
+  if(idClick === "btnCorregirP" && tagNameClick === "button"){
+    id = e.target.getAttribute("name");
+    // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
+    new bootstrap.Modal($("#exampleModalCorregirHallazgo")).toggle();
+  }
 };
 
 /**
@@ -160,6 +166,61 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
     $(".container-loading").style.display = "none";
   }
 };
+
+
+
+
+export const corregirHallazgo = async (e) => {
+  e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append("id", id);
+    
+    $(".container-loading").style.display = "flex";
+
+  try {
+    // ENVIAR LOS DATOS AL SERVIDOR
+    const response = await fetch(`/LinePatrol/CorregirHallazgo`, {
+      method: "PATCH",
+      body: formData,
+    });
+
+    if (response.ok) {
+      // MANEJAR RESPUESTA EXITOSA
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        text: "Imagen de corrección guardada",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // LIMPIAR FORMULARIO Y CERRAR MODAL
+      e.target.reset();
+      $("#exampleModalCorregirHallazgo .modal-dialog .modal-content .modal-header .btn-close").click();
+
+      // ACTUALIZAR INTERFAZ DE USUARIO
+      const plantaGuardada = localStorage.getItem("plantaSeleccionada");
+      obtenerRecorridosPorPlanta({ id_planta: plantaGuardada });
+     
+    } else {
+      // MANEJAR RESPUESTA DE ERROR
+      Swal.fire({
+        text: "Imagen no cargada",
+        icon: "error",
+      });
+    }
+  } catch (error) {
+    // MANEJAR ERRORES DE LA SOLICITUD
+    console.error("Error:", error);
+    Swal.fire({
+      text: "Ocurrió un error al procesar la solicitud. Por favor, inténtalo de nuevo.",
+      icon: "error",
+    });
+  } finally {
+    // OCULTAR ANIMACIÓN DE CARGA
+    $(".container-loading").style.display = "none";
+  }
+}
 
 
 /**
