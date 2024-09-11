@@ -7,8 +7,8 @@
             <th>Planta</th>
             <th>Linea</th>
             <th>Estación</th>
-            <th>Antes</th>
-            <th>Después</th>
+            <th>Hallazgo</th>
+            <th>Corrección</th>
             <th>Comentario</th>
             <th>Responsable</th>
             <th>Fecha</th>
@@ -37,6 +37,7 @@
     else
     {
         <span></span>
+        @* <i  class="fa fa-image icon" style="font-size: 50px; color: var(--ColorDanger);"></i> *@
     } </td>
               <td style="max-width: 300px;">
                 <p class="card-text-small" title="@item.comentario">
@@ -66,7 +67,12 @@
                 @if (item.estado != null)
                 {
                   @if(item.estado == true){
-                    <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                    @if(@item.path_imagen_after != null){
+                       <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                    }else{
+                       <button class="btn btn-success btn-sm" id="btnCorregirP" name="@item.id">Corregir</button>
+                    }
+                    
                   }else{
                     <button class="btn btn-secondary btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
                     <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>
@@ -142,7 +148,11 @@
                 @if (item.estado != null)
                 {
                   @if(item.estado == true){
-                    <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                    @if(@item.path_imagen_after != null){
+                       <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                    }else{
+                       <button class="btn btn-success btn-sm" id="btnCorregirP" name="@item.id">Corregir</button>
+                    }
                   }else{
                     <button class="btn btn-secondary btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
                     <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>

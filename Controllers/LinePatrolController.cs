@@ -62,12 +62,11 @@ public class LinePatrolController : Controller
         return PartialView("filter", registrosOrdenados);
     }
 
+
     [HttpPatch]
-    public async Task<IActionResult> Liberar(LinePatrolLiberar linePatrolLiberar){
-
-
-
-         if (linePatrolLiberar.imagen_after != null && linePatrolLiberar.imagen_after.Length > 0)
+    public async Task<IActionResult> CorregirHallazgo(LinePatrolLiberar linePatrolLiberar)
+    {
+        if (linePatrolLiberar.imagen_after != null && linePatrolLiberar.imagen_after.Length > 0)
         {
             // Lista de extensiones de archivo válidas (en minúsculas)
             var extensionesValidas = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
@@ -114,6 +113,23 @@ public class LinePatrolController : Controller
 
         bool respuesta;
 
+
+        respuesta = await linePatrol.Liberar(linePatrolLiberar);
+
+
+        if (respuesta)
+            return NoContent();
+        else
+            return NoContent();
+    }
+
+
+    [HttpPatch]
+    public async Task<IActionResult> Liberar(LinePatrolLiberar linePatrolLiberar){
+
+        bool respuesta;
+
+        linePatrolLiberar.estado = false;
 
         respuesta = await linePatrol.Liberar(linePatrolLiberar);
 
