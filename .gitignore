@@ -1,6 +1,7 @@
 bin/
 obj/
 uploads/
+Logs/
 wwwroot/images/linePatrol
 wwwroot/images/firmas
 wwwroot/images/reporteGenerador
