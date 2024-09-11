@@ -41,16 +41,20 @@ public class LinePatrolController : Controller
 
         if (!string.IsNullOrEmpty(ipAddress))
         {
+            Logger logger = new Logger();
             try
             {
                 var hostEntry = Dns.GetHostEntry(ipAddress);
                 hostName = hostEntry.HostName;
-                Console.WriteLine($"La IP del cliente es: {ipAddress}, Hostname: {hostName}");
+                Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}");
+
      
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener el hostname: {ex.Message} :IP: {ipAddress}");
+                logger.Log($"IP: {ipAddress}, Error al obtener el hostname: {ex.Message}");
             }
         }
 
