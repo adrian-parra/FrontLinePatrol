@@ -63,65 +63,66 @@ public class LinePatrolController : Controller
     }
 
 
-    [HttpPatch]
-    public async Task<IActionResult> CorregirHallazgo(LinePatrolLiberar linePatrolLiberar)
+   [HttpPatch]
+public async Task<IActionResult> CorregirHallazgo(LinePatrolLiberar linePatrolLiberar)
+{
+    try
     {
-        if (linePatrolLiberar.imagen_after != null && linePatrolLiberar.imagen_after.Length > 0)
+        // Validar si se seleccionó una imagen
+        if (linePatrolLiberar.imagen_after == null || linePatrolLiberar.imagen_after.Length == 0)
         {
-            // Lista de extensiones de archivo válidas (en minúsculas)
-            var extensionesValidas = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
-            // Obtener la extensión de archivo de la imagen cargada
-            var extension = Path.GetExtension(linePatrolLiberar.imagen_after.FileName).ToLower();
-            // Verificar si la extensión es válida
-            if (!(extensionesValidas.Contains(extension))) { return BadRequest("La extensión del archivo de imagen no es válida."); }
-            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + RUTA_IMAGENES);
-
-            // Generar un nombre de archivo único utilizando un UUID
-            var nombreArchivo = $"{Guid.NewGuid()}{Path.GetExtension(linePatrolLiberar.imagen_after.FileName)}";
-
-            var rutaImagen = Path.Combine(rutaCarpeta, nombreArchivo);
-
-            linePatrolLiberar.path_imagen_after = RUTA_IMAGENES + nombreArchivo;
-            
-            // Comprimir la imagen antes de guardarla
-            using (var inputStream = linePatrolLiberar.imagen_after.OpenReadStream())
-            {
-                using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
-                {
-                    // Cargar la imagen utilizando ImageSharp
-                    using (var image = Image.Load(inputStream))
-                    {
-                        // Aplicar la compresión a la imagen
-                        image.Mutate(x => x
-                            .Resize(image.Width, image.Height)); // Ajustar el tamaño si es necesario
-
-                        // Configurar la calidad de compresión
-                        var encoder = new JpegEncoder
-                        {
-                            Quality = 70 // Ajustar la calidad de compresión según sea necesario
-                        };
-
-                        // Guardar la imagen comprimida en el sistema de archivos
-                        image.Save(outputStream, encoder);
-                    }
-                }
-            }
-
-        }else{
             return BadRequest("No se ha seleccionado ninguna imagen.");
         }
 
-        bool respuesta;
+        // Validar la extensión del archivo de imagen
+        var extensionesValidas = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var extension = Path.GetExtension(linePatrolLiberar.imagen_after.FileName).ToLowerInvariant();
+        if (!extensionesValidas.Contains(extension))
+        {
+            return BadRequest("La extensión del archivo de imagen no es válida.");
+        }
 
+        // Generar un nombre de archivo único utilizando un UUID
+        var nombreArchivo = $"{Guid.NewGuid()}{extension}";
 
-        respuesta = await linePatrol.Liberar(linePatrolLiberar);
+        // Construir la ruta completa de la imagen
+        var rutaImagen = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", RUTA_IMAGENES, nombreArchivo);
 
+        // Guardar la ruta relativa de la imagen en el modelo
+        linePatrolLiberar.path_imagen_after = Path.Combine(RUTA_IMAGENES, nombreArchivo);
 
-        if (respuesta)
-            return NoContent();
-        else
-            return NoContent();
+        // Comprimir y guardar la imagen utilizando ImageSharp
+        using (var inputStream = linePatrolLiberar.imagen_after.OpenReadStream())
+        using (var image = Image.Load(inputStream))
+        {
+            // Redimensionar la imagen si es necesario
+            image.Mutate(x => x.Resize(image.Width, image.Height));
+
+            // Guardar la imagen comprimida en formato JPEG con una calidad del 70%
+            image.Save(rutaImagen, new JpegEncoder { Quality = 70 });
+        }
+
+        // Intentar liberar el hallazgo
+        bool respuesta = await linePatrol.Liberar(linePatrolLiberar);
+
+        if (!respuesta)
+        {
+            // Manejar el error al liberar el hallazgo, por ejemplo, registrar el error
+            // _logger.LogError("Error al liberar el hallazgo.", linePatrolLiberar);
+            return StatusCode(500, "Error al liberar el hallazgo.");
+        }
+
+        return NoContent();
     }
+    catch (Exception ex)
+    {
+        // Registrar la excepción
+        // _logger.LogError(ex, "Se produjo una excepción al corregir el hallazgo.");
+
+        // Devolver un error genérico al usuario
+        return StatusCode(500, "Se produjo un error al procesar la solicitud.");
+    }
+}
 
 
     [HttpPatch]
@@ -132,7 +133,7 @@ public class LinePatrolController : Controller
         linePatrolLiberar.estado = false;
 
         respuesta = await linePatrol.Liberar(linePatrolLiberar);
-
+        
 
         if (respuesta)
             return NoContent();
