@@ -8,6 +8,14 @@
   <link rel="stylesheet" href="~/css/linePatrolIndex.css">
 }
 
+<style>
+  #modalPreviewImagenComentario {
+    padding: var(--Padding);
+    padding-left: 0;
+    padding-top: 0;
+  }
+</style>
+
 
 <!-- CARD VIEW CON TABLE RECORRIDOS -->
 <div class="card movil">
@@ -180,10 +188,11 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Imagen seleccionada</h5>
+        <h5 class="modal-title title-modal-preview-image" id="exampleModalLabel">Imagen seleccionada</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <p id="modalPreviewImagenComentario"></p>
         <img id="imagenSeleccionada" src="#" alt="Imagen seleccionada" style="max-width:100%;">
       </div>
     </div>
@@ -314,13 +323,16 @@
 
 
 
-          <hr>
+          
 
           <div class="container-buttons">
             <button type="submit" id="btnGuardarLiberar" class="btn btn-success btn-sm">Liberar</button>
           </div>
 
         </form>
+        <hr>
+        <label for="">Corrección</label>
+         <img id="imagenCorreccion" src="#" alt="Imagen seleccionada" style="max-width:100%;">
 
       </div>
     </div>
@@ -357,6 +369,12 @@
   </div>
 </div>
 
+<!-- MODAL PARA AMPLIAR IMAGENES -->
+ <div id="modalAmpliarImagen" class="modal-ampliar-imagen" >
+        <span class="close">&times;</span>
+        <img class="modal-content" id="imgAmpliada">
+    </div>
+
 <!-- INFO LIBERACION-->
 <div class="modal fade" id="exampleModalInfoLiberacion" tabindex="-1" aria-labelledby="exampleModalLabelIL"
   aria-hidden="true">
@@ -376,9 +394,8 @@
           <label>Fecha de liberación</label>
           <input type="text" readonly class="form-control form-control-sm" id="fechaLiberacionIn" value="prueba">
         </div>
-        <hr>
-
-        <img id="imagenAfterLiberacion" src="#" alt="Imagen seleccionada" style="max-width:100%;" loading="lazy">
+        <label for="">Corrección</label>
+        <img id="imagenAfterLiberacion" src="#" alt="Imagen seleccionada" style="max-width:100%;border-radius: var(--BorderRadius);" loading="lazy" onclick="ampliarImagen(this)">
 
       </div>
     </div>

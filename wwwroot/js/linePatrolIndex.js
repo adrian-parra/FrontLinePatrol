@@ -68,10 +68,49 @@ export const obtenerDatosLinePatrol = async () => {
 export const contenedorDatos = (e) => {
   const tagNameClick = e.target.tagName.toLowerCase();
   const idClick = e.target.id;
+  const element = e.target;
 
   // ? CARGAR IMAGEN EN MODAL PARA PREVISUALIZACIÓN
   if (tagNameClick === "img") {
+
+    if (idClick == "imgImagenHallazgo") {
+      $(".title-modal-preview-image").textContent = "Hallazgo";
+      $("#modalPreviewImagenComentario").style = "color:red"
+    } else if (idClick == "imgImagenCorreccion") {
+      $(".title-modal-preview-image").textContent = "Corrección";
+      $("#modalPreviewImagenComentario").style = "color:green"
+    }
     $("#imagenSeleccionada").src = e.target.src;
+
+    const viewportWidth = window.innerWidth;
+
+    if (viewportWidth <= 600) {
+      $(".title-modal-preview-image").textContent = "Hallazgo";
+      $("#modalPreviewImagenComentario").style = "color:red"
+
+      let containerItems = element.parentNode
+
+      let comentario = containerItems.querySelector(".card-body > .card-text").textContent;
+
+
+      $("#modalPreviewImagenComentario").textContent = comentario;
+
+    } else {
+
+
+
+      let containerItems = element.parentNode.parentNode;
+
+      let comentario = containerItems.querySelector(".card-text-small").textContent;
+
+
+
+      $("#modalPreviewImagenComentario").textContent = comentario;
+    }
+
+
+
+
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
     new bootstrap.Modal($("#exampleModal")).toggle();
   }
@@ -100,11 +139,17 @@ export const contenedorDatos = (e) => {
   // ? MOSTRAR FORMULARIO MODAL PARA LIBERAR PATRULLAJE
   if (idClick === "btnLiberarP" && tagNameClick === "button") {
     id = e.target.getAttribute("name");
+
+    const siguienteEl = e.target.nextElementSibling;
+    let srcImagenCorreccion = siguienteEl.textContent;
+
+    $("#imagenCorreccion").src = srcImagenCorreccion;
+
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
     new bootstrap.Modal($("#exampleModalLiberar")).toggle();
   }
 
-  if(idClick === "btnCorregirP" && tagNameClick === "button"){
+  if (idClick === "btnCorregirP" && tagNameClick === "button") {
     id = e.target.getAttribute("name");
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
     new bootstrap.Modal($("#exampleModalCorregirHallazgo")).toggle();
@@ -172,10 +217,10 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
 
 export const corregirHallazgo = async (e) => {
   e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.append("id", id);
-    
-    $(".container-loading").style.display = "flex";
+  const formData = new FormData(e.target);
+  formData.append("id", id);
+
+  $(".container-loading").style.display = "flex";
 
   try {
     // ENVIAR LOS DATOS AL SERVIDOR
@@ -201,7 +246,7 @@ export const corregirHallazgo = async (e) => {
       // ACTUALIZAR INTERFAZ DE USUARIO
       const plantaGuardada = localStorage.getItem("plantaSeleccionada");
       obtenerRecorridosPorPlanta({ id_planta: plantaGuardada });
-     
+
     } else {
       // MANEJAR RESPUESTA DE ERROR
       Swal.fire({
@@ -284,7 +329,7 @@ export const liberarLinePatrol = async (e) => {
       // ACTUALIZAR INTERFAZ DE USUARIO
       const plantaGuardada = localStorage.getItem("plantaSeleccionada");
       obtenerRecorridosPorPlanta({ id_planta: plantaGuardada });
-     
+
     } else {
       // MANEJAR RESPUESTA DE ERROR
       Swal.fire({
@@ -325,18 +370,21 @@ export const liberarLinePatrol = async (e) => {
 export const changeInputFile = async (e) => {
   // OBTENER EL ARCHIVO SELECCIONADO DEL INPUT
   const file = e.target.files[0];
-  
+
   // OCULTAR EL ENLACE DE INFORMACIÓN DE IMAGEN
   $("#linkInfoImagenSelected").style.display = "none";
-  
+
   if (file) {
     // MOSTRAR EL ENLACE DE INFORMACIÓN DE IMAGEN
     $("#linkInfoImagenSelected").style.display = "flex";
-    
+
     // CREAR UNA URL DE OBJETO PARA LA IMAGEN Y ASIGNARLA AL ELEMENTO DE IMAGEN
     const imageURL = URL.createObjectURL(file);
     $("#imagenSeleccionada").src = imageURL;
-    
+
+    $(".title-modal-preview-image").textContent = "Imagen seleccionada";
+    $("#modalPreviewImagenComentario").textContent = "";
+
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
     new bootstrap.Modal($("#exampleModal")).show();
   }
@@ -615,3 +663,36 @@ export const obtenerRecorridosPorPlanta = async ({ id_planta }) => {
     $(".container-loading").style.display = "none";
   }
 };
+
+// Función para inicializar los escuchadores de eventos para las imágenes
+export const initImageClickListeners = () => {
+  // Seleccionamos las imágenes y adjuntamos los escuchadores de eventos de clic
+  const images = [
+    $("#imagenSeleccionada"),
+    $("#imagenAfterLiberacion"),
+    $("#imagenCorreccion")
+  ];
+
+  images.forEach(img => {
+    img.addEventListener("click", (e) => {
+      ampliarImagen(e.target); // Pasamos la imagen clicada a la función
+    });
+  });
+
+  // Adjuntamos el escuchador de eventos al modal para cerrarlo
+  $("#modalAmpliarImagen").addEventListener("click", cerrarModal);
+}
+
+const ampliarImagen = (img) => {
+  const modal = $("#modalAmpliarImagen");
+  const imgAmpliada = $("#imgAmpliada");
+
+  imgAmpliada.src = img.src; // Establecemos la fuente de la imagen ampliada
+  modal.style.display = "block"; // Mostramos el modal
+}
+
+// Función para cerrar el modal
+const cerrarModal = () => {
+  const modal = $("#modalAmpliarImagen");
+  modal.style.display = "none"; // Ocultamos el modal
+}

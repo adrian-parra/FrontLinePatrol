@@ -27,19 +27,19 @@
               <td>@item.id_linea</td>
               <td>@item.id_estacion</td>
               <td><img  src="@item.path_imagen" alt="" width="50px" height="50px" alt="Card image cap" loading="lazy"
-                  style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;border-radius:7px"></td>
+                  style="aspect-ratio: 16/9;object-fit:cover;cursor:pointer;border-radius:7px" id="imgImagenHallazgo"></td>
               <td>
                 @if (@item.path_imagen_after != null)
     {
         <img src="@item.path_imagen_after" alt="Card image cap" width="50px" height="50px" loading="lazy"
-             style="aspect-ratio: 16/9; object-fit: cover; cursor: pointer; border-radius: 7px">
+             style="aspect-ratio: 16/9; object-fit: cover; cursor: pointer; border-radius: 7px" id="imgImagenCorreccion">
     }
     else
     {
-        @* <span></span> *@
-        <i  class="fa fa-image icon text-danger" style="font-size: 50px; color: var(--ColorExtra);"></i>
+        <span></span>
+        @* <i  class="fa fa-image icon text-danger" style="font-size: 50px; color: var(--ColorExtra);"></i> *@
     } </td>
-              <td style="max-width: 300px;">
+              <td id="comentario" style="max-width: 300px;">
                 <p class="card-text-small" title="@item.comentario">
                   @item.comentario
                 </p>
@@ -60,7 +60,7 @@
                     <p class="text-warning">En proceso</p>
                    }else{
                     <p class="right @(item.estado.Value ? "activo" : "finalizado")">
-                    @(item.estado.Value ? "Activo" : "Liberado")
+                    @(item.estado.Value ? "Pendiente" : "Liberado")
                   </p>
                    }
                   
@@ -75,6 +75,7 @@
                   @if(item.estado == true){
                     @if(@item.path_imagen_after != null){
                        <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                       <p style="display: none;">@item.path_imagen_after</p>
                     }else{
                        <button class="btn btn-warning btn-sm" id="btnCorregirP" name="@item.id">Corregir</button>
                     }
@@ -129,7 +130,7 @@
                 <p class="right">@item.id_linea</p>
                 <p>Estación:</p>
                 <p class="right">@item.id_estacion</p>
-                <p>Responsable</p>
+                <p>Responsable:</p>
                 <p class="right">@item.responsable</p>
                 <p>Estado:</p>
                 @if (item.estado != null)
@@ -138,7 +139,7 @@
                     <p class="text-warning" style="text-align: right;">En proceso</p>
                    }else{
                     <p class="right @(item.estado.Value ? "activo" : "finalizado")">
-                    @(item.estado.Value ? "Activo" : "Liberado")
+                    @(item.estado.Value ? "Pendiente" : "Liberado")
                   </p>
                    }
 
@@ -147,7 +148,7 @@
                 
 
               </div>
-              <hr>
+              
               
               <p>Comentario:</p>
               <p class="card-text">
@@ -160,6 +161,7 @@
                   @if(item.estado == true){
                     @if(@item.path_imagen_after != null){
                        <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                       <p style="display: none;">@item.path_imagen_after</p>
                     }else{
                        <button class="btn btn-warning btn-sm" id="btnCorregirP" name="@item.id">Corregir</button>
                     }

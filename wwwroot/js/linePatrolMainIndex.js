@@ -9,7 +9,8 @@ import {
   showAndHideButtonFlotantePlantaRecorrido,
   confirmarPlantaRecorrido,
   obtenerRecorridosPorPlanta,
-  corregirHallazgo
+  corregirHallazgo,
+  initImageClickListeners
 } from "/js/linePatrolIndex.js";
 
 // SELECTORES COMUNES
@@ -37,9 +38,13 @@ const showModal = (modal) => new bootstrap.Modal(modal).show();
 const hideLoading = () => $containerLoading.style.display = "none";
 const showLoading = () => $containerLoading.style.display = "flex";
 
+
+
 // INICIALIZAR EVENTOS Y ESTADO DE LA APLICACIÓN AL CARGAR EL DOCUMENTO
 document.addEventListener("DOMContentLoaded", () => {
   const plantaGuardada = localStorage.getItem("plantaSeleccionada");
+
+  initImageClickListeners();
 
   if (plantaGuardada) {
     $(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
