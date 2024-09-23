@@ -1,7 +1,9 @@
 let id = null;
 let personaLibera = null;
 
-export const $ = (selector) => document.querySelector(selector);
+
+
+export const $$ = (selector) => document.querySelector(selector);
 
 /**
  * OBTENER DATOS DE LINEPATROL Y ACTUALIZAR LA INTERFAZ.
@@ -19,7 +21,7 @@ export const $ = (selector) => document.querySelector(selector);
  */
 export const obtenerDatosLinePatrol = async () => {
   // MOSTRAR ANIMACIÓN DE CARGA
-  $(".container-loading").style.display = "flex";
+  $$(".container-loading").style.display = "flex";
 
   try {
     // REALIZAR UNA SOLICITUD POST AL SERVIDOR
@@ -31,7 +33,7 @@ export const obtenerDatosLinePatrol = async () => {
     if (response.ok) {
       // OBTENER Y ACTUALIZAR INTERFAZ CON LOS DATOS RECIBIDOS
       const data = await response.text();
-      $(".container-items").innerHTML = data;
+      $$(".container-items").innerHTML = data;
     } else {
       // MANEJAR RESPUESTA DE ERROR DEL SERVIDOR
       Swal.fire({
@@ -48,7 +50,7 @@ export const obtenerDatosLinePatrol = async () => {
     });
   } finally {
     // OCULTAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 };
 
@@ -74,26 +76,26 @@ export const contenedorDatos = (e) => {
   if (tagNameClick === "img") {
 
     if (idClick == "imgImagenHallazgo") {
-      $(".title-modal-preview-image").textContent = "Hallazgo";
-      $("#modalPreviewImagenComentario").style = "color:red"
+      $$(".title-modal-preview-image").textContent = "Hallazgo";
+      $$("#modalPreviewImagenComentario").style = "color:red"
     } else if (idClick == "imgImagenCorreccion") {
-      $(".title-modal-preview-image").textContent = "Corrección";
-      $("#modalPreviewImagenComentario").style = "color:green"
+      $$(".title-modal-preview-image").textContent = "Corrección";
+      $$("#modalPreviewImagenComentario").style = "color:green"
     }
-    $("#imagenSeleccionada").src = e.target.src;
+    $$("#imagenSeleccionada").src = e.target.src;
 
     const viewportWidth = window.innerWidth;
 
     if (viewportWidth <= 600) {
-      $(".title-modal-preview-image").textContent = "Hallazgo";
-      $("#modalPreviewImagenComentario").style = "color:red"
+      $$(".title-modal-preview-image").textContent = "Hallazgo";
+      $$("#modalPreviewImagenComentario").style = "color:red"
 
       let containerItems = element.parentNode
 
       let comentario = containerItems.querySelector(".card-body > .card-text").textContent;
 
 
-      $("#modalPreviewImagenComentario").textContent = comentario;
+      $$("#modalPreviewImagenComentario").textContent = comentario;
 
     } else {
 
@@ -105,30 +107,30 @@ export const contenedorDatos = (e) => {
 
 
 
-      $("#modalPreviewImagenComentario").textContent = comentario;
+      $$("#modalPreviewImagenComentario").textContent = comentario;
     }
 
 
 
 
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
-    new bootstrap.Modal($("#exampleModal")).toggle();
+    new bootstrap.Modal($$("#exampleModal")).toggle();
   }
 
   // ? MOSTRAR INFORMACIÓN DE LIBERACIÓN EN UN MODAL
   if (idClick === "btnInfoLiberarP" && tagNameClick === "button") {
-    $("#imagenAfterLiberacion").src = e.target.getAttribute("name");
+    $$("#imagenAfterLiberacion").src = e.target.getAttribute("name");
 
     // OBTENER INFORMACIÓN DE LIBERACIÓN
     const siguienteEl = e.target.nextElementSibling;
     personaLibera = siguienteEl.textContent;
 
     // CONFIGURAR VALORES EN EL FORMULARIO DEL MODAL
-    $("#personaLibero").value = personaLibera;
-    $("#fechaLiberacionIn").value = siguienteEl.nextElementSibling.textContent;
+    $$("#personaLibero").value = personaLibera;
+    $$("#fechaLiberacionIn").value = siguienteEl.nextElementSibling.textContent;
 
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
-    new bootstrap.Modal($("#exampleModalInfoLiberacion")).toggle();
+    new bootstrap.Modal($$("#exampleModalInfoLiberacion")).toggle();
   }
 
   // ? TOGGLE DE VISIBILIDAD DE COMENTARIOS COMPLETOS
@@ -143,16 +145,16 @@ export const contenedorDatos = (e) => {
     const siguienteEl = e.target.nextElementSibling;
     let srcImagenCorreccion = siguienteEl.textContent;
 
-    $("#imagenCorreccion").src = srcImagenCorreccion;
+    $$("#imagenCorreccion").src = srcImagenCorreccion;
 
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
-    new bootstrap.Modal($("#exampleModalLiberar")).toggle();
+    new bootstrap.Modal($$("#exampleModalLiberar")).toggle();
   }
 
   if (idClick === "btnCorregirP" && tagNameClick === "button") {
     id = e.target.getAttribute("name");
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
-    new bootstrap.Modal($("#exampleModalCorregirHallazgo")).toggle();
+    new bootstrap.Modal($$("#exampleModalCorregirHallazgo")).toggle();
   }
 };
 
@@ -177,7 +179,7 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
   e.preventDefault(); // CANCELA LA ACCIÓN POR DEFECTO DEL FORMULARIO (RELOADING DE PÁGINA)
 
   // MOSTRAR ANIMACIÓN DE CARGA
-  $(".container-loading").style.display = "flex";
+  $$(".container-loading").style.display = "flex";
 
   try {
     // CREAR UNA INSTANCIA DE FormData A PARTIR DEL FORMULARIO
@@ -192,7 +194,7 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
     // OBTENER Y ACTUALIZAR INTERFAZ CON LOS DATOS RECIBIDOS
     if (response.ok) {
       const data = await response.text();
-      $(".container-items").innerHTML = data;
+      $$(".container-items").innerHTML = data;
     } else {
       Swal.fire({
         text: "Error al obtener los datos.",
@@ -208,7 +210,7 @@ export const submitFiltrarDatosLinePatrol = async (e) => {
     });
   } finally {
     // OCULTAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 };
 
@@ -220,7 +222,7 @@ export const corregirHallazgo = async (e) => {
   const formData = new FormData(e.target);
   formData.append("id", id);
 
-  $(".container-loading").style.display = "flex";
+  $$(".container-loading").style.display = "flex";
 
   try {
     // ENVIAR LOS DATOS AL SERVIDOR
@@ -241,7 +243,7 @@ export const corregirHallazgo = async (e) => {
 
       // LIMPIAR FORMULARIO Y CERRAR MODAL
       e.target.reset();
-      $("#exampleModalCorregirHallazgo .modal-dialog .modal-content .modal-header .btn-close").click();
+      $$("#exampleModalCorregirHallazgo .modal-dialog .modal-content .modal-header .btn-close").click();
 
       // ACTUALIZAR INTERFAZ DE USUARIO
       const plantaGuardada = localStorage.getItem("plantaSeleccionada");
@@ -263,7 +265,7 @@ export const corregirHallazgo = async (e) => {
     });
   } finally {
     // OCULTAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 }
 
@@ -303,7 +305,7 @@ export const liberarLinePatrol = async (e) => {
   formData.delete("contra");
 
   // MOSTRAR ANIMACIÓN DE CARGA
-  $(".container-loading").style.display = "flex";
+  $$(".container-loading").style.display = "flex";
 
   try {
     // ENVIAR LOS DATOS AL SERVIDOR
@@ -324,7 +326,7 @@ export const liberarLinePatrol = async (e) => {
 
       // LIMPIAR FORMULARIO Y CERRAR MODAL
       e.target.reset();
-      $("#exampleModalLiberar .modal-dialog .modal-content .modal-header .btn-close").click();
+      $$("#exampleModalLiberar .modal-dialog .modal-content .modal-header .btn-close").click();
 
       // ACTUALIZAR INTERFAZ DE USUARIO
       const plantaGuardada = localStorage.getItem("plantaSeleccionada");
@@ -346,7 +348,7 @@ export const liberarLinePatrol = async (e) => {
     });
   } finally {
     // OCULTAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 };
 
@@ -372,21 +374,21 @@ export const changeInputFile = async (e) => {
   const file = e.target.files[0];
 
   // OCULTAR EL ENLACE DE INFORMACIÓN DE IMAGEN
-  $("#linkInfoImagenSelected").style.display = "none";
+  $$("#linkInfoImagenSelected").style.display = "none";
 
   if (file) {
     // MOSTRAR EL ENLACE DE INFORMACIÓN DE IMAGEN
-    $("#linkInfoImagenSelected").style.display = "flex";
+    $$("#linkInfoImagenSelected").style.display = "flex";
 
     // CREAR UNA URL DE OBJETO PARA LA IMAGEN Y ASIGNARLA AL ELEMENTO DE IMAGEN
     const imageURL = URL.createObjectURL(file);
-    $("#imagenSeleccionada").src = imageURL;
+    $$("#imagenSeleccionada").src = imageURL;
 
-    $(".title-modal-preview-image").textContent = "Imagen seleccionada";
-    $("#modalPreviewImagenComentario").textContent = "";
+    $$(".title-modal-preview-image").textContent = "Imagen seleccionada";
+    $$("#modalPreviewImagenComentario").textContent = "";
 
     // CREAR UNA INSTANCIA DEL MODAL Y MOSTRARLO
-    new bootstrap.Modal($("#exampleModal")).show();
+    new bootstrap.Modal($$("#exampleModal")).show();
   }
 };
 
@@ -468,7 +470,7 @@ export const formSubmitHandler = async (e) => {
 
   try {
     // MOSTRAR ANIMACIÓN DE CARGA MIENTRAS SE ENVIAN LOS DATOS
-    $(".container-loading").style.display = "flex";
+    $$(".container-loading").style.display = "flex";
 
     // ENVIAR DATOS AL SERVIDOR
     const response = await fetch("/LinePatrol/GuardarCambios", {
@@ -479,7 +481,7 @@ export const formSubmitHandler = async (e) => {
     // MANEJAR RESPUESTA DEL SERVIDOR
     if (response.ok) {
       const data = await response.text();
-      $(".container-loading").style.display = "none";
+      $$(".container-loading").style.display = "none";
 
       // MOSTRAR MENSAJE DE ÉXITO
       Swal.fire({
@@ -495,10 +497,10 @@ export const formSubmitHandler = async (e) => {
       obtenerRecorridosPorPlanta({ id_planta: plantaGuardada })
 
       // LIMPIAR CAMPOS DEL FORMULARIO
-      $("#floatingTextarea2").value = "";
-      $("#formFileSm").value = "";
-      $("#selectEstacion").selectedIndex = 0;
-      $("#linkInfoImagenSelected").style.display = "none";
+      $$("#floatingTextarea2").value = "";
+      $$("#formFileSm").value = "";
+      $$("#selectEstacion").selectedIndex = 0;
+      $$("#linkInfoImagenSelected").style.display = "none";
     } else {
       // MANEJAR ERRORES DEL SERVIDOR
       const errorMessage = await response.text();
@@ -516,7 +518,7 @@ export const formSubmitHandler = async (e) => {
     });
   } finally {
     // OCULTAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 };
 
@@ -534,7 +536,7 @@ export const formSubmitHandler = async (e) => {
  */
 
 // SELECCIONAR EL MENÚ FLOTANTE
-const floatingMenu = $(".loal-container-button-flotante-planta");
+const floatingMenu = $$(".loal-container-button-flotante-planta");
 
 // GUARDAR LA POSICIÓN ANTERIOR DEL SCROLL
 let lastScrollTop = 0;
@@ -575,29 +577,29 @@ export const showAndHideButtonFlotantePlantaRecorrido = () => {
  * @throws {Error} Si no se selecciona una planta, se muestra una alerta de error.
  */
 export const confirmarPlantaRecorrido = async () => {
-  const plantaSeleccionada = $("#selectPlanta").value;
+  const plantaSeleccionada = $$("#selectPlanta").value;
 
   if (plantaSeleccionada) {
     // ALMACENAR LA PLANTA SELECCIONADA EN LOCALSTORAGE
     localStorage.setItem("plantaSeleccionada", plantaSeleccionada);
 
     // ACTUALIZAR EL TEXTO DEL BOTÓN FLOTANTE CON LA PLANTA SELECCIONADA
-    $(
+    $$(
       ".loal-button-flotante-planta"
     ).textContent = `Planta ${plantaSeleccionada}`;
 
     // MANTENER LA SELECCIÓN EN EL SELECTOR
-    $("#selectPlanta").value = plantaSeleccionada;
+    $$("#selectPlanta").value = plantaSeleccionada;
 
-    $("#selectPlantaRegistroRecorrido").value = plantaSeleccionada;
+    $$("#selectPlantaRegistroRecorrido").value = plantaSeleccionada;
 
-    $("#selectPlantaRegistroRecorrido").disabled = true
+    $$("#selectPlantaRegistroRecorrido").disabled = true
 
     // LLAMADA A LA FUNCIÓN PARA OBTENER LOS RECORRIDOS POR PLANTA
     await obtenerRecorridosPorPlanta({ id_planta: plantaSeleccionada });
 
     // CERRAR EL MODAL
-    $("#exampleModalPlantaRecorrido .btn-close").click();
+    $$("#exampleModalPlantaRecorrido .btn-close").click();
   } else {
     // MOSTRAR UN MENSAJE DE ERROR SI NO SE SELECCIONA NINGUNA PLANTA
     Swal.fire({
@@ -629,7 +631,7 @@ export const confirmarPlantaRecorrido = async () => {
 export const obtenerRecorridosPorPlanta = async ({ id_planta }) => {
   try {
     // MOSTRAR ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "flex";
+    $$(".container-loading").style.display = "flex";
 
     // CREAR UNA NUEVA INSTANCIA DE FORMDATA Y AÑADIR EL ID DE LA PLANTA
     const formData = new FormData();
@@ -650,7 +652,7 @@ export const obtenerRecorridosPorPlanta = async ({ id_planta }) => {
     const data = await response.text();
 
     // ACTUALIZAR EL CONTENIDO DEL ELEMENTO CON LOS DATOS RECIBIDOS
-    $(".container-items").innerHTML = data;
+    $$(".container-items").innerHTML = data;
   } catch (error) {
     // MANEJAR ERRORES DE LA SOLICITUD
     console.error("Ocurrió un error:", error);
@@ -660,7 +662,7 @@ export const obtenerRecorridosPorPlanta = async ({ id_planta }) => {
     });
   } finally {
     // OCULTAR LA ANIMACIÓN DE CARGA
-    $(".container-loading").style.display = "none";
+    $$(".container-loading").style.display = "none";
   }
 };
 
@@ -668,9 +670,9 @@ export const obtenerRecorridosPorPlanta = async ({ id_planta }) => {
 export const initImageClickListeners = () => {
   // Seleccionamos las imágenes y adjuntamos los escuchadores de eventos de clic
   const images = [
-    $("#imagenSeleccionada"),
-    $("#imagenAfterLiberacion"),
-    $("#imagenCorreccion")
+    $$("#imagenSeleccionada"),
+    $$("#imagenAfterLiberacion"),
+    $$("#imagenCorreccion")
   ];
 
   images.forEach(img => {
@@ -680,12 +682,12 @@ export const initImageClickListeners = () => {
   });
 
   // Adjuntamos el escuchador de eventos al modal para cerrarlo
-  $("#modalAmpliarImagen").addEventListener("click", cerrarModal);
+  $$("#modalAmpliarImagen").addEventListener("click", cerrarModal);
 }
 
 const ampliarImagen = (img) => {
-  const modal = $("#modalAmpliarImagen");
-  const imgAmpliada = $("#imgAmpliada");
+  const modal = $$("#modalAmpliarImagen");
+  const imgAmpliada = $$("#imgAmpliada");
 
   imgAmpliada.src = img.src; // Establecemos la fuente de la imagen ampliada
   modal.style.display = "block"; // Mostramos el modal
@@ -693,6 +695,6 @@ const ampliarImagen = (img) => {
 
 // Función para cerrar el modal
 const cerrarModal = () => {
-  const modal = $("#modalAmpliarImagen");
+  const modal = $$("#modalAmpliarImagen");
   modal.style.display = "none"; // Ocultamos el modal
 }
