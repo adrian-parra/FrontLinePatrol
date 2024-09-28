@@ -3,52 +3,76 @@
 }
 
 <style>
-    .container-opciones-grid {
-    }
-    .container-opciones{
+    .container-opciones-grid {}
+
+    .container-opciones {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: var(--Margin);
     }
+
     .opcion {
         border: 1px solid #CED4DA;
         border-radius: var(--BorderRadius);
         transition: .3s all;
     }
+
     .opcion:hover {
         cursor: pointer;
         background-color: #ced4da;
     }
-   .opcion .opcion-head {
-         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .opcion .opcion-body{
+
+    .opcion .opcion-head {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
-    .opcion .opcion-body i {
-     color: var(--ColorSecundario);
-        
+
+    .opcion .opcion-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-    .container-message{
+
+    .opcion .opcion-body i {
+        color: var(--ColorSecundario);
+
+    }
+
+    .container-message {
         border-radius: var(--BorderRadius);
         background-color: var(--ColorDanger);
         padding: var(--Padding);
         margin-bottom: var(--Margin);
-        display:none;
-        
+        display: none;
+
     }
-    .container-message .message {
-    }
+
+    .container-message .message {}
+
     .container-message .message p {
         color: var(--ColorPrincipal);
-        margin:0;
+        margin: 0;
     }
+
+
+     .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            z-index: 1000;
+            background: white;
+        }
+        .suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #f0f0f0;
+        }
 </style>
 
 <div class="card movil">
@@ -57,11 +81,47 @@
     </div>
     <div class="card-body">
 
+        <input type="text" id="myInput" placeholder="Escribe algo..." autocomplete="off">
+<div id="suggestions" class="autocomplete-suggestions"></div>
+
         <form id="formEjecutarComando">
             <div class="container-form-cv">
                 <div class="mb-2">
                     <label class="form-label">Comando</label>
                     <input type="text" class="form-control form-control-sm" name="comando">
+                </div>
+
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Ejecutar</button>
+            </div>
+
+        </form>
+
+
+        <span>wmi (Obtener información de dispositivo)</span>
+        <form id="formObtenerInfoDeviceWmi">
+            <div class="container-form-info-device">
+                <div class="mb-2">
+                    <label class="form-label">Ip o hostname</label>
+                    <input type="text" class="form-control form-control-sm" name="ip">
+                </div>
+
+            </div>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Ejecutar</button>
+            </div>
+
+        </form>
+
+        <span>wmi (Reiniciar dispositivo)</span>
+        <form id="formRestartDeviceWmi">
+            <div class="container-form-info-device">
+                <div class="mb-2">
+                    <label class="form-label">Ip o hostname</label>
+                    <input type="text" class="form-control form-control-sm" name="ip">
                 </div>
 
             </div>
@@ -79,42 +139,48 @@
             </div>
             <div class="container-message">
                 <div class="message">
-                    <p>Esta sección de la página está diseñada para funcionar en Windows. Algunas funcionalidades pueden no estar disponibles en tu sistema operativo.</p>
+                    <p>Esta sección de la página está diseñada para funcionar en Windows. Algunas funcionalidades pueden
+                        no
+                        estar disponibles en tu sistema operativo.</p>
                 </div>
             </div>
 
             <div class="container-opciones-grid">
                 <div class="container-opciones">
-                    <div class="opcion">
+                    <div class="opcion" id="restartChecadorMch3C7TIME306">
                         <div class="opcion-head">
-                            <p>Abrir correo</p>
+                            <p>Reiniciar(C7TIME306) mch3</p>
                         </div>
                         <div class="opcion-body">
-                            <i class="fa fa-envelope fa-10x"></i>
+                            @* <i class="fa fa-envelope fa-10x"></i> *@
+                            @* <i class="fa fa-rotate fa-10x"></i> *@
+                            <i class="fas fa-redo fa-10x"></i>
+
                         </div>
                     </div>
-                    <div class="opcion">
+                    <div class="opcion" id="restartChecadorMch3C7TIME307">
                         <div class="opcion-head">
-                            <p>Cerrar correo</p>
+                            <p>Reiniciar(C7TIME307) mch3</p>
                         </div>
                         <div class="opcion-body">
-                            <i class="fa fa-envelope fa-10x"></i>
+                            @* <i class="fa fa-envelope fa-10x"></i> *@
+                            <i class="fas fa-redo fa-10x"></i>
                         </div>
                     </div>
-                    <div class="opcion">
-                        <div class="opcion-head">
-                            <p>Abrir google chrome</p>
+                    <div class="opcion" id="optionCerraGacs">
+                        <div class="opcion-head" <p>Cerra Gacs</p>
                         </div>
                         <div class="opcion-body">
-                            <i class="fa fa-chrome fa-10x"></i>
+                            @* <i class="fa fa-chrome "></i> *@
+                            <i class="fas fa-times fa-10x"></i>
                         </div>
                     </div>
-                     <div class="opcion">
+                    <div class="opcion" id="optionCerraApps">
                         <div class="opcion-head">
-                            <p>Cerra google chrome</p>
+                            <p>Cerra apps </p>
                         </div>
                         <div class="opcion-body">
-                            <i class="fa fa-chrome fa-10x"></i>
+                             <i class="fas fa-times fa-10x"></i>
                         </div>
                     </div>
                 </div>
@@ -124,9 +190,208 @@
 
 </div>
 
+<!-- CERRAR APPS -->
+<div class="modal fade" id="modalCerrarApps" tabindex="-1" aria-labelledby="modalCerrarApps" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cerrar Apps</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCerrarApps">
+                    <div class="mb-2">
+                        <label for="">Ip o hostname</label>
+                        <input type="text" class="form-control form-control-sm" name="ip">
+                    </div> <!-- Este div de cierre es correcto -->
+                    <div class="mb-2">
+                        <label for="">Nombre de App</label>
+                        <input type="text" class="form-control form-control-sm" name="app">
+                    </div>
+                    <hr>
+
+                    <div class="container-buttons">
+                        <button type="submit" id="btnCerrarGacs" class="btn btn-success btn-sm">Cerrar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL CERRAR GACS -->
+<div class="modal fade" id="modalCerrarGacs" tabindex="-1" aria-labelledby="modalCerrarGacs" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Cerra Gacs</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCerrarGacs">
+                    <div class="mb-2">
+                        <label for="">Ip o hostname</label>
+                        <input type="text" class="form-control form-control-sm" name="ip">
+                    </div> <!-- Este div de cierre es correcto -->
+
+                    <hr>
+
+                    <div class="container-buttons">
+                        <button type="submit" id="btnCerrarGacs" class="btn btn-success btn-sm">Cerrar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 <script type="module">
 
     import { $ } from '/js/utils.js'
+
+    import { restartDeviceWmi,cerrarAppWmi } from '/js/cmdIndex.js'
+
+    const showModal = (modal) => new bootstrap.Modal(modal).show();
+    const hideLoading = () => $containerLoading.style.display = "none";
+    const showLoading = () => $containerLoading.style.display = "flex";
+
+
+
+
+     const suggestions = ["Manzana", "Banana", "Naranja", "Fresa", "Kiwi"];
+    const input = document.getElementById('myInput');
+    const suggestionBox = document.getElementById('suggestions');
+
+    input.addEventListener('input', function() {
+        const value = this.value;
+        suggestionBox.innerHTML = '';
+        if (!value) return;
+
+        const filteredSuggestions = suggestions.filter(item => item.toLowerCase().includes(value.toLowerCase()));
+        filteredSuggestions.forEach(item => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('suggestion');
+            suggestionItem.textContent = item;
+            suggestionItem.addEventListener('click', function() {
+                input.value = item;
+                suggestionBox.innerHTML = '';
+            });
+            suggestionBox.appendChild(suggestionItem);
+        });
+    });
+
+    
+
+    $("#optionCerraApps").addEventListener("click", () => showModal("#modalCerrarApps"))
+
+     $("#formCerrarApps").addEventListener("submit", (e) => {
+        e.preventDefault()
+        const dataForm = new FormData(e.target);
+       
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Quieres cerrar la aplicación?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, cerrar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Cerrando!',
+                    'La aplicación se cerrará ahora.',
+                    'success'
+                );
+                cerrarAppWmi(dataForm)
+            }
+        });
+    })
+
+    $("#optionCerraGacs").addEventListener("click", () => {
+        showModal("#modalCerrarGacs")
+    });
+
+    $("#formCerrarGacs").addEventListener("submit", (e) => {
+        e.preventDefault()
+        const dataForm = new FormData(e.target);
+        dataForm.append("app", "ACSystem.exe")
+
+
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Quieres cerrar la aplicación?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, cerrar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Aquí puedes agregar la lógica para cerrar la aplicación
+                Swal.fire(
+                    'Cerrando!',
+                    'La aplicación se cerrará ahora.',
+                    'success'
+                );
+                cerrarAppWmi(dataForm)
+                // Por ejemplo, redirigir a otra página o cerrar la ventana
+                // window.close(); // Esto solo funcionará si la ventana fue abierta por JavaScript
+            }
+        });
+    })
+
+    $("#restartChecadorMch3C7TIME306").addEventListener("click", () => {
+        const dataForm = new FormData();
+        dataForm.append("ip", "C7TIME306")
+
+        Swal.fire({
+            title: "¿Estás seguro de reiniciar el dispositivo?",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Si",
+            denyButtonText: `No`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+    @* swal("¡Reiniciando!", "El dispositivo se reiniciará ahora.", "success"); *@
+                    //Swal.fire("¡Reiniciando!", "El dispositivo se reiniciará ahora.", "success");
+                    restartDeviceWmi(dataForm)
+            } else if (result.isDenied) {
+                //#ced4daSwal.fire("Changes are not saved", "", "info");
+            }
+        });
+
+
+
+
+    })
+
+    $("#restartChecadorMch3C7TIME307").addEventListener("click", () => {
+
+        const dataForm = new FormData();
+        dataForm.append("ip", "C7TIME307")
+        Swal.fire({
+            title: "¿Estás seguro de reiniciar el dispositivo?",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Si",
+            denyButtonText: `No`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+    @* swal("¡Reiniciando!", "El dispositivo se reiniciará ahora.", "success"); *@
+                    //Swal.fire("¡Reiniciando!", "El dispositivo se reiniciará ahora.", "success");
+                    restartDeviceWmi(dataForm)
+            } else if (result.isDenied) {
+                //#ced4daSwal.fire("Changes are not saved", "", "info");
+            }
+        });
+
+
+    })
 
     $("#formEjecutarComando").addEventListener('submit', async (e) => {
         e.preventDefault()
@@ -154,6 +419,51 @@
 
     })
 
+    $("#formObtenerInfoDeviceWmi").addEventListener('submit', async (e) => {
+        e.preventDefault()
+        // MOSTRAR LOADER DE CARGA
+        $('.container-loading').style = 'display:flex;'
+        try {
+            // OBTENER DATA DEL FORM QUE SE USARA PARA FILTRAR LA INFORMACIÓN
+            const dataForm = new FormData(e.target);
+
+            const datosResponse = await fetch('/Cmd/ObtenerInfoDeviceWmi', {
+                method: 'POST',
+                body: dataForm,
+            });
+
+            // Verificar si la respuesta es un error 400
+            if (!datosResponse.ok) {
+                if (datosResponse.status === 400) {
+                    throw new Error('Solicitud incorrecta (400). Verifica los datos enviados.');
+                } else {
+                    throw new Error(`Error en la solicitud: ${datosResponse.status}`);
+                }
+            }
+
+            const datos = await datosResponse.text();
+            $('.container-respuesta .respuesta').innerHTML = `<pre>${recorrerCadena(datos)}</pre>`;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error:', error);
+            $('.container-respuesta .respuesta').innerHTML = `<pre>Error: ${error.message}</pre>`;
+        } finally {
+            // Ocultar el loader de carga
+            $('.container-loading').style = 'display:none;';
+        }
+
+    })
+
+    $("#formRestartDeviceWmi").addEventListener('submit', async (e) => {
+        e.preventDefault()
+        // MOSTRAR LOADER DE CARGA
+        const dataForm = new FormData(e.target);
+
+        restartDeviceWmi(dataForm)
+
+    })
+
+   
     function recorrerCadena(cadena) {
         var newCadena = ''
         var isNotBlockRecorrido = true

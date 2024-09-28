@@ -64,7 +64,7 @@ public class LinePatrolController : Controller
 
 
    [HttpPatch]
-public async Task<IActionResult> CorregirHallazgo(LinePatrolLiberar linePatrolLiberar)
+    public async Task<IActionResult> CorregirHallazgo(LinePatrolLiberar linePatrolLiberar)
 {
     try
     {
