@@ -1,54 +1,25 @@
-// export const obtenerEquiposComputo = async () =>{
-//     const response = await fetch("/GestionPlantas/ObtenerEquiposComputo")
-
-//     const data = await response.json()
-//     console.log(data)
-
-//     // Get the table body element
-//     const tableBody = document.getElementById('equiposTable').getElementsByTagName('tbody')[0];
-
-//     // Iterate over the data and create table rows
-//     data.forEach(equipo => {
-//       // Extract software names
-//       const softwareNames = equipo.equiposComputoSoftware.map(s => s.software.nombre).join(', ');
-
-//       // Find the linea object within the lineas array
-//       const lineaData = equipo.lineas[0]; // Assuming there's always one linea
-
-//       // Create a new row
-//       const row = tableBody.insertRow();
-//       row.insertCell().textContent = equipo.id;
-//       row.insertCell().textContent = lineaData.linea.planta.nombre;
-//       row.insertCell().textContent = lineaData.linea.nombre;
-//       row.insertCell().textContent = lineaData.estacion.nombre;
-//       row.insertCell().textContent = equipo.hostname;
-//       row.insertCell().textContent = softwareNames;
-//     });
-// }
 
 import { $ } from "/js/utils.js";
+import { showLoading,hideLoading } from "/js/utils.js";
 
 
 
 export const obtenerEquiposComputo = async () =>{
 
-
-
-       $('.container-loading').style = 'display:flex;'
+    showLoading()
 
     const response = await fetch("/GestionPlantas/ObtenerEquiposComputo")
 
     const data = await response.json()
-    console.log(data)
 
     $(".container-items").innerHTML = `
     <table id="equiposTable" class="table">
     <thead class="table-header">
       <tr>
-        <th>ID</th>
+        <th style="display:none;">ID</th>
         <th>Planta</th>
         <th>Línea</th>
-        <th>Estación</th>
+        <th>Estación/Ubicación</th>
          <th>Hostname</th>
         <th>Software</th>
         <th>Acciones</th>
@@ -65,20 +36,38 @@ export const obtenerEquiposComputo = async () =>{
 
         $(".items-table").innerHTML += `
         <tr>
-          <td>${equipo.id}</td>
-          <td>${lineaData.linea.planta.nombre}</td>
-          <td>${lineaData.linea.nombre}</td>
-          <td>${lineaData.estacion.nombre}</td>
-          <td id="hostname">${equipo.hostname}</td>
-          <td>${softwareNames}</td>
+          <td style="display:none;">${equipo.id || 'N/A'}</td>
+          <td>${lineaData?.linea?.planta?.nombre || 'N/A'}</td>
+          <td>${lineaData?.linea?.nombre || 'N/A'}</td>
+          <td>${lineaData?.estacion?.nombre || 'N/A'}</td>
+          <td id="hostname">${equipo.hostname || 'N/A'}</td>
+          <td>${softwareNames || 'N/A'}</td>  
           <td>
-            <button class="btn btn-warning" id="cerrarApp">Cerrar app</button>
-            <button class="btn btn-warning" id="reiniciarEquipo">Reiniciar equipo</button>
+            <button class="btn btn-primary" id="btnAcciones">Acciones</button>
           </td >
         </tr>
         `
     })
 
-       $('.container-loading').style = 'display:none;'
+    hideLoading()
+
+
+}
+
+export const registrarEquipoComputo = async (formData)=>{
+  showLoading()
+
+  const respuesta = await fetch("/GestionPlantas/GuardarEquipoComputo",{
+    method: 'POST',
+    body: formData,
+  })
+  const data = await respuesta.json()
+  
+  hideLoading()
+
+  Swal.fire({
+    icon:"success",
+    text:"Equipo registrado"
+  })
 
 }

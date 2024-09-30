@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace LinePatrol.Controllers;
 
@@ -34,6 +36,28 @@ public class GestionPlantasController : Controller
 
 
 
+    [HttpPost]
+    public async Task<bool> GuardarEquipoComputo(GestionPlantasEquipoComputo gestionPlantasEquipoComputo)
+    {
+        var cliente = new HttpClient();
+
+        string json = JsonConvert.SerializeObject(gestionPlantasEquipoComputo);
+
+        // Define el contenido de la solicitud HTTP
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+
+        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/", content);
+
+
+
+        if (response.IsSuccessStatusCode)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
     public IActionResult Index()
     {

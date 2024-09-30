@@ -37,7 +37,7 @@
   <div class="card-header">Gestión de equipos en planta</div>
   <div class="card-body">
     <div class="container-buttons-listado">
-      <a class="btn btn-success btn-sm" id="btnRegistrarLP">Registrar</a>
+      <button class="btn btn-primary btn-sm" id="btnRegistrarOpciones">Registrar</button>
       @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
     </div>
     <hr />
@@ -46,7 +46,76 @@
     </div>
   </div>
 </div>
+<!-- MODAL OPTCIONES DE REGISTRO-->
+<div class="modal fade" id="exampleModalOpcionesRegistro" tabindex="-1" aria-labelledby="exampleModalOpcionesRegistro"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Opciones de registro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
 
+        <div class="mb-2">
+          <button class="btn btn-primary" id="btnRegistrarEquipoComputo">Equipo computo</button>
+          <button class="btn btn-primary">Linea</button>
+          <button class="btn btn-primary">Estacion</button>
+          <button class="btn btn-primary">Planta</button>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- MODAL ACCIONES DE REGISTRO-->
+<div class="modal fade" id="exampleModalAccionesRegistro" tabindex="-1" aria-labelledby="exampleModalAccionesRegistro"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Acciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-2">
+           <button class="btn btn-primary" id="cerrarApp">Cerrar app</button>
+            <button class="btn btn-primary" id="reiniciarEquipo">Reiniciar equipo</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTRO DE EQUIPO-->
+<div class="modal fade" id="exampleModalRegistrarEquipoComputo" tabindex="-1" aria-labelledby="exampleModalRegistrarEquipo"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar equipo de computo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarEquipoComputo">
+          <div class="mb-2">
+            <label for="personaLibera">Hostname</label>
+            <input type="text" class="form-control form-control-sm" name="hostname">
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
 
 @section Scripts {
 
