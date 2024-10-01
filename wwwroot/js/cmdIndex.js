@@ -82,3 +82,4 @@ export const cerrarAppWmi = async (dataForm) => {
         $('.container-loading').style = 'display:none;';
     }
 }
+

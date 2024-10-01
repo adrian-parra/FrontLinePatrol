@@ -1,6 +1,6 @@
 import { obtenerEquiposComputo ,registrarEquipoComputo } from "./gestionPlantasIndex.js";
-import { restartDeviceWmi } from "./cmdIndex.js";
-import { showModal } from "./utils.js";
+import { restartDeviceWmi,cerrarAppWmi } from "./cmdIndex.js";
+import { hideLoading, showLoading, showModal } from "./utils.js";
 
 const $containerItems = document.querySelector(".container-items");
 const $btnRegistrarOpciones = document.querySelector("#btnRegistrarOpciones");
@@ -9,14 +9,22 @@ const $btnRegistrarEquipoComputo = document.querySelector("#btnRegistrarEquipoCo
 const $modalRegistarEquipoComputo = document.querySelector("#exampleModalRegistrarEquipoComputo");
 const $formRegistrarEquipoComputo = document.querySelector("#formRegistrarEquipoComputo");
 const $modalExampleModalAccionesRegistro = document.querySelector("#exampleModalAccionesRegistro");
+const $btnCerrarApp = document.querySelector("#btnCerrarApp");
+const $btnReiniciarEquipo = document.querySelector("#btnReiniciarEquipo");
 
+const $formCerrarSoftware = document.querySelector("#formCerrarSoftware");
+
+
+
+let hostnameGlobal;
+let dataGlobal;
 
 
 
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  await obtenerEquiposComputo();
+  dataGlobal = await obtenerEquiposComputo();
 
   $("#equiposTable").DataTable({
     language: {
@@ -69,28 +77,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $containerItems.addEventListener("click", async (e) => {
     const target = e.target;
-    console.log(target);
-
     if(target.id === "btnAcciones"){
+      hostnameGlobal = target.parentNode.parentNode.querySelector("#hostname").textContent;
+      document.querySelector("#exampleModalAccionesLabel").textContent = `Acciones para ${hostnameGlobal}`;
       showModal($modalExampleModalAccionesRegistro)
-    }
-
-    if (target.id === "cerrarApp") {
-      const parent = target.parentNode.parentNode;
-      console.log(parent);
-
-      const hostname = parent.querySelector("#hostname");
-    }
-
-    if (target.id === "reiniciarEquipo") {
-      const parent = target.parentNode.parentNode;
-      console.log(parent);
-
-      const hostname = parent.querySelector("#hostname");
-
-      const dataForm = new FormData();
-      dataForm.append("ip", hostname.textContent);
-      await restartDeviceWmi(dataForm);
     }
   });
 
@@ -113,4 +103,99 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.target.reset();
   })
 
+  $btnCerrarApp.addEventListener("click",async ()=>{
+    const dataForm = new FormData();
+    dataForm.append("ip", hostnameGlobal);
+
+    const software = obtenerSoftwarePorHostname(hostnameGlobal);
+    
+    if(software == "") {
+      Swal.fire({
+        icon:"error",
+        text:"No se encontraron software",
+      })
+      return;
+    }
+    document.querySelector("#selectSoftware").innerHTML = ``
+
+    software.forEach(item => {
+      document.querySelector("#selectSoftware").innerHTML += `
+      <option value="${item}.exe">${item}</option>` 
+  });
+
+  showModal("#exampleModalCerrarSoftware")
+   
+  })
+
+  $btnReiniciarEquipo.addEventListener("click",async ()=>{
+    const dataForm = new FormData();
+    dataForm.append("ip", hostnameGlobal);
+
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Quieres reiniciar el equipo?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          // Swal.fire(
+          //     'Cerrando!',
+          //     'La aplicación se cerrará ahora.',
+          //     'success'
+          // );
+          showLoading()
+          restartDeviceWmi(dataForm);
+          hideLoading()
+      }
+  });
+    
+  })
+
+  $formCerrarSoftware.addEventListener("submit",async (e)=>{
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
+    dataForm.append("ip", hostnameGlobal);
+    showLoading()
+    await cerrarAppWmi(dataForm)
+    hideLoading()
+  })
+
+
+
 });
+function obtenerSoftwarePorHostname(hostname) {
+  // Encuentra el equipo con el hostname dado
+  const equipo = dataGlobal.find(equipo => equipo.hostname === hostname);
+
+  // Si no se encuentra el equipo, retorna un array vacío
+  if (!equipo) {
+    return [];
+  }
+
+  // Retorna un array de nombres de software del equipo encontrado
+  return equipo.equiposComputoSoftware.map(softwareData => softwareData.software.nombre);
+}
+
+function buscarSoftware(termino) {
+  const resultados = [];
+
+  // Iterar sobre cada equipo en el array
+  equipos.forEach(equipo => {
+    // Obtener los nombres de software del equipo
+    const nombresSoftware = equipo.equiposComputoSoftware.map(s => s.software.nombre);
+
+    // Verificar si algún nombre de software coincide con el término de búsqueda
+    if (nombresSoftware.some(nombre => nombre.toLowerCase().includes(termino.toLowerCase()))) {
+      resultados.push({
+        hostname: equipo.hostname,
+        software: nombresSoftware
+      });
+    }
+  });
+
+  return resultados;
+}

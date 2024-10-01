@@ -50,6 +50,8 @@ export const obtenerEquiposComputo = async () =>{
     })
 
     hideLoading()
+    return data
+
 
 
 }

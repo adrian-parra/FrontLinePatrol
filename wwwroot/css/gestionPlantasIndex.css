@@ -1,0 +1,73 @@
+.buttons-excel,.btn-exportar-pdf,.btn-exportar-print,.buttons-page-length {
+    background-color: var(--ColorSecundario) !important;
+    color: white !important;
+    border-radius: 4px !important;
+   }
+   .dataTables_filter label input {
+    outline: none !important;
+    border: 1.5px solid var(--ColorSecundario) !important;
+   }
+
+   .items-table tr {
+    border: 1px solid transparent !important;
+   }
+
+  
+
+@media (max-width:600px){
+
+    .table-header {
+        display:none !important;
+    }
+ 
+
+   .items-table tr td:nth-last-of-type(1)::before {
+    content: "OPC: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(2)::before {
+    content: "SOFTWARE: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(3)::before {
+    content: "HOST/UBICACION: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(4)::before {
+    content: "ESTACION: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(5)::before {
+    content: "lINEA: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(6)::before {
+    content: "PLANTA: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+  .items-table tr td:nth-last-of-type(7)::before {
+    content: "PLANTA: ";
+    color: var(--ColorSecundario);
+    font-weight: bold;
+
+  }
+
+}
