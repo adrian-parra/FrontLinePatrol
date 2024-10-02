@@ -1,29 +1,44 @@
-import { obtenerEquiposComputo ,registrarEquipoComputo } from "./gestionPlantasIndex.js";
-import { restartDeviceWmi,cerrarAppWmi } from "./cmdIndex.js";
+import {
+  obtenerEquiposComputo,
+  registrarEquipoComputo,
+  obtenerSoftware,
+  asignarSoftwareEquipoComputo,
+} from "./gestionPlantasIndex.js";
+import { restartDeviceWmi, cerrarAppWmi } from "./cmdIndex.js";
 import { hideLoading, showLoading, showModal } from "./utils.js";
 
 const $containerItems = document.querySelector(".container-items");
 const $btnRegistrarOpciones = document.querySelector("#btnRegistrarOpciones");
-const $modalRegistrarOpciones = document.querySelector("#exampleModalOpcionesRegistro");
-const $btnRegistrarEquipoComputo = document.querySelector("#btnRegistrarEquipoComputo");
-const $modalRegistarEquipoComputo = document.querySelector("#exampleModalRegistrarEquipoComputo");
-const $formRegistrarEquipoComputo = document.querySelector("#formRegistrarEquipoComputo");
-const $modalExampleModalAccionesRegistro = document.querySelector("#exampleModalAccionesRegistro");
+const $modalRegistrarOpciones = document.querySelector(
+  "#exampleModalOpcionesRegistro"
+);
+const $btnRegistrarEquipoComputo = document.querySelector(
+  "#btnRegistrarEquipoComputo"
+);
+const $modalRegistarEquipoComputo = document.querySelector(
+  "#exampleModalRegistrarEquipoComputo"
+);
+const $formRegistrarEquipoComputo = document.querySelector(
+  "#formRegistrarEquipoComputo"
+);
+const $modalExampleModalAccionesRegistro = document.querySelector(
+  "#exampleModalAccionesRegistro"
+);
 const $btnCerrarApp = document.querySelector("#btnCerrarApp");
 const $btnReiniciarEquipo = document.querySelector("#btnReiniciarEquipo");
 
 const $formCerrarSoftware = document.querySelector("#formCerrarSoftware");
+const $btnAgregarSoftware = document.querySelector("#btnAgregarSoftware");
 
+const $formAgregarSoftwareEquipoComputo = document.querySelector(
+  "#formAgregarSoftwareEquipoComputo"
+);
 
-
-let hostnameGlobal;
-let dataGlobal;
-
-
-
+let hostnameGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
+let idEquipoComputoGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
+let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
 
 document.addEventListener("DOMContentLoaded", async () => {
-
   dataGlobal = await obtenerEquiposComputo();
 
   $("#equiposTable").DataTable({
@@ -77,99 +92,120 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $containerItems.addEventListener("click", async (e) => {
     const target = e.target;
-    if(target.id === "btnAcciones"){
-      hostnameGlobal = target.parentNode.parentNode.querySelector("#hostname").textContent;
-      document.querySelector("#exampleModalAccionesLabel").textContent = `Acciones para ${hostnameGlobal}`;
-      showModal($modalExampleModalAccionesRegistro)
+    if (target.id === "btnAcciones") {
+      hostnameGlobal =
+        target.parentNode.parentNode.querySelector("#hostname").textContent;
+      idEquipoComputoGlobal =
+        target.parentNode.parentNode.querySelector("#idEquipo").textContent;
+
+      document.querySelector(
+        "#exampleModalAccionesLabel"
+      ).textContent = `Acciones para ${hostnameGlobal}`;
+      showModal($modalExampleModalAccionesRegistro);
     }
   });
 
-  $btnRegistrarEquipoComputo.addEventListener("click",() => {
+  $btnRegistrarEquipoComputo.addEventListener("click", () => {
     showModal($modalRegistarEquipoComputo);
-  })
-
-
+  });
 
   $btnRegistrarOpciones.addEventListener("click", () => {
     showModal($modalRegistrarOpciones);
   });
 
-  $formRegistrarEquipoComputo.addEventListener("submit",(e)=>{
-    e.preventDefault()
-    const formData = new FormData(e.target)
+  $formRegistrarEquipoComputo.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
 
-    registrarEquipoComputo(formData)
+    registrarEquipoComputo(formData);
 
     e.target.reset();
-  })
+  });
 
-  $btnCerrarApp.addEventListener("click",async ()=>{
+  $btnCerrarApp.addEventListener("click", async () => {
     const dataForm = new FormData();
     dataForm.append("ip", hostnameGlobal);
 
     const software = obtenerSoftwarePorHostname(hostnameGlobal);
-    
-    if(software == "") {
+
+    if (software == "") {
       Swal.fire({
-        icon:"error",
-        text:"No se encontraron software",
-      })
+        icon: "error",
+        text: "No se encontraron software",
+      });
       return;
     }
-    document.querySelector("#selectSoftware").innerHTML = ``
+    document.querySelector("#selectSoftware").innerHTML = ``;
 
-    software.forEach(item => {
+    software.forEach((item) => {
       document.querySelector("#selectSoftware").innerHTML += `
-      <option value="${item}.exe">${item}</option>` 
+      <option value="${item}.exe">${item}</option>`;
+    });
+
+    showModal("#exampleModalCerrarSoftware");
   });
 
-  showModal("#exampleModalCerrarSoftware")
-   
-  })
-
-  $btnReiniciarEquipo.addEventListener("click",async ()=>{
+  $btnReiniciarEquipo.addEventListener("click", async () => {
     const dataForm = new FormData();
     dataForm.append("ip", hostnameGlobal);
 
     Swal.fire({
-      title: '¿Estás seguro?',
+      title: "¿Estás seguro?",
       text: "¿Quieres reiniciar el equipo?",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'Cancelar'
-  }).then((result) => {
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
       if (result.isConfirmed) {
-          // Swal.fire(
-          //     'Cerrando!',
-          //     'La aplicación se cerrará ahora.',
-          //     'success'
-          // );
-          showLoading()
-          restartDeviceWmi(dataForm);
-          hideLoading()
+        // Swal.fire(
+        //     'Cerrando!',
+        //     'La aplicación se cerrará ahora.',
+        //     'success'
+        // );
+        showLoading();
+        restartDeviceWmi(dataForm);
+        hideLoading();
       }
+    });
   });
-    
-  })
 
-  $formCerrarSoftware.addEventListener("submit",async (e)=>{
-    e.preventDefault()
-    const dataForm = new FormData(e.target)
+  $btnAgregarSoftware.addEventListener("click", async () => {
+    const software = await obtenerSoftware();
+
+    document.querySelector("#selectSoftwareEquipoComputo").innerHTML = ``;
+    software.forEach((item) => {
+      document.querySelector("#selectSoftwareEquipoComputo").innerHTML += `
+      <option value="${item.id}">${item.nombre}</option>`;
+    });
+
+    showModal("#exampleModalAgregarSoftwareEquipoComputo");
+  });
+
+  $formCerrarSoftware.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const dataForm = new FormData(e.target);
     dataForm.append("ip", hostnameGlobal);
-    showLoading()
-    await cerrarAppWmi(dataForm)
-    hideLoading()
-  })
+    showLoading();
+    await cerrarAppWmi(dataForm);
+    hideLoading();
+  });
 
+  $formAgregarSoftwareEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
+    const dataForm = new FormData(e.target);
+    dataForm.append("idEquipoComputo", idEquipoComputoGlobal);
 
+    const data = await asignarSoftwareEquipoComputo(dataForm);
+    
+  });
 });
 function obtenerSoftwarePorHostname(hostname) {
   // Encuentra el equipo con el hostname dado
-  const equipo = dataGlobal.find(equipo => equipo.hostname === hostname);
+  const equipo = dataGlobal.find((equipo) => equipo.hostname === hostname);
 
   // Si no se encuentra el equipo, retorna un array vacío
   if (!equipo) {
@@ -177,22 +213,30 @@ function obtenerSoftwarePorHostname(hostname) {
   }
 
   // Retorna un array de nombres de software del equipo encontrado
-  return equipo.equiposComputoSoftware.map(softwareData => softwareData.software.nombre);
+  return equipo.equiposComputoSoftware.map(
+    (softwareData) => softwareData.software.nombre
+  );
 }
 
 function buscarSoftware(termino) {
   const resultados = [];
 
   // Iterar sobre cada equipo en el array
-  equipos.forEach(equipo => {
+  equipos.forEach((equipo) => {
     // Obtener los nombres de software del equipo
-    const nombresSoftware = equipo.equiposComputoSoftware.map(s => s.software.nombre);
+    const nombresSoftware = equipo.equiposComputoSoftware.map(
+      (s) => s.software.nombre
+    );
 
     // Verificar si algún nombre de software coincide con el término de búsqueda
-    if (nombresSoftware.some(nombre => nombre.toLowerCase().includes(termino.toLowerCase()))) {
+    if (
+      nombresSoftware.some((nombre) =>
+        nombre.toLowerCase().includes(termino.toLowerCase())
+      )
+    ) {
       resultados.push({
         hostname: equipo.hostname,
-        software: nombresSoftware
+        software: nombresSoftware,
       });
     }
   });

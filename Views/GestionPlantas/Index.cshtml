@@ -1,22 +1,22 @@
 @{
-    ViewData["Title"] = "Index";
+  ViewData["Title"] = "Index";
 }
 
 @section Styles {
 
-  <link href="/lib/datatables/css/jquery.dataTables.min.css"  rel="stylesheet" />
+  <link href="/lib/datatables/css/jquery.dataTables.min.css" rel="stylesheet" />
 
-    @*ESTILOS DE BOTONES*@
-    <link href="/lib/datatables/css/buttons.dataTables.min.css"  rel="stylesheet" />
+  @*ESTILOS DE BOTONES*@
+  <link href="/lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet" />
 
 
-     @*filter columns*@
-    <link href="/lib/datatables/css/fixedHeader.dataTables.min.css"  rel="stylesheet" />
+  @*filter columns*@
+  <link href="/lib/datatables/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
 
-   <link rel="stylesheet" href="/css/gestionPlantasIndex.css">
+  <link rel="stylesheet" href="/css/gestionPlantasIndex.css">
 }
 
-<!-- CARD VIEW CON TABLE RECORRIDOS -->
+<!-- CARD VIEW CON TABLE GESTION DE EQUIPOS POR PLANTA -->
 <div class="card movil">
   <div class="card-header">Gestión de equipos en planta</div>
   <div class="card-body">
@@ -26,7 +26,7 @@
     </div>
     <hr />
     <div class="container-items">
-      
+
     </div>
   </div>
 </div>
@@ -43,22 +43,55 @@
       </div>
       <div class="modal-body">
 
-        <div class="mb-2">
+        @* <div class="mb-2">
           <button class="btn btn-primary" id="btnRegistrarEquipoComputo">Equipo computo</button>
           <button class="btn btn-primary">Linea</button>
           <button class="btn btn-primary">Estacion</button>
           <button class="btn btn-primary">Planta</button>
-          
+
+        </div> *@
+
+        <div class="container options-grid-container">
+          <div class="grid-container" id="btnRegistrarEquipoComputo">
+            <div class="card card-options">
+              <div class="icon">
+                <i class="fas fa-desktop"></i>
+              </div>
+              <h3>Equipo de Cómputo</h3>
+            </div>
+
+            <div class="card card-options">
+  <div class="icon">
+    <i class="fas fa-building"></i>
+  </div>
+  <h3>Registrar Planta</h3>
+</div>
+
+<div class="card card-options">
+  <div class="icon">
+    <i class="fas fa-project-diagram"></i>
+  </div>
+  <h3>Registrar Línea</h3>
+</div>
+<div class="card card-options">
+  <div class="icon">
+    <i class="fas fa-map-marker-alt"></i>
+  </div>
+  <h3>Registrar Estación</h3>
+</div>
+
+
+          </div>
         </div>
-        
+
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL REGISTRO DE EQUIPO-->
-<div class="modal fade" id="exampleModalRegistrarEquipoComputo" tabindex="-1" aria-labelledby="exampleModalRegistrarEquipo"
-  aria-hidden="true">
+<div class="modal fade" id="exampleModalRegistrarEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarEquipo" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -77,15 +110,13 @@
             <button type="submit" class="btn btn-success btn-sm">Guardar</button>
           </div>
         </form>
-        
+
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL ACCIONES DE REGISTRO-->
-
-
 <div class="modal fade" id="exampleModalAccionesRegistro" tabindex="-1" aria-labelledby="exampleModalAccionesRegistro"
   aria-hidden="true">
   <div class="modal-dialog">
@@ -96,14 +127,41 @@
       </div>
       <div class="modal-body">
 
-        <div class="mb-2">
-           <button class="btn btn-primary" id="btnCerrarApp">Cerrar app</button>
-            <button class="btn btn-primary" id="btnReiniciarEquipo">Reiniciar equipo</button>
-        </div
-  
+        @* <div class="mb-2">
+        <button class="btn btn-primary" id="btnCerrarApp">Cerrar app</button>
+        <button class="btn btn-primary" id="btnReiniciarEquipo">Reiniciar equipo</button>
+        <button class="btn btn-primary" id="btnAgregarSoftware">Agregar software</button>
+
+        </div *@
+
+        <div class="container options-grid-container">
+          <div class="grid-container">
+            <div class="card card-options" id="btnCerrarApp">
+              <div class="icon">
+                <i class="fas fa-power-off"></i>
+              </div>
+              <h3>Cerrar Software</h3>
+            </div>
+            <div class="card card-options" id="btnReiniciarEquipo">
+              <div class="icon">
+                <i class="fas fa-redo"></i>
+              </div>
+              <h3>Reiniciar Equipo</h3>
+            </div>
+            <div class="card card-options" id="btnAgregarSoftware">
+              <div class="icon">
+                <i class="fas fa-laptop-code"></i>
+              </div>
+              <h3>Asignar software</h3A>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
+</div>
+</div>
 </div>
 
 <!-- MODAL CERRAR SOFTWARE-->
@@ -118,18 +176,51 @@
       <div class="modal-body">
 
         <form id="formCerrarSoftware">
-         <div class="mb-2">
-          @* <label class="form-label">Planta</label> *@
-          <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware" name="app">
-          </select>
-          <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el software que desea cerrar.</label>
-        </div>
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware"
+              name="app">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el software que desea
+              cerrar.</label>
+          </div>
 
           <div class="container-buttons">
             <button type="submit" class="btn btn-success btn-sm">Cerrar</button>
           </div>
         </form>
-        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR SOFTWARE A EQUIPO DE COMPUTO -->
+<div class="modal fade" id="exampleModalAgregarSoftwareEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalAgregarSoftwareEquipoComputo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar software</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formAgregarSoftwareEquipoComputo">
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectSoftwareEquipoComputo" name="idSoftware">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el software que desea
+              agregar.</label>
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
       </div>
     </div>
   </div>
@@ -139,26 +230,26 @@
 
 @section Scripts {
 
-   <script src="/lib/datatables/js/jquery.dataTables.min.js"></script>
+  <script src="/lib/datatables/js/jquery.dataTables.min.js"></script>
 
-    @*SCRIPTS DE BOTONES*@
-    <script src="/lib/datatables/js/dataTables.buttons.min.js"></script>
+  @*SCRIPTS DE BOTONES*@
+  <script src="/lib/datatables/js/dataTables.buttons.min.js"></script>
 
-    @*excel*@
-    <script src="/lib/datatables/js/jszip.min.js"></script>
-    <script src="/lib/datatables/js/buttons.html5.min.js"></script>
+  @*excel*@
+  <script src="/lib/datatables/js/jszip.min.js"></script>
+  <script src="/lib/datatables/js/buttons.html5.min.js"></script>
 
-    @*pdf*@
-    <script src="/lib/datatables/js/pdfmake.min.js"></script>
-    <script src="/lib/datatables/js/vfs_fonts.js"></script>
+  @*pdf*@
+  <script src="/lib/datatables/js/pdfmake.min.js"></script>
+  <script src="/lib/datatables/js/vfs_fonts.js"></script>
 
-    @*imprimir*@
-    <script src="/lib/datatables/js/buttons.print.min.js"></script>
+  @*imprimir*@
+  <script src="/lib/datatables/js/buttons.print.min.js"></script>
 
 
 
-     @*filter columns*@
-    <script src="/lib/datatables/js/dataTables.fixedHeader.min.js"></script>
+  @*filter columns*@
+  <script src="/lib/datatables/js/dataTables.fixedHeader.min.js"></script>
 
   <script src="~/js/GestionPlantasMainIndex.js" type="module"></script>
 }
