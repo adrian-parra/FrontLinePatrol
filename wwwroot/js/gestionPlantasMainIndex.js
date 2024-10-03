@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   $("#equiposTable").DataTable({
     language: {
-      url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json",
+      url: "../lib/datatables/traslate/es/es-ES.json",
     },
     columnDefs: [
       {
@@ -90,19 +90,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     ],
   });
 
+  
+
   $containerItems.addEventListener("click", async (e) => {
     const target = e.target;
     if (target.id === "btnAcciones") {
-      hostnameGlobal =
-        target.parentNode.parentNode.querySelector("#hostname").textContent;
-      idEquipoComputoGlobal =
-        target.parentNode.parentNode.querySelector("#idEquipo").textContent;
-
-      document.querySelector(
-        "#exampleModalAccionesLabel"
-      ).textContent = `Acciones para ${hostnameGlobal}`;
-      showModal($modalExampleModalAccionesRegistro);
+      initAccionesEquipoSoftware(target)
     }
+
+    if (target.tagName === 'TD') {
+      // initAccionesEquipoSoftware(target)
+    }
+
+    console.log(target)
+
+
   });
 
   $btnRegistrarEquipoComputo.addEventListener("click", () => {
@@ -200,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dataForm.append("idEquipoComputo", idEquipoComputoGlobal);
 
     const data = await asignarSoftwareEquipoComputo(dataForm);
-    
+
   });
 });
 function obtenerSoftwarePorHostname(hostname) {
@@ -242,4 +244,29 @@ function buscarSoftware(termino) {
   });
 
   return resultados;
+}
+
+/**
+ * Inicializa las acciones para el equipo de software.
+ * Esta función obtiene el nombre de host y el ID del equipo de cómputo
+ * a partir del elemento objetivo del evento, y actualiza el título
+ * del modal con el nombre de host. Luego, muestra el modal correspondiente.
+ *
+ * @function initAccionesEquipoSoftware
+ * @returns {void} No retorna ningún valor.
+ *
+ * @example
+ * Supongamos que se llama a esta función al hacer clic en un botón
+ * initAccionesEquipoSoftware();
+ */
+const initAccionesEquipoSoftware = (target) => {
+  hostnameGlobal =
+    target.parentNode.parentNode.querySelector("#hostname").textContent;
+  idEquipoComputoGlobal =
+    target.parentNode.parentNode.querySelector("#idEquipo").textContent;
+
+  document.querySelector(
+    "#exampleModalAccionesLabel"
+  ).textContent = `Acciones para ${hostnameGlobal}`;
+  showModal($modalExampleModalAccionesRegistro);
 }

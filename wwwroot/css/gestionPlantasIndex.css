@@ -1,30 +1,79 @@
-.buttons-excel,.btn-exportar-pdf,.btn-exportar-print,.buttons-page-length {
-    background-color: var(--ColorSecundario) !important;
-    color: white !important;
-    border-radius: 4px !important;
-   }
-   .dataTables_filter label input {
-    outline: none !important;
-    border: 1.5px solid var(--ColorSecundario) !important;
-   }
+.buttons-excel,
+.btn-exportar-pdf,
+.btn-exportar-print,
+.buttons-page-length {
+  background-color: var(--ColorSecundario) !important;
+  color: white !important;
+  border-radius: 4px !important;
+}
 
-   .items-table tr {
-    border: 1px solid transparent !important;
-   }
+.dataTables_filter label input {
+  outline: none !important;
+  border: 1.5px solid var(--ColorSecundario) !important;
+  margin-bottom: var(--Margin);
+}
 
-  
+.items-table tr {
+  border: 1px solid transparent !important;
+}
 
-@media (max-width:600px){
 
-    .table-header {
-        display:none !important;
-    }
+
+@media (max-width:600px) {
+
+  #equiposTable {
+    margin: 0 !important;
+    width: 100% !important;
+  }
  
 
-   .items-table tr td:nth-last-of-type(1)::before {
+  .items-table {
+    display: flex !important;
+  }
+
+
+  .items-table tr {
+    min-width: 300px; /* Ancho mínimo para las tarjetas */
+    width: 100%;
+    transition: transform 0.2s; /* Transición suave para el efecto hover */
+    word-wrap: break-word !important;
+    background-color: #fff !important;
+    background-clip: border-box !important;
+    border: 1px solid rgba(0, 0, 0, .125) !important;
+    border-radius: .25rem !important;
+}
+
+.items-table tr:hover {
+    transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+}
+
+  .table-header {
+    display: none !important;
+  }
+
+
+  .items-table tr td:nth-last-of-type(2),
+  .items-table tr td:nth-last-of-type(3),
+  .items-table tr td:nth-last-of-type(4),
+  .items-table tr td:nth-last-of-type(5),
+  .items-table tr td:nth-last-of-type(6),
+  .items-table tr td:nth-last-of-type(7){
+    text-transform: uppercase;
+    grid-column: span 2 !important;
+    font-weight: bold;
+  }
+
+  .items-table tr td:nth-last-of-type(4) {
+    color: var(--ColorDanger);
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .items-table tr td:nth-last-of-type(1)::before {
     content: "OPC: ";
     color: var(--ColorSecundario);
     font-weight: bold;
+   
 
   }
 
@@ -32,25 +81,29 @@
     content: "SOFTWARE: ";
     color: var(--ColorSecundario);
     font-weight: bold;
+   
 
   }
 
   .items-table tr td:nth-last-of-type(3)::before {
-    content: "HOST/UBICACION: ";
+    content: "HOST: ";
     color: var(--ColorSecundario);
     font-weight: bold;
 
   }
 
+ 
   .items-table tr td:nth-last-of-type(4)::before {
-    content: "ESTACION: ";
+    content: "ESTACIÓN/UBIC.: ";
     color: var(--ColorSecundario);
     font-weight: bold;
+    text-decoration: underline;
+    
 
   }
 
   .items-table tr td:nth-last-of-type(5)::before {
-    content: "lINEA: ";
+    content: "LINEA: ";
     color: var(--ColorSecundario);
     font-weight: bold;
 
@@ -60,6 +113,8 @@
     content: "PLANTA: ";
     color: var(--ColorSecundario);
     font-weight: bold;
+   
+
 
   }
 
@@ -76,15 +131,13 @@
 
 
 
-
-.options-grid-container{
+/* GRID CONTAINER OPCIONES  */
+.options-grid-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
-
-
 
 .grid-container {
   display: grid;
