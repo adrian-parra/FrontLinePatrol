@@ -1,3 +1,5 @@
+import { showLoading,hideLoading } from "/js/utils.js";
+
 export const restartDeviceWmi = async (dataForm) => {
     $('.container-loading').style = 'display:flex;'
     try {
@@ -83,3 +85,29 @@ export const cerrarAppWmi = async (dataForm) => {
     }
 }
 
+export const ping = async (hostname)=>{
+    try {
+        showLoading()
+        const dataForm = new FormData();
+        dataForm.append("ip", hostname);
+
+        const response = await fetch("/cmd/TestConection", {
+            method: "POST",
+            body: dataForm,
+        });
+
+        if(!response.ok){
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            text: error.message,
+        })
+    } finally {
+        hideLoading()
+    }
+}

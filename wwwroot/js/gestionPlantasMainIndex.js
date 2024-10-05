@@ -3,8 +3,15 @@ import {
   registrarEquipoComputo,
   obtenerSoftware,
   asignarSoftwareEquipoComputo,
+  obtenerEstaciones,
+  obtenerLineas,
+  asignarEstacionUbicacionEquipoComputo,
+  registrarPlanta,
+  registrarEstacion,
+  registrarLinea,
+  obtenerPlantas
 } from "./gestionPlantasIndex.js";
-import { restartDeviceWmi, cerrarAppWmi } from "./cmdIndex.js";
+import { restartDeviceWmi, cerrarAppWmi,ping } from "./cmdIndex.js";
 import { hideLoading, showLoading, showModal } from "./utils.js";
 
 const $containerItems = document.querySelector(".container-items");
@@ -33,6 +40,35 @@ const $btnAgregarSoftware = document.querySelector("#btnAgregarSoftware");
 const $formAgregarSoftwareEquipoComputo = document.querySelector(
   "#formAgregarSoftwareEquipoComputo"
 );
+
+const $formAgregarEstacionEquipoComputo = document.querySelector(
+  "#formAgregarEstacionEquipoComputo"
+);
+
+
+const $btnEstacionUbicacion = document.querySelector("#btnAgregarEstacionUbicacion");
+
+const $btnRegistrarPlanta = document.querySelector("#btnRegistrarPlanta");
+const $modalRegistrarPlanta = document.querySelector(
+  "#exampleModalRegistrarPlanta"
+);
+const $formRegistrarPlanta = document.querySelector("#formRegistrarPlanta");
+
+const $btnRegistrarEstacion = document.querySelector("#btnRegistrarEstacion");
+const $modalRegistrarEstacion = document.querySelector(
+  "#exampleModalRegistrarEstacion"
+);
+const $formRegistrarEstacion = document.querySelector("#formRegistrarEstacion");
+
+const $btnRegistrarLinea = document.querySelector("#btnRegistrarLinea");
+const $modalRegistrarLinea = document.querySelector(
+  "#exampleModalRegistrarLinea"
+);
+const $formRegistrarLinea = document.querySelector("#formRegistrarLinea");
+
+
+
+
 
 let hostnameGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
 let idEquipoComputoGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
@@ -95,6 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   $containerItems.addEventListener("click", async (e) => {
     const target = e.target;
     if (target.id === "btnAcciones") {
+
       initAccionesEquipoSoftware(target)
     }
 
@@ -102,7 +139,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       // initAccionesEquipoSoftware(target)
     }
 
-    console.log(target)
 
 
   });
@@ -115,13 +151,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     showModal($modalRegistrarOpciones);
   });
 
-  $formRegistrarEquipoComputo.addEventListener("submit", (e) => {
+  $formRegistrarEquipoComputo.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    registrarEquipoComputo(formData);
+    const data = await registrarEquipoComputo(formData);
 
     e.target.reset();
+    updateInterfaz()
   });
 
   $btnCerrarApp.addEventListener("click", async () => {
@@ -137,11 +174,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       return;
     }
-    document.querySelector("#selectSoftware").innerHTML = ``;
 
+    document.querySelector("#selectedOption").innerHTML = `
+     Selecciona una opción
+    <i class="fas fa-check-circle" style="display: none;color:var(--ColorSuccess)"></i>
+    <i class="fas fa-chevron-down"></i>
+    <i class="fas fa-chevron-up" style="display: none;"></i>
+    `;
+    
+    document.querySelector(".options").innerHTML = ``
     software.forEach((item) => {
-      document.querySelector("#selectSoftware").innerHTML += `
-      <option value="${item}.exe">${item}</option>`;
+      document.querySelector(".options").innerHTML += `
+        <div class="card option" data-value="${item}.exe">
+       <p style="margin:0;"> ${item} <i class="fas fa-hand-pointer"></i></p>
+            </div>
+      `
     });
 
     showModal("#exampleModalCerrarSoftware");
@@ -189,6 +236,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   $formCerrarSoftware.addEventListener("submit", async (e) => {
     e.preventDefault();
     const dataForm = new FormData(e.target);
+   
+    if(dataForm.get("app") == ""){
+      Swal.fire({
+        icon: "error",
+        text: "Selecciona una opción",
+      })
+      return;
+    }
     dataForm.append("ip", hostnameGlobal);
     showLoading();
     await cerrarAppWmi(dataForm);
@@ -203,8 +258,154 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const data = await asignarSoftwareEquipoComputo(dataForm);
 
+    updateInterfaz()
+
   });
-});
+
+  $btnEstacionUbicacion.addEventListener("click",async()=>{
+    const estaciones = await obtenerEstaciones();
+
+    document.querySelector("#selectEstacionEquipoComputo").innerHTML = ``;
+
+    estaciones.forEach((estacion)=>{
+      document.querySelector("#selectEstacionEquipoComputo").innerHTML += `
+      <option value="${estacion.id}">${estacion.nombre}</option>`;
+    })
+    const lineas = await obtenerLineas();
+
+    document.querySelector("#selectLineaEquipoComputo").innerHTML = ``;
+
+    lineas.forEach((linea)=>{
+      document.querySelector("#selectLineaEquipoComputo").innerHTML += `
+      <option value="${linea.id}">${linea.nombre}</option>`;
+    })
+
+   
+    showModal("#exampleModalAgregarEstacionEquipoComputo")
+  })
+
+  $formAgregarEstacionEquipoComputo.addEventListener("submit",async (e)=>{
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
+
+    dataForm.append("idEquipo",idEquipoComputoGlobal)
+
+    await asignarEstacionUbicacionEquipoComputo(dataForm)
+
+    updateInterfaz()
+  })
+
+  $btnRegistrarPlanta.addEventListener("click",()=>{
+    showModal($modalRegistrarPlanta)
+  })
+
+  $formRegistrarPlanta.addEventListener("submit",async (e)=>{
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
+
+    await registrarPlanta(dataForm)
+    e.target.reset()
+
+    updateInterfaz()
+  })
+
+  $btnRegistrarEstacion.addEventListener("click",()=>{
+    showModal($modalRegistrarEstacion)
+  })
+
+$formRegistrarEstacion.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  await registrarEstacion(dataForm)
+  e.target.reset()
+
+  updateInterfaz()
+})
+
+$btnRegistrarLinea.addEventListener("click",async()=>{
+
+  const plantas = await obtenerPlantas();
+
+  document.querySelector("#selectPlantaEquipoComputo").innerHTML = ``;
+
+  plantas.forEach((planta)=>{
+    document.querySelector("#selectPlantaEquipoComputo").innerHTML += `
+    <option value="${planta.id}">${planta.nombre}</option>`;
+  })
+
+
+  showModal($modalRegistrarLinea)
+})
+
+$formRegistrarLinea.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  await registrarLinea(dataForm)
+  e.target.reset()
+
+  updateInterfaz()
+})
+
+
+}); // FINN EVENTO ONLOAD
+
+
+const updateInterfaz = async ()=>{
+  dataGlobal = await obtenerEquiposComputo();
+
+  $("#equiposTable").DataTable({
+    language: {
+      url: "../lib/datatables/traslate/es/es-ES.json",
+    },
+    columnDefs: [
+      {
+        targets: 0,
+        visible: true,
+      },
+    ],
+    //_______________ CUARTO ______________
+    dom: "Bfrtip",
+    buttons: [
+      //'excel',
+      {
+        extend: "excelHtml5",
+        text: "Exportar Excel",
+        filename: "Reporte Empleados",
+        title: "",
+        exportOptions: {
+          columns: [1, 2, 3, 4, 5],
+        },
+        className: "btn-exportar-excel",
+      },
+      //'pdf',
+      {
+        extend: "pdfHtml5",
+        text: "Exportar PDF",
+        filename: "Reporte de equipo de",
+        title: "",
+        exportOptions: {
+          columns: [1, 2, 3, 4, 5],
+        },
+        className: "btn-exportar-pdf",
+      },
+      //'print'
+      {
+        extend: "print",
+        title: "",
+        exportOptions: {
+          columns: [1, 2, 3, 4, 5],
+        },
+        className: "btn-exportar-print",
+      },
+      //extra
+      "pageLength",
+    ],
+  });
+}
+
+
 function obtenerSoftwarePorHostname(hostname) {
   // Encuentra el equipo con el hostname dado
   const equipo = dataGlobal.find((equipo) => equipo.hostname === hostname);
@@ -259,7 +460,7 @@ function buscarSoftware(termino) {
  * Supongamos que se llama a esta función al hacer clic en un botón
  * initAccionesEquipoSoftware();
  */
-const initAccionesEquipoSoftware = (target) => {
+const initAccionesEquipoSoftware = async (target) => {
   hostnameGlobal =
     target.parentNode.parentNode.querySelector("#hostname").textContent;
   idEquipoComputoGlobal =
@@ -268,5 +469,86 @@ const initAccionesEquipoSoftware = (target) => {
   document.querySelector(
     "#exampleModalAccionesLabel"
   ).textContent = `Acciones para ${hostnameGlobal}`;
+
+  //VERIFICAR LA CONEXION DE HOST
+  const testConection = await ping(hostnameGlobal)
+
+  if(testConection.estatus == "ok"){
+    document.querySelector(".test-conection").classList.add("bg-success")
+    document.querySelector(".test-conection").classList.remove("bg-danger")
+    document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
+  }else{
+    document.querySelector(".test-conection").classList.add("bg-danger")
+    document.querySelector(".test-conection").classList.remove("bg-success")
+    document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
+  }
+
+
   showModal($modalExampleModalAccionesRegistro);
 }
+
+
+
+
+/**
+ * Maneja el evento de clic en la opción seleccionada del menú desplegable.
+ * 
+ * Alterna la visibilidad del contenedor de opciones y actualiza la visualización
+ * de los iconos de flecha para indicar si el menú está abierto o cerrado.
+ *
+ * @listens .selected-option:click
+ */
+document.querySelector('.selected-option').addEventListener('click', () => {
+  const optionsContainer = document.getElementById('options');
+  const selectedOption = document.getElementById('selectedOption');
+
+  // Alterna la visibilidad del contenedor de opciones.
+  optionsContainer.style.display = optionsContainer.style.display === 'grid' ? 'none' : 'grid';
+
+  // Actualiza la visualización de los iconos de flecha.
+  if (optionsContainer.style.display === 'grid') {
+    selectedOption.querySelector('i:nth-last-of-type(2)').style.display = 'inline'; // Flecha arriba
+    selectedOption.querySelector('i:nth-last-of-type(1)').style.display = 'none';   // Flecha abajo
+  } else {
+    selectedOption.querySelector('i:nth-last-of-type(2)').style.display = 'none';   // Flecha arriba
+    selectedOption.querySelector('i:nth-last-of-type(1)').style.display = 'inline'; // Flecha abajo
+  }
+});
+
+
+
+/**
+ * Maneja el evento de clic en el contenedor de opciones de software.
+ * 
+ * Al hacer clic en una opción de software, actualiza el texto del elemento
+ * seleccionado con el nombre del software y establece el valor del campo
+ * oculto con el nombre del archivo ejecutable del software.
+ *
+ * @listens document#options:click
+ * @param {Event} e - El objeto del evento.
+ */
+document.querySelector("#options").addEventListener("click", (e) => {
+  // Verifica si el elemento clickeado tiene la clase "option"
+  if (e.target.classList.contains("option")) {
+    // Obtiene el elemento del texto de la opción seleccionada
+    const selectedOption = document.getElementById("selectedOption");
+    // Obtiene el campo oculto para almacenar el valor de la opción
+    const hiddenInput = document.getElementById("customSelect");
+
+    // Actualiza el texto de la opción seleccionada con el texto de la opción clickeada
+    selectedOption.firstChild.textContent = e.target.textContent;
+
+    // Muestra el icono de palomita en la opción seleccionada
+    selectedOption.querySelector("i").style.display = "inline";
+
+    // Oculta los iconos de flecha arriba y abajo en la opción seleccionada
+    selectedOption.querySelector("i:nth-last-of-type(1)").style.display =
+      "none";
+    selectedOption.querySelector("i:nth-last-of-type(2)").style.display =
+      "none";
+
+    // Establece el valor del campo oculto con el valor del atributo "data-value" de la opción clickeada
+    hiddenInput.value = e.target.getAttribute("data-value");
+  }
+});
+

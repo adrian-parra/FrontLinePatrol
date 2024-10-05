@@ -44,41 +44,41 @@
       <div class="modal-body">
 
         @* <div class="mb-2">
-          <button class="btn btn-primary" id="btnRegistrarEquipoComputo">Equipo computo</button>
-          <button class="btn btn-primary">Linea</button>
-          <button class="btn btn-primary">Estacion</button>
-          <button class="btn btn-primary">Planta</button>
+        <button class="btn btn-primary" id="btnRegistrarEquipoComputo">Equipo computo</button>
+        <button class="btn btn-primary">Linea</button>
+        <button class="btn btn-primary">Estacion</button>
+        <button class="btn btn-primary">Planta</button>
 
         </div> *@
 
         <div class="container options-grid-container">
-          <div class="grid-container" id="btnRegistrarEquipoComputo">
-            <div class="card card-options">
+          <div class="grid-container">
+            <div class="card card-options" id="btnRegistrarEquipoComputo">
               <div class="icon">
                 <i class="fas fa-desktop"></i>
               </div>
               <h3>Equipo de Cómputo</h3>
             </div>
 
-            <div class="card card-options">
-  <div class="icon">
-    <i class="fas fa-building"></i>
-  </div>
-  <h3>Registrar Planta</h3>
-</div>
+            <div class="card card-options"  id="btnRegistrarPlanta">
+              <div class="icon">
+                <i class="fas fa-building"></i>
+              </div>
+              <h3>Registrar Planta</h3>
+            </div>
 
-<div class="card card-options">
-  <div class="icon">
-    <i class="fas fa-project-diagram"></i>
-  </div>
-  <h3>Registrar Línea</h3>
-</div>
-<div class="card card-options">
-  <div class="icon">
-    <i class="fas fa-map-marker-alt"></i>
-  </div>
-  <h3>Registrar Estación</h3>
-</div>
+            <div class="card card-options" id="btnRegistrarLinea">
+              <div class="icon">
+                <i class="fas fa-project-diagram"></i>
+              </div>
+              <h3>Registrar Línea</h3>
+            </div>
+            <div class="card card-options" id="btnRegistrarEstacion">
+              <div class="icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <h3>Registrar Estación</h3>
+            </div>
 
 
           </div>
@@ -116,6 +116,60 @@
   </div>
 </div>
 
+<!-- MODAL REGISTRO DE PLANTA-->
+<div class="modal fade" id="exampleModalRegistrarPlanta" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarPlanta" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar planta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarPlanta">
+          <div class="mb-2">
+            <label for="">Nombre</label>
+            <input type="text" class="form-control form-control-sm" name="nombre">
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTRO DE ESTACION-->
+<div class="modal fade" id="exampleModalRegistrarEstacion" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarEstacion" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar estacion/ubicacion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarEstacion">
+          <div class="mb-2">
+            <label for="">Nombre</label>
+            <input type="text" class="form-control form-control-sm" name="nombre">
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL ACCIONES DE REGISTRO-->
 <div class="modal fade" id="exampleModalAccionesRegistro" tabindex="-1" aria-labelledby="exampleModalAccionesRegistro"
   aria-hidden="true">
@@ -133,8 +187,12 @@
         <button class="btn btn-primary" id="btnAgregarSoftware">Agregar software</button>
 
         </div *@
+        <div class="test-conection">
+          <p>Conections susessfull</p>
 
+        </div>
         <div class="container options-grid-container">
+
           <div class="grid-container">
             <div class="card card-options" id="btnCerrarApp">
               <div class="icon">
@@ -153,6 +211,12 @@
                 <i class="fas fa-laptop-code"></i>
               </div>
               <h3>Asignar software</h3>
+            </div>
+             <div class="card card-options" id="btnAgregarEstacionUbicacion">
+              <div class="icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <h3>Asignar estación/ubicación</h3>
             </div>
           </div>
         </div>
@@ -178,11 +242,20 @@
         <form id="formCerrarSoftware">
           <div class="mb-2">
             @* <label class="form-label">Planta</label> *@
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware"
-              name="app">
-            </select>
-            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el software que desea
-              cerrar.</label>
+            @* <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware"
+            name="app">
+            </select> *@
+
+            <div class="custom-select">
+              <div class="selected-option" id="selectedOption">
+                Selecciona una opción
+                <i class="fas fa-check-circle" style="display: none;color:var(--ColorSuccess)"></i>
+              </div>
+              <div class="options" id="options">
+              </div>
+             
+                <input type="hidden" name="app" id="customSelect" />
+            </div>
           </div>
 
           <div class="container-buttons">
@@ -226,6 +299,80 @@
   </div>
 </div>
 
+<!-- MODAL ASIGNAR ESTACIÓN/UBICACIÓN EQUIPO COMPUTO -->
+<div class="modal fade" id="exampleModalAgregarEstacionEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalAgregarEstacionEquipoComputo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Asignar estacion/ubicacion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formAgregarEstacionEquipoComputo">
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectEstacionEquipoComputo" name="idEstacion">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la estacion a la que lo desea
+              agregar.</label>
+          </div>
+           <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectLineaEquipoComputo" name="idLinea">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la linea a donde pertenece.</label>
+          </div>
+           
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Asignar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ASIGNAR ESTACIÓN/UBICACIÓN EQUIPO COMPUTO -->
+<div class="modal fade" id="exampleModalRegistrarLinea" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarLinea" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar linea</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarLinea">
+          <div class="mb-2">
+            <label for="">Nombre</label>
+            <input type="text" class="form-control form-control-sm" name="nombre">
+          </div>
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectPlantaEquipoComputo" name="idPlanta">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la planta a la que pertenece.</label>
+          </div>
+           
+           
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 @section Scripts {

@@ -21,6 +21,10 @@
 
 @media (max-width:600px) {
 
+  .btn-sm {
+    width: 100% !important;
+  }
+
   #equiposTable {
     margin: 0 !important;
     width: 100% !important;
@@ -68,7 +72,16 @@
     font-weight: bold;
     text-decoration: underline;
   }
-
+  .items-table tr td:nth-last-of-type(2) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+     text-overflow: ellipsis;
+    user-select: none;
+    padding: 0 !important;
+    padding-left: var(--Padding) !important;
+  }
   .items-table tr td:nth-last-of-type(1)::before {
     content: "OPC: ";
     color: var(--ColorSecundario);
@@ -143,18 +156,21 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
+  cursor: pointer;
 }
+
 
 .card-options {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   text-align: center;
 }
 
 .card-options:hover {
+  background-color: rgba(0, 0, 0,  0.1);
   transform: translateY(-10px);
 }
 
@@ -176,4 +192,64 @@
     grid-template-columns: 1fr;
   }
 
+}
+
+/* PROBAR CONEXION NOTIFY */
+.test-conection {
+  /* background-color: var(--ColorDanger); */
+  padding: var(--Padding);
+  border-radius: var(--BorderRadius);
+}
+.test-conection p {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-weight: bold;
+  letter-spacing: .5px;
+}
+
+/* CUSTOM SELECT  */
+.custom-select {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+
+.custom-select .selected-option {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+/* .options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+} */
+.options {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 10px;
+ margin-top: 5px;
+}
+
+.options .option {
+  padding: 10px;
+  /* border-bottom: 1px solid #eee;*/
+  transition: background-color 0.3s; 
+}
+
+ .options .option:hover {
+  background-color: #f0f0f0;
+}
+.options .option p,
+.options .option i {
+  pointer-events:none;
 }
