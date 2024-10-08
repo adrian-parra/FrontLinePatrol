@@ -37,18 +37,42 @@ export const obtenerEquiposComputo = async () =>{
         const lineaData = equipo.lineas[0];
 
         $(".items-table").innerHTML += `
-        <tr>
-          <td id="idEquipo" style="display:none;">${equipo.id || 'N/A'}</td>
-          <td>${lineaData?.linea?.planta?.nombre || 'N/A'}</td>
-          <td>${lineaData?.linea?.nombre || 'N/A'}</td>
-          <td>${lineaData?.estacion?.nombre || 'N/A'}</td>
-          <td id="hostname">${equipo.hostname || 'N/A'}</td>
-          <td>${softwareNames || 'N/A'}</td>  
-          <td>
-            <button class="btn btn-primary" id="btnAcciones">Acciones</button>
-          </td >
-        </tr>
-        `
+     <tr>
+       <td  style="display:none;">
+         <p id="idEquipo" data-tippy-content="${equipo.id || 'Sin información'}">${equipo.id || '<span class="text-danger">N/A</span>'}</p>
+       </td>
+       <td>
+         <p data-tippy-content="${lineaData?.linea?.planta?.nombre || 'Sin información'}">${lineaData?.linea?.planta?.nombre ? lineaData.linea.planta.nombre : '<span class="text-danger">N/A</span>'}</p>
+       </td>
+       <td>
+         <p data-tippy-content="${lineaData?.linea?.nombre || 'Sin información'}">${lineaData?.linea?.nombre ? lineaData.linea.nombre : '<span class="text-danger">N/A</span>'}</p>
+       </td>
+       <td>
+         <p data-tippy-content="${lineaData?.estacion?.nombre || 'Sin información'}">${lineaData?.estacion?.nombre ? lineaData.estacion.nombre : '<span class="text-danger">N/A</span>'}</p>
+       </td>
+       <td>
+         <p id="hostname" data-tippy-content="${equipo.hostname || 'Sin información'}">${equipo.hostname ? equipo.hostname : '<span class="text-danger">N/A</span>'}</p>
+       </td>
+       <td>
+         <p data-tippy-content="${softwareNames || 'Sin información'}">${softwareNames ? softwareNames : '<span class="text-danger">N/A</span>'}</p>
+       </td>  
+       <td>
+         <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles">Acciones</button>
+       </td>
+     </tr>
+     `;
+
+// Iniciar Tippy en los elementos que tengan data-tippy-content
+tippy('[data-tippy-content]', {
+  // theme: 'custom', // Aplica el tema personalizado
+  animation: 'scale', // Animación de escalado
+  duration: [300, 200], // Duración de la animación (entrada, salida)
+  placement: 'top', // Posición del tooltip
+  arrow: true, // Mostrar la flecha del tooltip
+  delay: [100, 50], // Retraso al mostrar (entrada, salida)
+  //maxWidth: 200, // Ancho máximo del tooltip
+});
+
     })
 
     hideLoading()

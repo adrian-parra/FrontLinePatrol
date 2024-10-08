@@ -77,6 +77,11 @@ let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
 document.addEventListener("DOMContentLoaded", async () => {
   dataGlobal = await obtenerEquiposComputo();
 
+  //software
+  tippy('#software', {
+    content: "I'm a Tippy tooltip!",
+  });
+
   $("#equiposTable").DataTable({
     language: {
       url: "../lib/datatables/traslate/es/es-ES.json",
@@ -165,8 +170,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dataForm = new FormData();
     dataForm.append("ip", hostnameGlobal);
 
+    console.log(hostnameGlobal)
     const software = obtenerSoftwarePorHostname(hostnameGlobal);
-
+    console.log(software)
     if (software == "") {
       Swal.fire({
         icon: "error",
@@ -465,6 +471,9 @@ const initAccionesEquipoSoftware = async (target) => {
     target.parentNode.parentNode.querySelector("#hostname").textContent;
   idEquipoComputoGlobal =
     target.parentNode.parentNode.querySelector("#idEquipo").textContent;
+
+    console.log(hostnameGlobal)
+    console.log(idEquipoComputoGlobal)
 
   document.querySelector(
     "#exampleModalAccionesLabel"

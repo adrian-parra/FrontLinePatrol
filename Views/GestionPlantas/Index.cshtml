@@ -21,7 +21,7 @@
   <div class="card-header">Gestión de equipos en planta</div>
   <div class="card-body">
     <div class="container-buttons-listado">
-      <button class="btn btn-primary btn-sm" id="btnRegistrarOpciones">Registrar</button>
+      <button data-tippy-content="Opciones de registro disponibles" class="btn btn-primary btn-sm" id="btnRegistrarOpciones">Registrar</button>
       @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
     </div>
     <hr />
@@ -397,6 +397,13 @@
 
   @*filter columns*@
   <script src="/lib/datatables/js/dataTables.fixedHeader.min.js"></script>
+
+  <!-- Development -->
+  @* <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script> *@
+  <script src="/lib/tippy/popper.min.js"></script>
+  <script src="/lib/tippy/tippy-bundle.umd.js"></script>
+
 
   <script src="~/js/GestionPlantasMainIndex.js" type="module"></script>
 }
