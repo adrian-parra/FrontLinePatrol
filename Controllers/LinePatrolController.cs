@@ -47,7 +47,7 @@ public class LinePatrolController : Controller
                 var hostEntry = Dns.GetHostEntry(ipAddress);
                 hostName = hostEntry.HostName;
                 Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
-                logger.Log($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Line patrol");
 
      
             }

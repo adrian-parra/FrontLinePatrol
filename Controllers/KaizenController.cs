@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
-
+using System.Text;
+using System.IO;
+using System.Net;
 namespace LinePatrol.Controllers;
 
 public class KaizenController : Controller
@@ -20,6 +22,8 @@ public class KaizenController : Controller
         [HttpPost]
     public async Task<IActionResult> Filter(Kaizen kaizen)
     {
+   var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
 
         // Aquí puedes configurar la URL de la API externa
     string apiUrl = "http://c7share.sewsus.com.mx:9001/Kaizen/MostrarKaizen.php";
@@ -29,6 +33,8 @@ public class KaizenController : Controller
       // Crea un objeto FormUrlEncodedContent con los datos del formulario
             var formData = new FormUrlEncodedContent(new[]
             {
+
+
                 new KeyValuePair<string, string>("Fecha1", kaizen.Fecha1),
                 new KeyValuePair<string, string>("Fecha2", kaizen.Fecha2),
                 new KeyValuePair<string, string>("Planta", kaizen.Planta),
@@ -42,6 +48,12 @@ public class KaizenController : Controller
 
         if (response.IsSuccessStatusCode)
         {
+              Logger logger = new Logger();
+
+          var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Kaizen");
             var htmlTable = await response.Content.ReadAsStringAsync();
             return Content(htmlTable, "text/html");
         }

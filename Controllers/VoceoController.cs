@@ -2,6 +2,9 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
 using Newtonsoft.Json;
+using System.Text;
+using System.IO;
+using System.Net;
 
 namespace LinePatrol.Controllers;
 
@@ -15,6 +18,8 @@ public class VoceoController : Controller
     [HttpPost]
     public async Task<IActionResult> Filter(Voceo voceo)
     {
+ var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
 
         // Aquí puedes configurar la URL de la API externa
     string apiUrl = "http://172.30.73.72:9001/intranet/regresaVoceosCTS.php";
@@ -29,7 +34,13 @@ public class VoceoController : Controller
                 new KeyValuePair<string, string>("Planta", voceo.Planta),
                 new KeyValuePair<string, string>("Departamento", voceo.Departamento),
             });
+            Logger logger = new Logger();
 
+          
+                var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: voceo");
             // Envía la solicitud POST con el contenido del formulario
             var response = await client.PostAsync(apiUrl, formData);
 

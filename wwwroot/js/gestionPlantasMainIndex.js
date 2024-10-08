@@ -77,6 +77,32 @@ let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
 document.addEventListener("DOMContentLoaded", async () => {
   dataGlobal = await obtenerEquiposComputo();
 
+  document.querySelector("#prueba").addEventListener("click", async () => {
+    try {
+      const dataForm = new FormData();
+      dataForm.append("ip", "172.30.106.138");
+      dataForm.append("productName", "tvnviewer");
+      const response = await fetch("/cmd/EliminarProducto", {
+        method: "POST",
+        body: dataForm,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+    
+    } catch (error) {
+      console.log(error);
+   
+    }
+  });
+
+ 
+
+  
   //software
   tippy('#software', {
     content: "I'm a Tippy tooltip!",

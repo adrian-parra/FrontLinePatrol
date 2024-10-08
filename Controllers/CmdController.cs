@@ -2,11 +2,14 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
 using Newtonsoft.Json;
+using System.Management;
 
 namespace LinePatrol.Controllers;
 
 public class CmdController : Controller
 {
+
+    //private static ManagementScope scope;
     private readonly ILogger<HomeController> _logger;
 
     public CmdController(ILogger<HomeController> logger)
@@ -17,6 +20,52 @@ public class CmdController : Controller
     public IActionResult Index()
     {
         return View();
+    }
+
+    [HttpPost]
+    public ActionResult EliminarProducto(string productName ,string ip)
+    {
+        try
+        {
+
+             Console.WriteLine($"IP recibida:.{ip}., Producto: .{productName}.");
+            // Crear el alcance de la conexión WMI al equipo remoto
+
+            ManagementScope scope = new ManagementScope($"\\\\{ip}\\root\\cimv2");
+            scope.Connect();
+            // Crea la consulta para encontrar el producto
+            ObjectQuery query = new ObjectQuery($"SELECT * FROM Win32_Product WHERE Name = '{productName}'");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+
+            // Recopila los productos a desinstalar
+            ManagementObjectCollection products = searcher.Get();
+            Console.WriteLine($"Producto: {products}");
+            if (products.Count == 0)
+            {
+                return Json(new { success = false, message = "No se encontró ningún producto para desinstalar." });
+            }
+
+            // Desinstala los productos
+            foreach (ManagementObject product in products)
+            {
+                try
+                {
+                    product.InvokeMethod("Uninstall", null);
+                }
+                catch (Exception ex)
+                {
+                    // Registra o maneja errores individuales de desinstalación de productos
+                    return Json(new { success = false, message = $"Error al desinstalar {productName}: {ex.Message}" });
+                }
+            }
+
+            return Json(new { success = true, message = "El producto ha sido desinstalado." });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = $"Error: {ex.Message}" });
+        }
     }
 
     [HttpPost]

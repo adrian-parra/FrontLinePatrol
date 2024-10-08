@@ -4,6 +4,11 @@ using LinePatrol.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 
+using System.Text;
+using System.IO;
+using System.Net;
+
+
 namespace LinePatrol.Controllers;
 
 public class GestionPlantasController : Controller
@@ -20,7 +25,17 @@ public class GestionPlantasController : Controller
     {
         var cliente = new HttpClient();
 
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
+
         var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo?idPlanta={idPlanta}");
+
+         Logger logger = new Logger();
+
+          var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Gestión de equipos de cómputo");
 
         if (response.IsSuccessStatusCode)
         {
