@@ -25,17 +25,31 @@ public class GestionPlantasController : Controller
     {
         var cliente = new HttpClient();
 
+       
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo?idPlanta={idPlanta}");
+
+  
         var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         string hostName = string.Empty;
 
-        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo?idPlanta={idPlanta}");
-
-         Logger logger = new Logger();
-
-          var hostEntry = Dns.GetHostEntry(ipAddress);
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            Logger logger = new Logger();
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(ipAddress);
                 hostName = hostEntry.HostName;
                 Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
                 logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Gestión de equipos de cómputo");
+
+     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message} :IP: {ipAddress}");
+                logger.Log($"IP: {ipAddress},Interfaz: Gestión de equipos de cómputo, Error al obtener el hostname: {ex.Message}");
+            }
+        }
 
         if (response.IsSuccessStatusCode)
         {
