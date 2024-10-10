@@ -23,12 +23,12 @@ public class CmdController : Controller
     }
 
     [HttpPost]
-    public ActionResult EliminarProducto(string productName ,string ip)
+    public ActionResult EliminarProducto(string productName, string ip)
     {
         try
         {
 
-             Console.WriteLine($"IP recibida:.{ip}., Producto: .{productName}.");
+            Console.WriteLine($"IP recibida:.{ip}., Producto: .{productName}.");
             // Crear el alcance de la conexión WMI al equipo remoto
 
             ManagementScope scope = new ManagementScope($"\\\\{ip}\\root\\cimv2");
@@ -147,7 +147,7 @@ public class CmdController : Controller
     }
 
 
-     [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> TestConection(string ip)
     {
         // Imprimir la IP recibida en la consola
@@ -264,7 +264,7 @@ public class CmdController : Controller
     }
 
 
- [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> ApagarDeviceWmi(string ip)
     {
         // Imprimir la IP recibida en la consola
@@ -307,7 +307,7 @@ public class CmdController : Controller
     }
 
 
-[HttpPost]
+    [HttpPost]
     public async Task<IActionResult> UptimeDeviceWmi(string ip)
     {
         // Imprimir la IP recibida en la consola

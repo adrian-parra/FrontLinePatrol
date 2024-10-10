@@ -9,7 +9,8 @@ import {
   registrarPlanta,
   registrarEstacion,
   registrarLinea,
-  obtenerPlantas
+  obtenerPlantas,
+  registrarSoftware
 } from "./gestionPlantasIndex.js";
 import { restartDeviceWmi, cerrarAppWmi,ping,apagarEquipoComputo,obtenerInfoEquipoComputo,recorrerCadena,obtenerUptimeDevice } from "./cmdIndex.js";
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -71,6 +72,20 @@ const $btnApagarEquipoComputo = document.querySelector("#btnApagarEquipoComputo"
 const $btnInformacionEquipoComputo = document.querySelector("#btnInformacionEquipoComputo");
 
 const $btnUptimeEquipoComputo = document.querySelector("#btnUptimeEquipoComputo");
+
+const $btnRegistrarSoftwareEquipoComputo = document.querySelector(
+  "#btnRegistrarSoftwareEquipoComputo"
+);
+
+const $modalRegistrarSoftwareEquipoComputo = document.querySelector(
+  "#exampleModalRegistrarSoftwareEquipoComputo"
+);
+const $formRegistrarSoftwareEquipoComputo = document.querySelector(
+  "#formRegistrarSoftwareEquipoComputo"
+);
+
+
+
 
 
 
@@ -412,6 +427,29 @@ $btnUptimeEquipoComputo.addEventListener("click",async()=>{
   //document.querySelector(".respuesta-uptime-pc").innerHTML = `<pre>${data.tiempoEncendido}</pre>`;
   //document.querySelector(".respuesta-fecha-encendido-pc").innerHTML = `<pre>${data.fechaEncendido}</pre>`;
   //showModal("#exampleModalUptimeEquipoComputo")
+})
+
+
+$btnRegistrarSoftwareEquipoComputo.addEventListener("click",()=>{
+  showModal($modalRegistrarSoftwareEquipoComputo)
+})
+
+$formRegistrarSoftwareEquipoComputo.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  const data = await registrarSoftware(dataForm)
+
+  console.log(data)
+
+  e.target.reset()
+
+  await updateInterfaz()
+
+  Swal.fire({
+    icon: "success",
+    text: data.message,
+  });
 })
 
 

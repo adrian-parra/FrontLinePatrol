@@ -348,7 +348,7 @@ public class GestionPlantasController : Controller
         string json = JsonConvert.SerializeObject(data);
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
          var cliente = new HttpClient();
-        var response = await cliente.PostAsync("http://localhost:3000/api/linea", content);
+        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/lineas", content);
 
         if (response.IsSuccessStatusCode)
         {
@@ -356,6 +356,30 @@ public class GestionPlantasController : Controller
         }
 
         return StatusCode((int)response.StatusCode, new { success = false, message = "Error al registrar la línea." });
+    }
+   
+   
+   [HttpPost]
+    public async Task<IActionResult> RegistrarSoftware(SoftwareDto softwareDto)
+    {
+        if (string.IsNullOrWhiteSpace(softwareDto.Nombre))
+        {
+            return BadRequest(new { success = false, message = "El nombre de la línea y el ID de la planta son requeridos." });
+        }
+
+        var data = new { nombre = softwareDto.Nombre,softwareDto.Estado };
+
+        string json = JsonConvert.SerializeObject(data);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+         var cliente = new HttpClient();
+        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/software", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Ok(new { success = true, message = "Software registrado correctamente." });
+        }
+
+        return StatusCode((int)response.StatusCode, new { success = false, message = "Error al registrar el software." });
     }
 
     // Endpoint para registrar una nueva Estacion
@@ -397,6 +421,11 @@ public class GestionPlantasController : Controller
     }
 
     public class EstacionDto
+    {
+        public string Nombre { get; set; }
+        public bool Estado { get; set; } = true; // Valor por defecto
+    }
+     public class SoftwareDto
     {
         public string Nombre { get; set; }
         public bool Estado { get; set; } = true; // Valor por defecto

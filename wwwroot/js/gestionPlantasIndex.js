@@ -372,4 +372,32 @@ export const obtenerPlantas = async ()=>{
   }
 }
 
+export const registrarSoftware = async (formData)=>{
+  showLoading();
+
+  try {
+    const respuesta = await fetch("/GestionPlantas/RegistrarSoftware", {
+      method: 'POST',
+      body: formData,
+    });
+
+    // Verifica si la respuesta es exitosa
+    if (!respuesta.ok) {
+      throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+    }
+
+    const dataResponse = await respuesta.json();
+
+    return dataResponse;
+  } catch (error) {
+    console.error("Error al registrar software:", error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al registrar software. Inténtalo de nuevo más tarde. "+error.message,
+    });
+  } finally {
+    hideLoading();
+  }
+}
+
 
