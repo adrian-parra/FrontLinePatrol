@@ -371,3 +371,5 @@ export const obtenerPlantas = async ()=>{
     hideLoading()
   }
 }
+
+

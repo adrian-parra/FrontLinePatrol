@@ -249,7 +249,7 @@
 
     import { $ } from '/js/utils.js'
 
-    import { restartDeviceWmi,cerrarAppWmi } from '/js/cmdIndex.js'
+    import { restartDeviceWmi,cerrarAppWmi ,recorrerCadena } from '/js/cmdIndex.js'
 
     const showModal = (modal) => new bootstrap.Modal(modal).show();
     const hideLoading = () => $containerLoading.style.display = "none";
@@ -464,52 +464,5 @@
     })
 
    
-    function recorrerCadena(cadena) {
-        var newCadena = ''
-        var isNotBlockRecorrido = true
-        for (let i = 0; i < cadena.length; i++) {
-
-            let caracterEnter = cadena[i] + cadena[i + 1]
-
-
-            let saltoDeLinea = caracterEnter.replace(/\\n|\\r/g, function (match) {
-                if (match === "\\n") {
-                    return "\n";
-                } else if (match === "\\r") {
-                    return "\r";
-                }
-            });
-
-
-
-
-
-
-            if (isNotBlockRecorrido) {
-                if (saltoDeLinea.charCodeAt(0) === 10 || saltoDeLinea.charCodeAt(0) === 13) {
-
-                    newCadena += '<br>'
-                    isNotBlockRecorrido = false
-
-                } else {
-
-
-
-                    newCadena += cadena[i]
-
-
-                }
-            } else {
-                isNotBlockRecorrido = true
-            }
-
-
-
-        }
-
-
-
-        return newCadena
-    }
-
+   
 </script>

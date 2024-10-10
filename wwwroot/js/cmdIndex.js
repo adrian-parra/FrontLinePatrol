@@ -1,4 +1,4 @@
-import { showLoading,hideLoading } from "/js/utils.js";
+import { showLoading, hideLoading } from "/js/utils.js";
 
 export const restartDeviceWmi = async (dataForm) => {
     $('.container-loading').style = 'display:flex;'
@@ -31,7 +31,7 @@ export const restartDeviceWmi = async (dataForm) => {
     } catch (error) {
         // Manejo de errores
         console.error('Error:', error);
-       // $('.container-respuesta .respuesta').innerHTML = `<pre>Error: ${error.message}</pre>`;
+        // $('.container-respuesta .respuesta').innerHTML = `<pre>Error: ${error.message}</pre>`;
         Swal.fire({
             title: 'error',
             text: `<pre>${error.message}</pre>`, // Usamos 'html' para permitir etiquetas HTML
@@ -85,7 +85,7 @@ export const cerrarAppWmi = async (dataForm) => {
     }
 }
 
-export const ping = async (hostname)=>{
+export const ping = async (hostname) => {
     try {
         showLoading()
         const dataForm = new FormData();
@@ -96,7 +96,7 @@ export const ping = async (hostname)=>{
             body: dataForm,
         });
 
-        if(!response.ok){
+        if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
 
@@ -110,4 +110,137 @@ export const ping = async (hostname)=>{
     } finally {
         hideLoading()
     }
+}
+export const apagarEquipoComputo = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/ApagarDeviceWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        Swal.fire({
+            icon: "success",
+            text: "Equipo se apago coon éxito"
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al apagar equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+export const obtenerInfoEquipoComputo = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/ObtenerInfoDeviceWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al obtener información del equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+
+export const obtenerUptimeDevice = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/UptimeDeviceWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al obtener información del equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+
+
+
+export function recorrerCadena(cadena) {
+    var newCadena = ''
+    var isNotBlockRecorrido = true
+    for (let i = 0; i < cadena.length; i++) {
+
+        let caracterEnter = cadena[i] + cadena[i + 1]
+
+
+        let saltoDeLinea = caracterEnter.replace(/\\n|\\r/g, function (match) {
+            if (match === "\\n") {
+                return "\n";
+            } else if (match === "\\r") {
+                return "\r";
+            }
+        });
+
+
+
+
+
+
+        if (isNotBlockRecorrido) {
+            if (saltoDeLinea.charCodeAt(0) === 10 || saltoDeLinea.charCodeAt(0) === 13) {
+
+                newCadena += '<br>'
+                isNotBlockRecorrido = false
+
+            } else {
+
+
+
+                newCadena += cadena[i]
+
+
+            }
+        } else {
+            isNotBlockRecorrido = true
+        }
+
+
+
+    }
+
+
+
+    return newCadena
 }

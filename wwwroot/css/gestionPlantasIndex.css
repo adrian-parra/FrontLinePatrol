@@ -3,6 +3,11 @@ p{
   margin: 0 !important;
 }
 
+.respuesta-info-pc {
+  /* display: flex;
+  color: red; */
+}
+
 .buttons-excel,
 .btn-exportar-pdf,
 .btn-exportar-print,

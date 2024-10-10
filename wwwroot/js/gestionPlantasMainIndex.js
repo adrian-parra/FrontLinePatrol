@@ -11,7 +11,7 @@ import {
   registrarLinea,
   obtenerPlantas
 } from "./gestionPlantasIndex.js";
-import { restartDeviceWmi, cerrarAppWmi,ping } from "./cmdIndex.js";
+import { restartDeviceWmi, cerrarAppWmi,ping,apagarEquipoComputo,obtenerInfoEquipoComputo,recorrerCadena,obtenerUptimeDevice } from "./cmdIndex.js";
 import { hideLoading, showLoading, showModal } from "./utils.js";
 
 const $containerItems = document.querySelector(".container-items");
@@ -66,6 +66,17 @@ const $modalRegistrarLinea = document.querySelector(
 );
 const $formRegistrarLinea = document.querySelector("#formRegistrarLinea");
 
+const $btnApagarEquipoComputo = document.querySelector("#btnApagarEquipoComputo");
+
+const $btnInformacionEquipoComputo = document.querySelector("#btnInformacionEquipoComputo");
+
+const $btnUptimeEquipoComputo = document.querySelector("#btnUptimeEquipoComputo");
+
+
+
+
+
+
 
 
 
@@ -77,36 +88,6 @@ let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
 document.addEventListener("DOMContentLoaded", async () => {
   dataGlobal = await obtenerEquiposComputo();
 
-  document.querySelector("#prueba").addEventListener("click", async () => {
-    try {
-      const dataForm = new FormData();
-      dataForm.append("ip", "172.30.106.138");
-      dataForm.append("productName", "tvnviewer");
-      const response = await fetch("/cmd/EliminarProducto", {
-        method: "POST",
-        body: dataForm,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-    
-    } catch (error) {
-      console.log(error);
-   
-    }
-  });
-
- 
-
-  
-  //software
-  tippy('#software', {
-    content: "I'm a Tippy tooltip!",
-  });
 
   $("#equiposTable").DataTable({
     language: {
@@ -379,6 +360,62 @@ $formRegistrarLinea.addEventListener("submit",async (e)=>{
 
   updateInterfaz()
 })
+
+$btnApagarEquipoComputo.addEventListener("click",async()=>{
+  const dataForm = new FormData();
+  dataForm.append("ip", hostnameGlobal);
+
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "¿Quieres apagar el equipo?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Sí",
+    cancelButtonText: "Cancelar",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      //showLoading();
+      await apagarEquipoComputo(dataForm);
+      //hideLoading();
+    }
+  });
+})
+
+$btnInformacionEquipoComputo.addEventListener("click",async()=>{
+
+  var formData = new FormData();
+  formData.append("ip", hostnameGlobal);
+
+  const data = await obtenerInfoEquipoComputo(formData)
+  console.log(data)
+  document.querySelector(".respuesta-info-pc").innerHTML = `<pre>${recorrerCadena(data)}</pre>`;
+  showModal("#exampleModalInformacionEquipoComputo")
+})
+
+$btnUptimeEquipoComputo.addEventListener("click",async()=>{
+  var formData = new FormData();
+  formData.append("ip", hostnameGlobal);
+
+  const data = await obtenerUptimeDevice(formData)
+  console.log(data)
+
+  Swal.fire({
+    html: `
+      <div>
+        <p><span>Tiempo de encendido:</span> ${data.tiempoEncendido}</p>
+        <p><span>Fecha de encendido:</span> ${data.fechaEncendido}</p>
+      </div>
+    `,
+  })
+  //document.querySelector(".respuesta-uptime-pc").innerHTML = `<pre>${data.tiempoEncendido}</pre>`;
+  //document.querySelector(".respuesta-fecha-encendido-pc").innerHTML = `<pre>${data.fechaEncendido}</pre>`;
+  //showModal("#exampleModalUptimeEquipoComputo")
+})
+
+
+
 
 
 }); // FINN EVENTO ONLOAD
