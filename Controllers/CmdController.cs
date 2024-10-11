@@ -3,8 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using LinePatrol.Models;
 using Newtonsoft.Json;
 using System.Management;
+using System;
 
 namespace LinePatrol.Controllers;
+
+ public class Actualizacion
+    {
+        public string HotFixID { get; set; }
+        public string Description { get; set; }
+        public string InstalledOn { get; set; }
+        public string Caption { get; set; }
+        public string CSName { get; set; }
+        public string InstallDate { get; set; }
+        public string Name { get; set; }
+        public string Status { get; set; }
+        public string TiempoDesdeInstalacion { get; set; } 
+    }
 
 public class CmdController : Controller
 {
@@ -22,28 +36,84 @@ public class CmdController : Controller
         return View();
     }
 
+    private string CalcularTiempoDesde(DateTime fechaInstalacion)
+        {
+            TimeSpan tiempoTranscurrido = DateTime.Now - fechaInstalacion;
+
+            if (tiempoTranscurrido.TotalMinutes < 1)
+                return "hace menos de un minuto";
+            if (tiempoTranscurrido.TotalHours < 1)
+                return $"hace {tiempoTranscurrido.Minutes} minutos";
+            if (tiempoTranscurrido.TotalDays < 1)
+                return $"hace {tiempoTranscurrido.Hours} horas";
+
+            return $"hace {tiempoTranscurrido.Days} días";
+    }
+    
+
     [HttpPost]
-    public ActionResult EliminarProducto(string productName, string ip)
+    public  async Task<IActionResult> ObtenerActualizacionesDeEquipoWmi(string ip)
+    {
+         List<Actualizacion> actualizaciones = new List<Actualizacion>();
+        string computerName = ip;
+
+        try
+        {
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
+            ObjectQuery query = new ObjectQuery($"SELECT * FROM Win32_QuickFixEngineering");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+            foreach (ManagementObject update in searcher.Get())
+            {
+                DateTime? installedOnDate = null;
+                if (DateTime.TryParse(update["InstalledOn"]?.ToString(), out DateTime parsedDate))
+                {
+                    installedOnDate = parsedDate;
+                }
+
+                 Actualizacion actualizacion = new Actualizacion
+                {
+                    HotFixID = update["HotFixID"]?.ToString() ?? "N/A",
+                    Description = update["Description"]?.ToString() ?? "N/A",
+                    InstalledOn = update["InstalledOn"]?.ToString() ?? "N/A",
+                    Caption = update["Caption"]?.ToString() ?? "N/A",
+                    CSName = update["CSName"]?.ToString() ?? "N/A",
+                    InstallDate = update["InstallDate"]?.ToString() ?? "N/A",
+                    Name = update["Name"]?.ToString() ?? "N/A",
+                    Status = update["Status"]?.ToString() ?? "N/A",
+                    TiempoDesdeInstalacion = installedOnDate.HasValue ? CalcularTiempoDesde(installedOnDate.Value) : "N/A"
+                };
+
+                actualizaciones.Add(actualizacion);
+            }
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error al obtener actualizaciones: {ex.Message}");
+        }
+
+        return Json(actualizaciones);
+    }
+    [HttpPost]
+    public ActionResult DesinstalarSoftwareDeEquipoWmi(string productName, string ip)
     {
         try
         {
+            string computerName = ip;
 
-            Console.WriteLine($"IP recibida:.{ip}., Producto: .{productName}.");
-            // Crear el alcance de la conexión WMI al equipo remoto
 
-            ManagementScope scope = new ManagementScope($"\\\\{ip}\\root\\cimv2");
-            scope.Connect();
             // Crea la consulta para encontrar el producto
-            ObjectQuery query = new ObjectQuery($"SELECT * FROM Win32_Product WHERE Name = '{productName}'");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
 
+            ObjectQuery query = new ObjectQuery($"SELECT * FROM Win32_Product WHERE Name = '{productName.Trim()}'");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
 
             // Recopila los productos a desinstalar
             ManagementObjectCollection products = searcher.Get();
-            Console.WriteLine($"Producto: {products}");
             if (products.Count == 0)
             {
-                return Json(new { success = false, message = "No se encontró ningún producto para desinstalar." });
+                return BadRequest("No se encontró ningún producto para desinstalar.");
             }
 
             // Desinstala los productos
@@ -55,16 +125,67 @@ public class CmdController : Controller
                 }
                 catch (Exception ex)
                 {
-                    // Registra o maneja errores individuales de desinstalación de productos
-                    return Json(new { success = false, message = $"Error al desinstalar {productName}: {ex.Message}" });
+                    return BadRequest();
+
                 }
             }
 
-            return Json(new { success = true, message = "El producto ha sido desinstalado." });
+            return Json(new { message = "Software desinstalado correctamente." });
+
+
         }
         catch (Exception ex)
         {
-            return Json(new { success = false, message = $"Error: {ex.Message}" });
+            return BadRequest();
+        }
+    }
+
+
+    [HttpPost]
+    public ActionResult ObtenerSoftwareDeEquipoWmi(string ip)
+    {
+        try
+        {
+
+            string computerName = ip;
+
+            // Crear el alcance de la conexión WMI al equipo remoto
+
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
+
+            // Crear el objeto de búsqueda para obtener los productos instalados
+            ObjectQuery query = new ObjectQuery("SELECT Name FROM Win32_Product");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+            // Ejecutar la búsqueda y obtener los resultados
+            ManagementObjectCollection queryCollection = searcher.Get();
+
+
+            // Limpiar ComboBox
+            // cb_listado_software.Items.Clear();
+
+            List<string> softwareList = new List<string>();
+
+
+            foreach (ManagementObject m in queryCollection)
+            {
+                if (m["Name"] != null)
+                {
+
+                    softwareList.Add(m["Name"].ToString());
+                    //Console.WriteLine($"software: {m["Name"].ToString()}");
+                }
+            }
+
+
+
+
+            return Json(new { softwareInstalado = softwareList });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest();
         }
     }
 

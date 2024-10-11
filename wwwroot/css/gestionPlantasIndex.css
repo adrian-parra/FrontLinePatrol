@@ -186,15 +186,57 @@ p{
     content: "PLANTA: ";
     color: var(--ColorSecundario);
     font-weight: bold;
+    flex-direction: column;
 
   }
 
 }
 
 
+/* ESTILOS BUTTON FLOTANTE PLANTA EN DONDE SE ENCUANTRA REALIZANDO EL RECORRIDO */
+.loal-container-button-flotante-planta {
+  transition: .3s all;
+  background-color: var(--ColorSecundario);
+  position:fixed;
+  top:120px;
+  right:0;
+  z-index: 1001;
+  border-top-left-radius: var(--Padding);      /* Esquina superior izquierda redondeada */
+  border-bottom-left-radius: var(--Padding);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  padding:var(--Padding);
+}
+.loal-container-button-flotante-planta:hover{
+  cursor:pointer;
+  opacity:.8;
+}
+
+.loal-container-button-flotante-planta .loal-button-flotante-planta {
+  /* padding:var(--Padding); */
+  background-color:transparent;
+  border:0;
+  color:white;
+}
+.loal-container-button-flotante-planta p {
+  margin:0;
+  color:white;
+  text-align:center;
+  
+}
 
 
 
+
+#exampleModalAccionesRegistro {
+ 
+}
+#exampleModalAccionesRegistro .modal-dialog {
+  max-width: 800px;
+  /* width: 900px; */
+
+}
 /* GRID CONTAINER OPCIONES  */
 .options-grid-container {
   max-width: 1200px;
@@ -212,12 +254,26 @@ p{
 
 
 .card-options {
+  position: relative;
   background-color: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
   text-align: center;
+}
+
+.card-options .sms-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 .card-options:hover {

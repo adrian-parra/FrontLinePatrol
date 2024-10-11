@@ -16,7 +16,7 @@ namespace LinePatrol.Controllers;
 
 public class LinePatrolController : Controller
 {
-     private readonly ILinePatrol linePatrol;
+    private readonly ILinePatrol linePatrol;
     private const string RUTA_IMAGENES = "images/linePatrol/";
 
     public LinePatrolController(ILinePatrol linePatrol)

@@ -195,6 +195,88 @@ export const obtenerUptimeDevice = async (formData) => {
 
 }
 
+export const obtenerSoftwareInstalado = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/ObtenerSoftwareDeEquipoWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al obtener información del equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+
+export const DesinstalarSoftwareDeEquipoWmi = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/DesinstalarSoftwareDeEquipoWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al obtener información del equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+
+export const HistorialActualizacionEquipoComputo = async (formData) => {
+    try {
+        showLoading()
+        const response = await fetch("/cmd/ObtenerActualizacionesDeEquipoWmi", {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+        Swal.fire({
+            icon: "error",
+            text: "Error al obtener información del equipo, " + (error.message || "desconocido")
+        });
+    } finally {
+        hideLoading()
+    }
+
+}
+
+
 
 
 export function recorrerCadena(cadena) {

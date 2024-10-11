@@ -10,9 +10,22 @@ import {
   registrarEstacion,
   registrarLinea,
   obtenerPlantas,
-  registrarSoftware
+  registrarSoftware,
+  confirmarPlantaRecorrido
 } from "./gestionPlantasIndex.js";
-import { restartDeviceWmi, cerrarAppWmi,ping,apagarEquipoComputo,obtenerInfoEquipoComputo,recorrerCadena,obtenerUptimeDevice } from "./cmdIndex.js";
+import { 
+  restartDeviceWmi, 
+  cerrarAppWmi,
+  ping,
+  apagarEquipoComputo,
+  obtenerInfoEquipoComputo,
+  recorrerCadena,
+  obtenerUptimeDevice,
+  obtenerSoftwareInstalado,
+  DesinstalarSoftwareDeEquipoWmi,
+  HistorialActualizacionEquipoComputo 
+} from "./cmdIndex.js";
+
 import { hideLoading, showLoading, showModal } from "./utils.js";
 
 const $containerItems = document.querySelector(".container-items");
@@ -84,12 +97,23 @@ const $formRegistrarSoftwareEquipoComputo = document.querySelector(
   "#formRegistrarSoftwareEquipoComputo"
 );
 
+const $btnDesinstalarSoftwareInstaladoEquipoComputo = document.querySelector(
+  "#btnDesinstalarSoftwareInstaladoEquipoComputo"
+);
+
+const $modalDesinstalarSoftwareInstaladoEquipoComputo = document.querySelector(
+  "#exampleModalDesinstalarSoftwareInstaladoEquipoComputo"
+);
+const $formDesinstalarSoftwareInstaladoEquipoComputo = document.querySelector(
+  "#formDesinstalarSoftwareEquipoComputo"
+);
+
+const $btnConfirmarPlanta =  document.querySelector("#BtnconfirmarPlanta");
+const $modalPlantaRecorrido =  document.querySelector("#exampleModalPlantaRecorrido")
+const $loalContainerButton =  document.querySelector(".loal-container-button-flotante-planta")
 
 
-
-
-
-
+const $btnHistorialActualizacionEquipoComputo = document.querySelector("#btnHistorialActualizacionEquipoComputo")
 
 
 
@@ -101,7 +125,25 @@ let idEquipoComputoGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONE
 let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
 
 document.addEventListener("DOMContentLoaded", async () => {
-  dataGlobal = await obtenerEquiposComputo();
+
+  const plantaGuardada = localStorage.getItem("plantaSeleccionadaG");
+
+
+  if (plantaGuardada) {
+    document.querySelector(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
+    document.querySelector("#selectPlanta").value = plantaGuardada;
+    console.log(plantaGuardada)
+    const formData = new FormData()
+    formData.append("idPlanta",plantaGuardada)
+
+    dataGlobal = await obtenerEquiposComputo(formData);
+  } else {
+    showModal($modalPlantaRecorrido);
+
+  }
+
+ 
+  //dataGlobal = await obtenerEquiposComputo();
 
 
   $("#equiposTable").DataTable({
@@ -153,7 +195,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     ],
   });
 
-  
+  $btnConfirmarPlanta.addEventListener("click",async ()=>{
+    const formData = new FormData()
+    formData.append("idPlanta",document.querySelector("#selectPlanta").value)
+
+    await confirmarPlantaRecorrido(formData)
+
+    await updateInterfaz()
+  });
+
+  $loalContainerButton.addEventListener("click", () => showModal($modalPlantaRecorrido));
 
   $containerItems.addEventListener("click", async (e) => {
     const target = e.target;
@@ -452,15 +503,88 @@ $formRegistrarSoftwareEquipoComputo.addEventListener("submit",async (e)=>{
   });
 })
 
+$btnDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("click",async (e)=>{
 
+  const dataForm = new FormData()
+  dataForm.append("ip",hostnameGlobal)
 
+  const data = await obtenerSoftwareInstalado(dataForm);
+
+  console.log(data.softwareInstalado)
+
+  document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML = ``;
+  data.softwareInstalado.forEach((item) => {
+    document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML += `
+    <option value="${item}">${item}</option>`;
+  });
+
+  showModal($modalDesinstalarSoftwareInstaladoEquipoComputo)
+})
+
+$formDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  dataForm.append("ip",hostnameGlobal)
+
+  const data = await DesinstalarSoftwareDeEquipoWmi(dataForm)
+
+  console.log(data)
+
+  e.target.reset()
+
+  await updateInterfaz()
+
+  Swal.fire({
+    icon: "success",
+    text: data.message,
+  });
+})
+
+$btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
+  const dataForm = new FormData()
+  dataForm.append("ip",hostnameGlobal)
+
+  const data = await HistorialActualizacionEquipoComputo(dataForm)
+
+  console.log(data)
+
+  let htmlContent = ``
+  data.forEach(item =>{
+    htmlContent += `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>hotFixID:${item.hotFixID}</p>
+        <p>installedOn:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px">${item.installedOn}</span></p>
+        <p>TiempoDesdeInstalacion:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px">${item.tiempoDesdeInstalacion}</span></p>
+        <p>descripcion:<span class="text-white bg-danger p-1" style="padding:10px;border-radius:4px">${item.description}</span></p>
+        <p>csName:${item.csName}</p>
+        <p>installDate:${item.installDate}</p>
+        <p>name:${item.name}</p>
+        <p>status:${item.status}</p>
+        <hr>
+      </div>
+    `
+  })
+
+  Swal.fire({
+    html: `
+      <div>
+        ${htmlContent}
+      </div>
+    `,
+  })
+ 
+})
 
 
 }); // FINN EVENTO ONLOAD
 
 
 const updateInterfaz = async ()=>{
-  dataGlobal = await obtenerEquiposComputo();
+  const dataForm =  new FormData()
+  dataForm.append("idPlanta",localStorage.getItem("plantaSeleccionadaG") || "")
+
+  dataGlobal = await obtenerEquiposComputo(dataForm);
 
   $("#equiposTable").DataTable({
     language: {

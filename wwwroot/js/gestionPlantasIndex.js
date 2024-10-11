@@ -4,11 +4,11 @@ import { showLoading,hideLoading } from "/js/utils.js";
 
 
 
-export const obtenerEquiposComputo = async () =>{
+export const obtenerEquiposComputo = async (dataForm) =>{
 
     showLoading()
 
-    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo")
+    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + dataForm.get("idPlanta") || "")
 
     const data = await response.json()
 
@@ -400,4 +400,33 @@ export const registrarSoftware = async (formData)=>{
   }
 }
 
+export const confirmarPlantaRecorrido = async (formData) => {
+  const plantaSeleccionada = $("#selectPlanta").value;
+
+  if (plantaSeleccionada) {
+    // ALMACENAR LA PLANTA SELECCIONADA EN LOCALSTORAGE
+    localStorage.setItem("plantaSeleccionadaG", plantaSeleccionada);
+
+    // ACTUALIZAR EL TEXTO DEL BOTÓN FLOTANTE CON LA PLANTA SELECCIONADA
+    $(
+      ".loal-button-flotante-planta"
+    ).textContent = `Planta ${plantaSeleccionada}`;
+
+    // MANTENER LA SELECCIÓN EN EL SELECTOR
+    $("#selectPlanta").value = plantaSeleccionada;
+
+
+    // LLAMADA A LA FUNCIÓN PARA OBTENER LOS RECORRIDOS POR PLANTA
+    await obtenerEquiposComputo(formData);
+
+    // CERRAR EL MODAL
+    $("#exampleModalPlantaRecorrido .btn-close").click();
+  } else {
+    // MOSTRAR UN MENSAJE DE ERROR SI NO SE SELECCIONA NINGUNA PLANTA
+    Swal.fire({
+      icon: "error",
+      text: "Por favor, selecciona una planta.",
+    });
+  }
+};
 

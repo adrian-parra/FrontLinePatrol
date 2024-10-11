@@ -20,6 +20,8 @@ public class GestionPlantasController : Controller
 
     }
 
+    
+
     [HttpGet]
     public async Task<IActionResult> ObtenerEquiposComputo(string idPlanta)
     {

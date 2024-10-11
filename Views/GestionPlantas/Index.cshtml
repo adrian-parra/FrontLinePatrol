@@ -216,12 +216,6 @@
       </div>
       <div class="modal-body">
 
-        @* <div class="mb-2">
-        <button class="btn btn-primary" id="btnCerrarApp">Cerrar app</button>
-        <button class="btn btn-primary" id="btnReiniciarEquipo">Reiniciar equipo</button>
-        <button class="btn btn-primary" id="btnAgregarSoftware">Agregar software</button>
-
-        </div *@
         <div class="test-conection">
           <p>Conections susessfull</p>
 
@@ -243,14 +237,16 @@
             </div>
             <div class="card card-options" id="btnCerrarApp">
               <div class="icon">
-                <i class="fas fa-power-off"></i>
+                @* <i class="fas fa-power-off"></i> *@
+                <i class="fas fa-times"></i>
               </div>
               <h3>Cerrar Software</h3>
             </div>
 
             <div class="card card-options" id="btnAgregarSoftware">
               <div class="icon">
-                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-laptop-code"></i> *@
+                <i class="fas fa-check-circle"></i>
               </div>
               <h3>Asignar software</h3>
             </div>
@@ -263,16 +259,36 @@
 
             <div class="card card-options" id="btnInformacionEquipoComputo">
               <div class="icon">
-                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-laptop-code"></i> *@
+                <i class="fas fa-info-circle"></i>
               </div>
               <h3>Información de pc</h3>
             </div>
 
             <div class="card card-options" id="btnUptimeEquipoComputo">
               <div class="icon">
-                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-laptop-code"></i> *@
+                <i class="fas fa-clock"></i>
               </div>
               <h3>Uptime</h3>
+            </div>
+
+             <div class="card card-options" id="btnDesinstalarSoftwareInstaladoEquipoComputo">
+              <div class="icon">
+                @* <i class="fas fa-laptop-code"></i> *@
+                <i class="fas fa-eraser"></i>
+              </div>
+              <h3>Desinstalar Software</h3>
+              <p class="bg-danger sms-info">Proceso lento</p>
+            </div>
+
+             <div class="card card-options" id="btnHistorialActualizacionEquipoComputo">
+              <div class="icon">
+                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-eraser"></i> *@
+              </div>
+              <h3>Historial de actualizaciones</h3>
+             
             </div>
           </div>
         </div>
@@ -433,6 +449,36 @@
 </div>
 
 
+<!-- MODAL LISTAR SOFTWARE INSTALADO EQUIPO COMPUTO -->
+<div class="modal fade" id="exampleModalDesinstalarSoftwareInstaladoEquipoComputo" tabindex="-1" aria-labelledby="exampleModalDesinstalarSoftwareInstaladoEquipoComputo"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Desinstalar software</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formDesinstalarSoftwareEquipoComputo">
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+            id="selectListadoSoftwareInstaladoEquipoComputo" name="productName">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el software que desea desinstalar.</label>
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Desinstalar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL INFORMACIÓN DE PC -->
 <div class="modal fade" id="exampleModalInformacionEquipoComputo" tabindex="-1"
   aria-labelledby="exampleModalInformacionEquipoComputo" aria-hidden="true">
@@ -450,6 +496,48 @@
   </div>
 </div>
 
+
+<!-- BUTTON FLOTANTE PARA INDICAR EN LA PLANTA QUE SE ENCUENTRA REALIZANDO EL RECORRIDO -->
+<div class="loal-container-button-flotante-planta">
+  @* <button class="loal-button-flotante-planta" data-toggle="modal" data-target="#exampleModalPlantaRecorrido"> Planta
+  mochis 3</button> *@
+  <p>Ubicación</p>
+  <button class="loal-button-flotante-planta" type="button" class="btn btn-primary" data-toggle="modal"
+    data-target="#exampleModalPlantaRecorrido">
+    Desconocida
+  </button>
+</div>
+
+<!-- MODAL VERIFICAR UBICACIÓN DE RECORRIDO-->
+<div class="modal fade" id="exampleModalPlantaRecorrido" tabindex="-1" aria-labelledby="exampleModalPlantaRecorrido"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">¿En qué planta estás ubicado?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="mb-2">
+          @* <label class="form-label">Planta</label> *@
+          <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectPlanta">
+            <option value="" disabled selected>Seleccione planta</option>
+            <option value="1">MOCHIS 1</option>
+            <option value="2">MOCHIS 2</option>
+            <option value="3">MOCHIS 3</option>
+            <option value="4">MOCHIS MAIN</option>
+             @* <option value="sanblas">SAN BLAS</option> *@
+          </select>
+          <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la planta donde desea gestionar equipos de computo.</label>
+        </div>
+        <div class="container-buttons">
+          <button type="submit" id="BtnconfirmarPlanta" class="btn btn-success btn-sm">Confirmar planta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 @section Scripts {
 
