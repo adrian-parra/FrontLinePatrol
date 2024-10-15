@@ -57,4 +57,21 @@ label {
     pointer-events: none;
 }
 
-/*RESPONSIVE DESIGN*/
+
+.loal-form .loal-container-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+
+#modalRegistrarReporteGenerador .modal-dialog {
+    max-width: 900px;
+}
+
+@media (max-width:600px) {
+    .loal-form .loal-container-form {
+        display: flex;
+        flex-direction: column;
+    }
+}

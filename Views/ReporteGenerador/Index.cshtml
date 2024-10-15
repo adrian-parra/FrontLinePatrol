@@ -2,11 +2,39 @@
     ViewData["Title"] = "Index";
 }
 
+
 @section Styles {
-    <link rel="stylesheet" href="~/css/reporteGeneradorIndex.css" />
+
+  <link href="/lib/datatables/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+  @*ESTILOS DE BOTONES*@
+  <link href="/lib/datatables/css/buttons.dataTables.min.css" rel="stylesheet" />
+
+
+  @*filter columns*@
+  <link href="/lib/datatables/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/css/reporteGeneradorIndex.css" />
+
 }
 
+
+<!-- CARD VIEW CON TABLE GESTION DE EQUIPOS POR PLANTA -->
 <div class="card movil">
+  <div class="card-header">Reporte del generador</div>
+  <div class="card-body">
+    <div class="container-buttons-listado">
+      <button data-tippy-content="Registrar un nuevo reporte" class="btn btn-primary btn-sm"
+        id="btnRegistrarReporteGenerador">Registrar</button>
+      @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
+    </div>
+    <hr />
+    <div class="container-items">
+
+    </div>
+  </div>
+</div>
+@* <div class="card movil">
     <div class="card-header">
         Reporte de generador
     </div>
@@ -15,14 +43,19 @@
 
         <form class="loal-form" id="formReporteGenerador">
             <div class="loal-container-form">
-                <div class="mb-2">
-                    <label class="form-label">Numero de reloj</label>
-                    <input type="text" class="form-control form-control-sm" name="reloj"
-                        placeholder="Ingrese numero de reloj">
+                <div>
+                    <div class="mb-2">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectPlantaReporteGenrador" name="idPlanta">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la planta al que pertenece el generador.</label>
+          </div>
                 </div>
-
-
-
+                <div class="mb-2">
+                    <label class="form-label">Responsable</label>
+                    <input type="text" class="form-control form-control-sm" name="responsable"
+                        placeholder="Ingrese nombre">
+                </div>
 
                 <div class="container-inputs-file mb-2">
                     <label class="form-label">Horas trabajadas</label>
@@ -93,6 +126,102 @@
 
     </div>
 
+</div> *@
+
+
+
+<div class="modal fade" id="modalRegistrarReporteGenerador" tabindex="-1" aria-labelledby="modalRegistrarReporteGeneradorLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrar reporte</h5>
+                <button type="button" class="btn-close text-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                 <form class="loal-form" id="formReporteGenerador">
+            <div class="loal-container-form">
+                <div>
+                    <div class="mb-2">
+                        <label for="">Planta</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectPlantaReporteGenrador" name="idPlanta">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la planta al que pertenece el generador.</label>
+          </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Responsable</label>
+                    <input type="text" class="form-control form-control-sm" name="responsable"
+                        placeholder="Ingrese nombre">
+                </div>
+
+                <div class="container-inputs-file mb-2">
+                    <label class="form-label">Horas trabajadas</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileHorasTrabajadas"
+                        type="file" name="imagen_horas_trabajadas" accept="image/*">
+                    <button type="button" class="form-control form-control-sm"
+                        id="btnChangeInputFileImageHorasTrabajadas"></button>
+                    <a href="#" id="linkInfoImagenSelectedHoras" class="loal-ocultar-o-mostrar"
+                        class="btn-link text-success text-decoration-underline small"></a>
+                </div>
+
+                <div class="container-inputs-file mb-2">
+                    <label class="form-label">Status de bateria</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileImageStatusBateria"
+                        type="file" name="imagen_status_bateria" accept="image/*">
+                    <button type="button" class="form-control form-control-sm"
+                        id="btnChangeInputFileImageStatusBateria"></button>
+                    <a href="#" id="linkInfoImagenSelectedBateria" class="loal-ocultar-o-mostrar"
+                        class="btn-link text-success text-decoration-underline small"></a>
+                </div>
+
+                <div class="container-inputs-file mb-2">
+                    <label class="form-label">Nivel anticongelante</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAnticongelante" type="file"
+                        name="imagen_nivel_anticongelante" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAnticongelante"></button>
+                    <a href="#" id="linkInfoImagenSelectedAnticongelante" class="loal-ocultar-o-mostrar"
+                        class="btn-link text-success text-decoration-underline small"></a>
+                </div>
+                <div class="container-inputs-file mb-2">
+                    <label class="form-label">Nivel diesel</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelDiesel" type="file"
+                        name="imagen_nivel_diesel" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelDiesel"></button>
+                    <a href="#" id="linkInfoImagenSelectedDiesel" class="loal-ocultar-o-mostrar"
+                        class="btn-link text-success text-decoration-underline small"></a>
+                </div>
+                <div class="container-inputs-file mb-2">
+                    <label class="form-label">Nivel aceite</label>
+                    <input style="display: none;" class="form-control form-control-sm" id="inputFileNivelAceite" type="file"
+                        name="imagen_nivel_aceite" accept="image/*">
+                    <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImageNivelAceite"></button>
+                    <a href="#" id="linkInfoImagenSelectedAceite" class="loal-ocultar-o-mostrar"
+                        class="btn-link text-success text-decoration-underline small"></a>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label">Observación</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Ingrese comentarios" id="floatingTextarea2"
+                            style="height: 100px" name="comentario"></textarea>
+                        <label for="floatingTextarea2">Comentario u observación</label>
+                    </div>
+                </div>
+
+            </div>
+            <hr>
+
+            <div class="container-buttons">
+                <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+                <a asp-action="Index" asp-controller="LinePatrol" class="btn btn-primary btn-sm">Cancelar</a>
+            </div>
+
+        </form>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -109,5 +238,34 @@
     </div>
 </div>
 @section Scripts {
+      <script src="/lib/datatables/js/jquery.dataTables.min.js"></script>
+
+  @*SCRIPTS DE BOTONES*@
+  <script src="/lib/datatables/js/dataTables.buttons.min.js"></script>
+
+  @*excel*@
+  <script src="/lib/datatables/js/jszip.min.js"></script>
+  <script src="/lib/datatables/js/buttons.html5.min.js"></script>
+
+  @*pdf*@
+  <script src="/lib/datatables/js/pdfmake.min.js"></script>
+  <script src="/lib/datatables/js/vfs_fonts.js"></script>
+
+  @*imprimir*@
+  <script src="/lib/datatables/js/buttons.print.min.js"></script>
+
+
+
+  @*filter columns*@
+  <script src="/lib/datatables/js/dataTables.fixedHeader.min.js"></script>
+
+  <!-- Development -->
+  @* <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script> *@
+  <script src="/lib/tippy/popper.min.js"></script>
+  <script src="/lib/tippy/tippy-bundle.umd.js"></script>
     <script src="~/js/reporteGeneradorIndex.js" type='module'></script>
 }
+
+
+
