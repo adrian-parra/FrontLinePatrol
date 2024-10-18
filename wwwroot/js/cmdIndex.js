@@ -276,6 +276,91 @@ export const HistorialActualizacionEquipoComputo = async (formData) => {
 
 }
 
+export const DiskSpace = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/DiskSpace", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener espacio en disco:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener espacio en disco. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+  };
+
+export const PhysicalMemory = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/PhysicalMemory", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener memoria física:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener memoria física. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+}
+
+export const SistemaOperativo = async (formData) => {   
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/InfoSistemaOperativo", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener sistema operativo:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener sistema operativo. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+}
+  
+
 
 
 
@@ -326,3 +411,4 @@ export function recorrerCadena(cadena) {
 
     return newCadena
 }
+
