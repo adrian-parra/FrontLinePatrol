@@ -243,6 +243,8 @@ p{
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  max-height: calc(100vh - 200px);
+  overflow: auto;
 }
 
 .grid-container {

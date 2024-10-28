@@ -57,11 +57,15 @@
                 {
 
                    @if (@item.path_imagen_after != null && item.estado != false){
-                    <p class="text-warning">En proceso</p>
+                    <p class="text-warning">En proceso  <i class="fas fa-cog"></i></p>
                    }else{
-                    <p class="right @(item.estado.Value ? "activo" : "finalizado")">
-                    @(item.estado.Value ? "Pendiente" : "Liberado")
-                  </p>
+                      @if(item.estado.Value == true){
+                    <p class="text-danger">Pendiente   <i class="fas fa-clock"></i></p>
+                      }else {
+                    <p class="text-success">Liberado  <i class="fas fa-check-circle"></i></p>
+
+                      }
+                   
                    }
                   
 
@@ -74,14 +78,14 @@
                 {
                   @if(item.estado == true){
                     @if(@item.path_imagen_after != null){
-                       <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar</button>
+                       <button class="btn btn-success btn-sm" id="btnLiberarP" name="@item.id">Liberar <i class="fas fa-door-open"></i></button>
                        <p style="display: none;">@item.path_imagen_after</p>
                     }else{
-                       <button class="btn btn-warning btn-sm" id="btnCorregirP" name="@item.id">Corregir</button>
+                       <button class="btn btn-warning btn-sm" id="btnCorregirP" name="@item.id">Corregir  <i class="fas fa-pencil-alt"></i></button>
                     }
                     
                   }else{
-                    <button class="btn btn-success btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación</button>
+                    <button class="btn btn-success btn-sm" id="btnInfoLiberarP" name="@item.path_imagen_after">liberación <i class="fas fa-info-circle"></i></button>
                     <p style="display: none;" id="perosnaLiberaHide">@item.persona_libera</p>
                     <p style="display: none;" id="fechaLiberacion">@item.updated_at_f - @item.updated_at</p>
                   }

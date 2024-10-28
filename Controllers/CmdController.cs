@@ -4,6 +4,7 @@ using LinePatrol.Models;
 using Newtonsoft.Json;
 using System.Management;
 using System;
+using System.IO;
 
 namespace LinePatrol.Controllers;
 
@@ -72,6 +73,13 @@ public class Actualizacion
     public string Name { get; set; }
     public string Status { get; set; }
     public string TiempoDesdeInstalacion { get; set; }
+}
+
+public class ServiceInfo
+{
+    public string Name { get; set; }
+    public string DisplayName { get; set; }
+    public string Status { get; set; }
 }
 
 
@@ -182,6 +190,155 @@ public class CmdController : Controller
     }
 
 
+[HttpPost]
+public async Task<IActionResult> DeleteTemp(string ip, string user)
+{
+    try
+    {
+        var computerName = ip;
+        // Ruta de la carpeta temporal en la máquina remota
+        string tempFolderPath = $@"\\{computerName}\c$\Users\{user}\AppData\Local\Temp";
+
+        // Verificar si la carpeta existe
+        if (Directory.Exists(tempFolderPath))
+        {
+            // Calcular el tamaño total de la carpeta
+            long totalSize = GetDirectorySize(tempFolderPath);
+            // Convertir el tamaño total a un formato legible
+            string formattedSize = FormatSize(totalSize);
+
+            // Aquí puedes retornar el tamaño total al usuario
+            // Por ejemplo, en bytes o convertir a MB
+            double totalSizeInMB = totalSize / (1024.0 * 1024.0);
+
+            // Obtener todos los archivos en la carpeta temporal
+            var files = Directory.GetFiles(tempFolderPath);
+
+            // Borrar cada archivo
+            foreach (var file in files)
+            {
+                try
+                {
+                    System.IO.File.Delete(file);
+                }
+                catch (IOException)
+                {
+                    // Log or handle the exception if needed, but continue with the next file
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Log or handle the exception if needed, but continue with the next file
+                }
+            }
+
+            // También puedes eliminar subdirectorios si es necesario
+            var directories = Directory.GetDirectories(tempFolderPath);
+            foreach (var directory in directories)
+            {
+                try
+                {
+                    Directory.Delete(directory, true); // Eliminar directorios recursivamente
+                }
+                catch (IOException)
+                {
+                    // Log or handle the exception if needed, but continue with the next directory
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Log or handle the exception if needed, but continue with the next directory
+                }
+            }
+
+            return Json(new { message = "Archivos temporales eliminados con éxito.", totalSizeMB = formattedSize  });
+        }
+        else
+        {
+            return BadRequest(new { error = "La carpeta temporal no existe." }); // La carpeta no existe
+        }
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(new { error = ex.Message }); // Manejo de errores
+    }
+}
+
+// Método para calcular el tamaño total de la carpeta
+private long GetDirectorySize(string path)
+{
+    long size = 0;
+
+    // Sumar tamaños de archivos
+    var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+    foreach (var file in files)
+    {
+        FileInfo fileInfo = new FileInfo(file);
+        size += fileInfo.Length;
+    }
+
+    return size;
+}
+
+// Método para formatear el tamaño en un formato legible
+private string FormatSize(long bytes)
+{
+    string[] sizes = { "Bytes", "KB", "MB", "GB", "TB" };
+    double len = bytes;
+    int order = 0;
+
+    while (len >= 1024 && order < sizes.Length - 1)
+    {
+        order++;
+        len /= 1024;
+    }
+
+    return $"{Math.Round(len, 2)} {sizes[order]}";
+}
+ [HttpPost]
+public async Task<IActionResult> GetServiceInfo(string ip)
+{
+    try
+    {
+        string computerName = ip;
+       // List<DiskSpaceInfo> diskSpaceList = new List<DiskSpaceInfo>();
+
+         List<ServiceInfo> servicesList = new List<ServiceInfo>();
+
+        // Crea la consulta para encontrar el producto
+        ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+        scope.Connect();
+
+        ObjectQuery query = new ObjectQuery($"SELECT * FROM Win32_Service");
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+        
+        // Ejecutar la consulta y recorrer los resultados
+        foreach (ManagementObject service in searcher.Get())
+        {
+
+            ServiceInfo servicesInfo = new ServiceInfo
+            {
+                Name = service["Name"].ToString(),
+                DisplayName = service["DisplayName"].ToString(),
+                Status = service["State"].ToString()
+
+            };
+
+
+           
+             
+            servicesList.Add(servicesInfo);
+        }
+
+          var orderedServices = servicesList.OrderByDescending(s => s.Status == "Running").ToList();
+
+
+        return Json(orderedServices);
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(new { error = ex.Message });
+    }
+}
+
     [HttpPost]
 public async Task<IActionResult> InfoSistemaOperativo(string ip)
 {
@@ -218,7 +375,7 @@ public async Task<IActionResult> InfoSistemaOperativo(string ip)
     }
 }
 
-   [HttpPost]
+ [HttpPost]
 public async Task<IActionResult> DiskSpace(string ip)
 {
     try
@@ -241,8 +398,11 @@ public async Task<IActionResult> DiskSpace(string ip)
             ulong size = Convert.ToUInt64(disk["Size"]);
             uint driveType = Convert.ToUInt32(disk["DriveType"]);
 
-             // Calcular el porcentaje utilizado
-            double usedPercentage = ((double)(size - freeSpace) / size) * 100;
+            double usedPercentage = 0;
+            if (size > 0)
+            {
+                usedPercentage = ((double)(size - freeSpace) / size) * 100;
+            }
 
             DiskSpaceInfo diskInfo = new DiskSpaceInfo
             {
@@ -251,7 +411,6 @@ public async Task<IActionResult> DiskSpace(string ip)
                 Size = FormatBytes(size), // Formatear tamaño total
                 DriveType = GetDriveType(driveType),
                 UsedPercentage = Math.Round(usedPercentage, 2)
-
             };
 
             diskSpaceList.Add(diskInfo);
@@ -261,6 +420,7 @@ public async Task<IActionResult> DiskSpace(string ip)
     }
     catch (Exception ex)
     {
+        Console.WriteLine(ex.Message);
         return BadRequest(new { error = ex.Message });
     }
 }

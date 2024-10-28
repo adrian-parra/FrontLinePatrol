@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageClickListeners();
 
   if (plantaGuardada) {
-    $(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
+    $(".loal-button-flotante-planta").innerHTML = `Planta ${plantaGuardada} <i class="fas fa-building"></i>`;
     $("#selectPlanta").value = plantaGuardada;
     $selectPlanta.value = plantaGuardada;
     $selectPlanta.disabled = true

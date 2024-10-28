@@ -584,7 +584,7 @@ export const confirmarPlantaRecorrido = async () => {
     // ACTUALIZAR EL TEXTO DEL BOTÓN FLOTANTE CON LA PLANTA SELECCIONADA
     $(
       ".loal-button-flotante-planta"
-    ).textContent = `Planta ${plantaSeleccionada}`;
+    ).innerHTML = `Planta ${plantaSeleccionada} <i class="fas fa-building"></i>`;
 
     // MANTENER LA SELECCIÓN EN EL SELECTOR
     $("#selectPlanta").value = plantaSeleccionada;

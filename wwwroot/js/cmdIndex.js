@@ -359,7 +359,68 @@ export const SistemaOperativo = async (formData) => {
       hideLoading();
     }
 }
+
+export const GetServicesEquipoComputo = async (formData) => {
+    showLoading();
   
+    try {
+      const respuesta = await fetch("/Cmd/GetServiceInfo", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener servicios del equipo:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener servicios del equipo. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+}
+
+export const DeleteTempEquipoComputo = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/DeleteTemp", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      Swal.fire({
+        icon: "success",
+        text: dataResponse.message + " " + dataResponse.totalSizeMB + " en carpeta temporal",
+      });
+    } catch (error) {
+      console.error("Error al eliminar archivos temporales:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al eliminar archivos temporales. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+  }
+
+
+
 
 
 

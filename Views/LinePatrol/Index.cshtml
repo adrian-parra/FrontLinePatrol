@@ -22,8 +22,8 @@
   <div class="card-header">Lista de recorrido de líneas</div>
   <div class="card-body">
     <div class="container-buttons-listado">
-      <a class="btn btn-success btn-sm" id="btnRegistrarLP">Registrar</a>
-      <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a>
+      <a class="btn btn-success btn-sm" id="btnRegistrarLP">Registrar  <i class="fas fa-map"></i></a>
+      <a class="btn btn-primary btn-sm" id="btnFiltrar"><i class="fas fa-filter"></i></a>
     </div>
     <hr />
     <div class="container-items">
@@ -85,15 +85,7 @@
             </div>
 
 
-            <div class="mb-2">
-              <label class="form-label">Imagen</label>
-              <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
-                name="imagen" accept="image/*">
-              <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
-              <a href="#" id="linkInfoImagenSelected" style="display: none;"
-                class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
-                data-bs-target="#exampleModal"></a>
-            </div>
+           
             <div class="mb-2">
               <label class="form-label">Estación</label>
               <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="id_estacion"
@@ -116,6 +108,16 @@
                 <option value="Otra">Otra</option>
               </select>
             </div>
+
+             <div class="mb-2">
+              <label class="form-label">Imagen</label>
+              <input style="display: none;" class="form-control form-control-sm" id="formFileSm" type="file"
+                name="imagen" accept="image/*">
+              <button type="button" class="form-control form-control-sm" id="btnChangeInputFileImage"></button>
+              <a href="#" id="linkInfoImagenSelected" style="display: none;"
+                class="btn-link text-success text-decoration-underline small" data-bs-toggle="modal"
+                data-bs-target="#exampleModal"></a>
+            </div>
             <div class="mb-2">
               <label class="form-label">Comentario</label>
               <div class="form-floating">
@@ -132,8 +134,8 @@
           </div>
 
           <div class="container-buttons">
-            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
-            <a data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary   btn-sm">Cancelar</a>
+            <button type="submit" class="btn btn-success btn-sm">Guardar  <i class="fas fa-save"></i></button>
+            <a data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary   btn-sm">Cancelar <i class="fas fa-times"></i></a>
           </div>
 
         </form>
@@ -178,7 +180,7 @@
             el recorrido.</label>
         </div>
         <div class="container-buttons">
-          <button type="submit" id="BtnconfirmarPlanta" class="btn btn-success btn-sm">Confirmar planta</button>
+          <button type="submit" id="BtnconfirmarPlanta" class="btn btn-success btn-sm">Guardar <i class="fas fa-save"></i></button>
         </div>
       </div>
     </div>
@@ -285,8 +287,9 @@
 
           <div class="container-buttons">
             <button type="submit" id="btnGuardarFiltrado" class="btn btn-success btn-sm" data-bs-dismiss="modal"
-              aria-label="Close">Aplicar</button>
-            <input type="reset" id="btnResetFiltrado" class="btn btn-secondary btn-sm" value="Restablecer">
+              aria-label="Close">Aplicar  <i class="fas fa-save"></i></button>
+            <!-- <input type="reset" id="btnResetFiltrado" class="btn btn-secondary btn-sm" value="Restablecer"> -->
+            <button type="reset" id="btnResetFiltrado" class="btn btn-secondary btn-sm">Restablecer  <i class="fas fa-times"></i></button>
           </div>
 
         </form>
@@ -328,7 +331,7 @@
           
 
           <div class="container-buttons">
-            <button type="submit" id="btnGuardarLiberar" class="btn btn-success btn-sm">Liberar</button>
+            <button type="submit" id="btnGuardarLiberar" class="btn btn-success btn-sm">Guardar  <i class="fas fa-save"></i></button>
           </div>
 
         </form>
@@ -361,7 +364,7 @@
           </div>
           <hr>
           <div class="container-buttons">
-            <button type="submit" id="btnGuardarCorreccionHallazgo" class="btn btn-success btn-sm">Guardar</button>
+            <button type="submit" id="btnGuardarCorreccionHallazgo" class="btn btn-success btn-sm">Guardar  <i class="fas fa-save"></i></button>
           </div>
 
         </form>

@@ -26,7 +26,9 @@ import {
   HistorialActualizacionEquipoComputo,
   PhysicalMemory,
   DiskSpace,
-  SistemaOperativo
+  SistemaOperativo,
+  GetServicesEquipoComputo,
+  DeleteTempEquipoComputo
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -123,6 +125,16 @@ const $btnAlmacenamientoEquipoComputo = document.querySelector("#btnAlmacenamien
 const $btnMemoriaFisicaEquipoComputo = document.querySelector("#btnMemoriaFisicaEquipoComputo")
 
 const $btnSistemaOperativoEquipoComputo = document.querySelector("#btnSistemaOperativoEquipoComputo")
+
+const $btnGetServicesEquipoComputo = document.querySelector("#btnGetServicesEquipoComputo")
+
+const $btnDeleteTempEquipoComputo = document.querySelector("#btnDeleteTempEquipoComputo")
+
+
+
+
+
+
 
 
 
@@ -741,6 +753,64 @@ $btnSistemaOperativoEquipoComputo.addEventListener("click",async ()=>{
 // })
 
 
+
+$btnGetServicesEquipoComputo.addEventListener("click", async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetServicesEquipoComputo(formData)
+// <p>Tipo:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.type}</span></p>
+//<p>Inicio:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.startMode}</span></p>
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.name}</span></p>
+        <p>Descripción:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.displayName}</span></p> 
+        <p>Estado:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.status}</span></p>
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
+})
+
+
+$btnDeleteTempEquipoComputo.addEventListener("click",async ()=>{
+  var formData = new FormData();
+  formData.append("ip", hostnameGlobal);
+
+  const data = await obtenerInfoEquipoComputo(formData)
+
+  const userName = data[0].userName
+
+  if(!userName){
+    Swal.fire({
+      icon:"error",
+      text:"Pc no tiene usuario iniciado"
+    })
+    return
+  }
+
+  console.log(userName)
+
+  const extractedUser = userName.split('\\')[1]; // Divide la cadena y toma el segundo elemento
+
+  formData.append("user", extractedUser);
+
+  const deleteTemp = await DeleteTempEquipoComputo(formData)
+
+  console.log(deleteTemp)
+
+})
 
 
 }); // FINN EVENTO ONLOAD
