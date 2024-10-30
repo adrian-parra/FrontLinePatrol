@@ -28,7 +28,9 @@ import {
   DiskSpace,
   SistemaOperativo,
   GetServicesEquipoComputo,
-  DeleteTempEquipoComputo
+  DeleteTempEquipoComputo,
+  GetProcessEquipoComputo,
+  GetUsersInfoEquipoComputo
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -129,6 +131,14 @@ const $btnSistemaOperativoEquipoComputo = document.querySelector("#btnSistemaOpe
 const $btnGetServicesEquipoComputo = document.querySelector("#btnGetServicesEquipoComputo")
 
 const $btnDeleteTempEquipoComputo = document.querySelector("#btnDeleteTempEquipoComputo")
+
+const $btnGetProcessEquipoComputo = document.querySelector("#btnGetProcessEquipoComputo")
+
+const $btnGetUsuariosEquipoComputo = document.querySelector("#btnGetUsuariosEquipoComputo")
+
+
+
+
 
 
 
@@ -810,6 +820,103 @@ $btnDeleteTempEquipoComputo.addEventListener("click",async ()=>{
 
   console.log(deleteTemp)
 
+})
+
+$btnGetProcessEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetProcessEquipoComputo(formData)
+
+
+
+
+  let content = "<div class='container-items-process'></div>";
+// Convertir la cadena HTML en un elemento DOM
+let container = document.createElement('div');
+container.innerHTML = content;
+  data.forEach(item =>{
+
+    container.querySelector(
+      ".container-items-process"
+    ).innerHTML += `<div class="item" style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px;">
+        <p><span class="text-white bg-success p-1 text-proccess-open" style="padding:10px;border-radius:4px;cursor:pointer"> ${item.name}</span></p>
+      </div>
+      <hr>`
+  })
+
+  // Usar innerHTML para obtener el contenido HTML del contenedor
+Swal.fire({
+  html: container.innerHTML, // Cambiar aquí para usar innerHTML
+});
+
+  document.querySelector(".container-items-process").addEventListener("click", async (e)=>{
+    console.log(e.target)
+        if (e.target.closest('.item')) {
+         const itemName = e.target.closest('.item').querySelector('span').textContent;
+        console.log(`Se hizo clic en el item: ${itemName}`);
+
+
+        var dataForm =  new FormData()
+        dataForm.append("ip",hostnameGlobal)
+        dataForm.append("app",itemName.trim())
+
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: `¿Quieres cerrar la aplicacion '${itemName.trim()}'?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí",
+          cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // Swal.fire(
+            //     'Cerrando!',
+            //     'La aplicación se cerrará ahora.',
+            //     'success'
+            // );
+            showLoading();
+            await cerrarAppWmi(dataForm);
+            hideLoading();
+          }
+        });
+
+       
+        
+    }
+  })
+ 
+ 
+})
+
+$btnGetUsuariosEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetUsersInfoEquipoComputo(formData)
+
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.localPath}</span></p>
+        <p>Ultimo uso:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.lastUserTime}</span></p> 
+        <p>Ultimo uso:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.lastUserTimeFormated}</span></p>
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
 })
 
 

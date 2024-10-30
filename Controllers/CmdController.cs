@@ -6,6 +6,9 @@ using System.Management;
 using System;
 using System.IO;
 
+using System.Collections.Generic;
+using System.Globalization;
+
 namespace LinePatrol.Controllers;
 
 
@@ -53,6 +56,21 @@ public class SistemaOperativo {
 //     public string ProcessorVirtualizationFeatures { get; set; }
 //     public
  }
+
+ public class UserProfileDto
+{
+    public string LocalPath { get; set; }
+    public string SID { get; set; }
+    public string LastUserTime { get; set; }
+    public string LastUserTimeFormated { get; set; }
+
+    // public bool IsRoaming { get; set; }
+    // public bool Special { get; set; }
+}
+
+public class ProcessInit{
+    public string Name { get; set; }
+}
 
 public class PhysicalMemory{
     public string Manufacturer { get; set; }
@@ -337,6 +355,247 @@ public async Task<IActionResult> GetServiceInfo(string ip)
     {
         return BadRequest(new { error = ex.Message });
     }
+}
+
+
+ private string FormatLastUseTime(string lastUseTime)
+    {
+        if (string.IsNullOrEmpty(lastUseTime))
+        {
+            return "Nunca usado"; // O algún valor que indique que nunca se usó
+        }
+
+        try
+        {
+
+            string dateTimeString = lastUseTime;
+            string year = dateTimeString.Substring(0, 4); // "2024"
+            string month = dateTimeString.Substring(4, 2); // "10"
+            string day = dateTimeString.Substring(6, 2); // "26"
+            string hour = dateTimeString.Substring(8, 2); // "07"
+            string minute = dateTimeString.Substring(10, 2); // "49"
+            string second = dateTimeString.Substring(12, 2); // "48"
+            string milliseconds = dateTimeString.Substring(15, 6); // "663000"
+        
+            // Formatear la fecha
+            string formattedDate = $"{day} de {GetMonthName(month)} de {year}, {hour}:{minute}:{second}.{milliseconds} UTC";
+            
+            return formattedDate;
+        }
+        catch (Exception ex)
+        {
+            // Loguear cualquier otro error
+            Console.WriteLine($"Error inesperado: {ex.Message}");
+            return "Error al formatear la fecha"; // Manejo de errores generales
+        }
+    }
+
+    private static string GetMonthName(string month)
+    {
+        switch (month)
+        {
+            case "01": return "enero";
+            case "02": return "febrero";
+            case "03": return "marzo";
+            case "04": return "abril";
+            case "05": return "mayo";
+            case "06": return "junio";
+            case "07": return "julio";
+            case "08": return "agosto";
+            case "09": return "septiembre";
+            case "10": return "octubre";
+            case "11": return "noviembre";
+            case "12": return "diciembre";
+            default: return "mes desconocido";
+        }
+    }
+
+    private string FormatTimeStamp(string dateTimeString){
+
+        if (string.IsNullOrEmpty(dateTimeString))
+        {
+            return "Nunca usado"; // O algún valor que indique que nunca se usó
+        }
+        
+        // Extraer partes de la cadena
+        string year = dateTimeString.Substring(0, 4); // "2024"
+        string month = dateTimeString.Substring(4, 2); // "10"
+        string day = dateTimeString.Substring(6, 2); // "26"
+        string hour = dateTimeString.Substring(8, 2); // "07"
+        string minute = dateTimeString.Substring(10, 2); // "49"
+        string second = dateTimeString.Substring(12, 2); // "48"
+        
+        // Crear un objeto DateTime a partir de las partes extraídas
+        DateTime userDateTime = new DateTime(int.Parse(year), int.Parse(month), int.Parse(day), 
+                                              int.Parse(hour), int.Parse(minute), int.Parse(second));
+
+        // Calcular la diferencia con la fecha actual
+        TimeSpan timeDifference = DateTime.UtcNow - userDateTime;
+
+        // Obtener el mensaje de tiempo transcurrido
+        string timeAgoMessage = GetTimeAgoMessage(timeDifference);
+        return timeAgoMessage;
+    }
+
+    private string GetTimeAgoMessage(TimeSpan timeDifference)
+    {
+        if (timeDifference.Days > 0)
+        {
+            return $"Hace {timeDifference.Days} día{(timeDifference.Days > 1 ? "s" : "")}";
+        }
+        else if (timeDifference.Hours > 0)
+        {
+            return $"Hace {timeDifference.Hours} hora{(timeDifference.Hours > 1 ? "s" : "")}";
+        }
+        else if (timeDifference.Minutes > 0)
+        {
+            return $"Hace {timeDifference.Minutes} minuto{(timeDifference.Minutes > 1 ? "s" : "")}";
+        }
+        else
+        {
+            return "Hace unos momentos";
+        }
+    }
+
+[HttpPost]
+public async Task<IActionResult> GetUsersInfo(string ip){
+   
+ try
+            {
+                var computerName = ip;
+                // Conectar al espacio de nombres WMI
+                ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+                scope.Connect(); // Intenta conectarse
+
+                // Realizar la consulta WMI
+                ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_UserProfile WHERE Special = false");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+                //var userList = new List<string>();
+
+                var userProfileList = new List<UserProfileDto>();
+                string formattedDateTime;
+                foreach (ManagementObject user in searcher.Get())
+                {
+                    // Verificar si 'LocalPath' no es null antes de agregar
+                    if (user["LocalPath"] != null)
+                    {
+
+                     
+
+ 
+                        // Crear un DTO para cada perfil de usuario
+                    var userProfile = new UserProfileDto
+                    {
+                        LocalPath = user["LocalPath"]?.ToString(),
+                        SID = user["SID"]?.ToString(),
+                        LastUserTime = FormatLastUseTime(user["LastUseTime"]?.ToString()),
+                        LastUserTimeFormated = FormatTimeStamp(user["LastUseTime"]?.ToString())
+
+                        // LastUseTime = ManagementDateTimeConverter.ToDateTime(user["LastUseTime"]?.ToString() ?? "0"),
+                    
+
+                        // IsRoaming = (bool)(user["Roaming"] ?? false),
+                        // Special = (bool)(user["Special"] ?? false)
+                    };
+
+                    userProfileList.Add(userProfile);
+                    }
+                }
+
+                // Devolver la lista de usuarios
+                return Json(userProfileList);
+            }
+            catch (ManagementException mEx)
+            {
+                return StatusCode(500, $"Error de gestión WMI: {mEx.Message}");
+            }
+            catch (UnauthorizedAccessException uaEx)
+            {
+                return StatusCode(403, $"Acceso denegado: {uaEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener usuarios: {ex.Message}");
+            }
+
+                
+                 
+}
+
+ [HttpPost]
+public async Task<IActionResult> GetProccessInfo(string ip)
+{
+   try
+{
+    string computerName = ip;
+    //var applications = new List<string>();
+
+     List<ProcessInit> applications = new List<ProcessInit>();
+
+    // Lista de procesos comúnmente en segundo plano
+    var backgroundProcesses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        "csrss.exe",
+        "winlogon.exe",
+        "svchost.exe",
+        "taskhostw.exe",
+        "services.exe",
+        "explorer.exe", // Puede ser GUI, pero es esencial del sistema
+        "lsass.exe",
+        "sihost.exe",
+        "fontdrvhost.exe",
+        "dwm.exe",
+        "conhost.exe",
+        "unsecapp.exe",
+        "dllhost.exe",
+        "RuntimeBroker.exe",
+        "dotnet.exe",
+        "cloudcode_cli.exe",
+        "StartMenuExperienceHost.exe",
+        "SecurityHealthSystray.exe"
+
+        // Agrega más procesos conocidos aquí
+    };
+
+    // Crea la consulta para encontrar el producto
+    ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+    scope.Connect();
+
+    ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_Process");
+    ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+    
+    // Ejecutar la consulta y recorrer los resultados
+    foreach (ManagementObject process in searcher.Get())
+    {
+        var processName = process["Name"].ToString();
+        
+        // Filtrar procesos con interfaz gráfica (SessionId != 0) y que no están en la lista de exclusión
+        if (process["SessionId"] != null && Convert.ToInt32(process["SessionId"]) != 0 &&
+            !string.IsNullOrEmpty(processName) && 
+            !processName.StartsWith("@") && 
+            !backgroundProcesses.Contains(processName))
+        {
+
+             ProcessInit processInit = new ProcessInit
+            {
+                Name = process["Name"].ToString(),
+            };
+            applications.Add(processInit);
+        }
+    }
+
+    applications = applications
+    .GroupBy(app => app.Name) // Cambia 'ProcessName' por la propiedad que deseas usar
+    .Select(group => group.First()) // Selecciona el primer elemento de cada grupo
+    .ToList();
+
+    return Json(applications);
+}
+catch (Exception ex)
+{
+    return BadRequest(new { error = ex.Message });
+}
 }
 
     [HttpPost]

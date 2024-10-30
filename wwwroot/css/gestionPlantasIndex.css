@@ -8,6 +8,12 @@ p{
   color: red; */
 }
 
+.text-proccess-open:hover {
+  transition: .3s all !important;
+  cursor: pointer !important;
+  transform: scale(1.05) !important;
+}
+
 .buttons-excel,
 .btn-exportar-pdf,
 .btn-exportar-print,

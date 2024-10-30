@@ -419,6 +419,63 @@ export const DeleteTempEquipoComputo = async (formData) => {
     }
   }
 
+export const GetProcessEquipoComputo =  async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/GetProccessInfo", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener procesos del equipo:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener procesos del equipo. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+  }
+
+export const GetUsersInfoEquipoComputo = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/GetUsersInfo", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener información de usuarios:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener información de usuarios. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+}
+
+
 
 
 
