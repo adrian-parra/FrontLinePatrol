@@ -17,6 +17,12 @@ p{
   color: red; */
 }
 
+.text-proccess-open:hover {
+  transition: .3s all !important;
+  cursor: pointer !important;
+  transform: scale(1.05) !important;
+}
+
 .buttons-excel,
 .btn-exportar-pdf,
 .btn-exportar-print,
@@ -252,6 +258,8 @@ p{
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  max-height: calc(100vh - 200px);
+  overflow: auto;
 }
 
 .grid-container {

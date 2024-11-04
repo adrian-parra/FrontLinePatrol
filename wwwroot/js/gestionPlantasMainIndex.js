@@ -28,7 +28,14 @@ import {
   obtenerUptimeDevice,
   obtenerSoftwareInstalado,
   DesinstalarSoftwareDeEquipoWmi,
-  HistorialActualizacionEquipoComputo 
+  HistorialActualizacionEquipoComputo,
+  PhysicalMemory,
+  DiskSpace,
+  SistemaOperativo,
+  GetServicesEquipoComputo,
+  DeleteTempEquipoComputo,
+  GetProcessEquipoComputo,
+  GetUsersInfoEquipoComputo
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -120,6 +127,20 @@ const $loalContainerButton =  document.querySelector(".loal-container-button-flo
 
 const $btnHistorialActualizacionEquipoComputo = document.querySelector("#btnHistorialActualizacionEquipoComputo")
 
+const $btnAlmacenamientoEquipoComputo = document.querySelector("#btnAlmacenamientoEquipoComputo")
+
+const $btnMemoriaFisicaEquipoComputo = document.querySelector("#btnMemoriaFisicaEquipoComputo")
+
+const $btnSistemaOperativoEquipoComputo = document.querySelector("#btnSistemaOperativoEquipoComputo")
+
+const $btnGetServicesEquipoComputo = document.querySelector("#btnGetServicesEquipoComputo")
+
+const $btnDeleteTempEquipoComputo = document.querySelector("#btnDeleteTempEquipoComputo")
+
+const $btnGetProcessEquipoComputo = document.querySelector("#btnGetProcessEquipoComputo")
+
+const $btnGetUsuariosEquipoComputo = document.querySelector("#btnGetUsuariosEquipoComputo")
+
 const $btnRegistrarImpresoraEquipoComputo = document.querySelector("#btnRegistrarImpresoraEquipoComputo")
 const $modalRegistrarImpresoraEquipoComputo = document.querySelector("#exampleModalRegistrarImpresoraEquipoComputo")
 const $formRegistrarImpresoraEquipoComputo = document.querySelector("#formRegistrarImpresoraEquipoComputo")
@@ -137,13 +158,6 @@ const $modalSoportesHoy = document.querySelector("#exampleModalSoportesHoy");
 //const $formSoportesHoy = document.querySelector("#formSoportesHoy");
 
 
-
-
-
-
-
-
-
 let hostnameGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
 let idEquipoComputoGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
 let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
@@ -156,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (plantaGuardada) {
     document.querySelector(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
     document.querySelector("#selectPlanta").value = plantaGuardada;
-    console.log(plantaGuardada)
+
     const formData = new FormData()
     formData.append("idPlanta",plantaGuardada)
 
@@ -267,9 +281,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dataForm = new FormData();
     dataForm.append("ip", hostnameGlobal);
 
-    console.log(hostnameGlobal)
     const software = obtenerSoftwarePorHostname(hostnameGlobal);
-    console.log(software)
+   
     if (software == "") {
       Swal.fire({
         icon: "error",
@@ -479,9 +492,27 @@ $btnInformacionEquipoComputo.addEventListener("click",async()=>{
   formData.append("ip", hostnameGlobal);
 
   const data = await obtenerInfoEquipoComputo(formData)
-  console.log(data)
-  document.querySelector(".respuesta-info-pc").innerHTML = `<pre>${recorrerCadena(data)}</pre>`;
-  showModal("#exampleModalInformacionEquipoComputo")
+
+ // document.querySelector(".respuesta-info-pc").innerHTML = `<pre>${recorrerCadena(data)}</pre>`;
+
+ let htmlContent =  ``
+ data.forEach(item =>{
+   htmlContent += `
+    <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+            <p>Domain:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.domain}</span></p>
+      <p>Fabricante:<span class="text-white bg-info p-1" style="padding:10px;border-radius:4px"> ${item.manufacturer}</span></p>
+      <p>Modelo:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.model}</span></p>
+      <p>Tipo de sistema:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.systemType}</span></p>
+      <p>Usuario:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.userName}</span></p>
+    </div>
+    <hr>
+  `
+ })
+
+  Swal.fire({
+    html:`${htmlContent}`
+  })
+  //showModal("#exampleModalInformacionEquipoComputo")
 })
 
 $btnUptimeEquipoComputo.addEventListener("click",async()=>{
@@ -489,7 +520,7 @@ $btnUptimeEquipoComputo.addEventListener("click",async()=>{
   formData.append("ip", hostnameGlobal);
 
   const data = await obtenerUptimeDevice(formData)
-  console.log(data)
+
 
   Swal.fire({
     html: `
@@ -515,7 +546,6 @@ $formRegistrarSoftwareEquipoComputo.addEventListener("submit",async (e)=>{
 
   const data = await registrarSoftware(dataForm)
 
-  console.log(data)
 
   e.target.reset()
 
@@ -534,7 +564,6 @@ $btnDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("click",async (e)
 
   const data = await obtenerSoftwareInstalado(dataForm);
 
-  console.log(data.softwareInstalado)
 
   document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML = ``;
   data.softwareInstalado.forEach((item) => {
@@ -553,7 +582,6 @@ $formDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("submit",async (
 
   const data = await DesinstalarSoftwareDeEquipoWmi(dataForm)
 
-  console.log(data)
 
   e.target.reset()
 
@@ -571,7 +599,7 @@ $btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
 
   const data = await HistorialActualizacionEquipoComputo(dataForm)
 
-  console.log(data)
+
 
   let htmlContent = ``
   data.forEach(item =>{
@@ -595,6 +623,304 @@ $btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
       <div>
         ${htmlContent}
       </div>
+    `,
+  })
+ 
+})
+
+$btnAlmacenamientoEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await DiskSpace(formData)
+
+
+
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p><span>Device:</span> ${item.deviceID}</p>
+        <p>Espacio libre:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.freeSpace}</span></p>
+        <p>Espacio total:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.size}</span></p>
+        <p>Tipo disco: ${item.driveType}</p>
+        <p>Porcentaje utilizado: <span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px">${item.usedPercentage}%</span></p>
+      </div>
+
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
+})
+
+$btnMemoriaFisicaEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await PhysicalMemory(formData)
+
+
+
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Velocidad:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.capacity}</span></p>
+        <p>Velocidad:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.speed}</span></p>
+        <p>Tipo:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.memoryType}</span></p>
+      </div>
+
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
+})
+
+$btnSistemaOperativoEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await SistemaOperativo(formData)
+
+
+
+  let content = ""
+  data.forEach(item =>{
+  
+    // <p>Build:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.buildNumber}</span></p>
+    // <p>Fabricante:<span class="text-white bg-info p-1" style="padding:10px;border-radius:4px"> ${item.manufacturer}</span></p>
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.caption}</span></p>
+        <p>Versión:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.version}</span></p> 
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
+})  
+
+// document.addEventListener("click", (e) => {
+//   // Verifica si el elemento clickeado es un botón con la clase "btn-exportar"
+//   if (e.target.classList.contains("btn-exportar")) {
+//     // Obtiene el tipo de exportación del atributo "data-export" del botón
+//     const exportType = e.target.getAttribute("data-export");
+
+//     // Crea una instancia de la clase DataTable
+//     const table = $("#equiposTable").DataTable();
+
+//     // Llama al método de exportación correspondiente según el tipo de exportación
+//     if (exportType === "excel") {
+//       table.button(0).trigger();
+//     } else if (exportType === "pdf") {
+//       table.button(1).trigger();
+//     } else if (exportType === "print") {
+//       table.button(2).trigger();
+//     }
+//   }
+// });
+
+// document.addEventListener("click", (e) => {
+//   // Verifica si el elemento clickeado es un botón con la clase "btn-exportar"
+//   if (e.target.classList.contains("btn-exportar")) {
+//     // Obtiene el tipo de exportación del atributo "data-export" del botón
+//     const exportType = e.target.getAttribute("data-export");
+
+//     // Crea una instancia de la clase DataTable
+//     const table = $("#equiposTable").DataTable();
+
+//     // Llama al método de exportación correspondiente según el tipo de exportación
+//     if (exportType === "excel") {
+//       table.button(0).trigger();
+//     } else if (exportType === "pdf") {
+//       table.button(1).trigger();
+//     } else if (exportType === "print") {
+//       table.button(2).trigger();
+//     }
+//   }
+// })
+
+
+
+$btnGetServicesEquipoComputo.addEventListener("click", async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetServicesEquipoComputo(formData)
+// <p>Tipo:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.type}</span></p>
+//<p>Inicio:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.startMode}</span></p>
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.name}</span></p>
+        <p>Descripción:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.displayName}</span></p> 
+        <p>Estado:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.status}</span></p>
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+ 
+})
+
+
+$btnDeleteTempEquipoComputo.addEventListener("click",async ()=>{
+  var formData = new FormData();
+  formData.append("ip", hostnameGlobal);
+
+  const data = await obtenerInfoEquipoComputo(formData)
+
+  const userName = data[0].userName
+
+  if(!userName){
+    Swal.fire({
+      icon:"error",
+      text:"Pc no tiene usuario iniciado"
+    })
+    return
+  }
+
+  console.log(userName)
+
+  const extractedUser = userName.split('\\')[1]; // Divide la cadena y toma el segundo elemento
+
+  formData.append("user", extractedUser);
+
+  const deleteTemp = await DeleteTempEquipoComputo(formData)
+
+  console.log(deleteTemp)
+
+})
+
+$btnGetProcessEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetProcessEquipoComputo(formData)
+
+
+
+
+  let content = "<div class='container-items-process'></div>";
+// Convertir la cadena HTML en un elemento DOM
+let container = document.createElement('div');
+container.innerHTML = content;
+  data.forEach(item =>{
+
+    container.querySelector(
+      ".container-items-process"
+    ).innerHTML += `<div class="item" style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px;">
+        <p><span class="text-white bg-success p-1 text-proccess-open" style="padding:10px;border-radius:4px;cursor:pointer"> ${item.name}</span></p>
+      </div>
+      <hr>`
+  })
+
+  // Usar innerHTML para obtener el contenido HTML del contenedor
+Swal.fire({
+  html: container.innerHTML, // Cambiar aquí para usar innerHTML
+  allowOutsideClick: false,
+  preConfirm: () => {
+    // Abrir la segunda alerta si se confirma
+    // abrirAlerta();
+    //return false; // Evita cerrar el modal
+}
+});
+
+  document.querySelector(".container-items-process").addEventListener("click", async (e)=>{
+    console.log(e.target)
+        if (e.target.closest('.item')) {
+         const itemName = e.target.closest('.item').querySelector('span').textContent;
+        console.log(`Se hizo clic en el item: ${itemName}`);
+
+
+        var dataForm =  new FormData()
+        dataForm.append("ip",hostnameGlobal)
+        dataForm.append("app",itemName.trim())
+
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: `¿Quieres cerrar la aplicacion '${itemName.trim()}'?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí",
+          cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // Swal.fire(
+            //     'Cerrando!',
+            //     'La aplicación se cerrará ahora.',
+            //     'success'
+            // );
+            showLoading();
+            await cerrarAppWmi(dataForm);
+            hideLoading();
+          }
+        });
+
+       
+        
+    }
+  })
+ 
+ 
+})
+
+$btnGetUsuariosEquipoComputo.addEventListener("click",async ()=>{
+  const formData = new FormData()
+  formData.append("ip",hostnameGlobal)
+
+  const data = await GetUsersInfoEquipoComputo(formData)
+
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.localPath}</span></p>
+        <p>Ultimo uso:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.lastUserTime}</span></p> 
+        <p>Ultimo uso:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.lastUserTimeFormated}</span></p>
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
     `,
   })
  
@@ -830,8 +1156,7 @@ const initAccionesEquipoSoftware = async (target) => {
   idEquipoComputoGlobal =
     target.parentNode.parentNode.querySelector("#idEquipo").textContent;
 
-    console.log(hostnameGlobal)
-    console.log(idEquipoComputoGlobal)
+
 
   document.querySelector(
     "#exampleModalAccionesLabel"

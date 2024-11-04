@@ -27,6 +27,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   $btnRegistrarReporteGenerador.addEventListener("click", async () => {
     showModal($modalRegistrarReporteGenerador);
   });
+
+  document.querySelector(".items-table").addEventListener("click",async (e)=>{
+    console.log(e.target)
+
+    if(e.target.tagName == "IMG"){
+      console.log(e.target.src)
+
+      document.querySelector("#imagenSeleccionada1").src = e.target.src
+
+      const modal = new bootstrap.Modal($("#exampleModal1"));
+      modal.show();
+
+    }
+  })
 });
 
 //  EVENTO CLICK EN CONTAINER DE FORM
@@ -55,6 +69,7 @@ const imageUrls = {};
 function handleFileInputChange(inputId, linkId, key) {
   document.querySelector(inputId).addEventListener("change", (e) => {
     const file = e.target.files[0];
+    console.log(file)
     const link = document.querySelector(linkId);
 
     // Ocultamos el link inicialmente
@@ -62,8 +77,9 @@ function handleFileInputChange(inputId, linkId, key) {
     // Si hay un archivo seleccionado, guardamos la URL y mostramos el link
     if (file) {
       const imageURL = URL.createObjectURL(file);
-      $("#imagenSeleccionada").src = imageURL;
-      const modal = new bootstrap.Modal($("#exampleModal"));
+      console.log(imageURL)
+      document.querySelector("#imagenSeleccionada").src = imageURL;
+      const modal = new bootstrap.Modal(document.querySelector("#exampleModal"));
       modal.show();
       imageUrls[key] = imageURL; // Guardamos la URL de la imagen seleccionada
       link.classList.toggle("loal-ocultar-o-mostrar");
@@ -75,8 +91,11 @@ function handleFileInputChange(inputId, linkId, key) {
     e.preventDefault(); // Prevenir el comportamiento por defecto del enlace
 
     // Si existe una imagen guardada, la mostramos en el modal
+    console.log(imageUrls)
+    console.log(key)
     if (imageUrls[key]) {
-      $("#imagenSeleccionada").src = imageUrls[key];
+      console.log("si entra " + imageUrls[key])
+      document.querySelector("#imagenSeleccionada").src = imageUrls[key];
       const modal = new bootstrap.Modal($("#exampleModal"));
       modal.show();
     }
@@ -240,12 +259,11 @@ const initTable = async (data) => {
       <tr>
         <th>Planta</th>
         <th>Responsable</th>
-        <th>Img Horas trabajadas</th>
-         <th>Img status bateria</th>
-        <th>Img nivel anticongelante</th>
-        <th>Imagen nivel diesel</th>
-
-        <th>Imagen nivel aceite</th>
+        <th>Horas trabajadas</th>
+         <th>Bateria</th>
+        <th>Nivel anticongelante</th>
+        <th>Nivel diesel</th>
+        <th>Nivel aceite</th>
         <th>Comentario</th>
         <th>Fecha</th>
 
