@@ -429,3 +429,152 @@ export const confirmarPlantaRecorrido = async (formData) => {
     });
   }
 };
+
+export const registrarImpresora = async (formData) => {
+  showLoading();
+
+  try {
+    const respuesta = await fetch("/GestionPlantas/GuardarImpresora", {
+      method: 'POST',
+      body: formData,
+    });
+
+    // Verifica si la respuesta es exitosa
+    if (!respuesta.ok) {
+      throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+    }
+
+    const dataResponse = await respuesta.json();
+
+    Swal.fire({
+      icon: "success",
+      text: dataResponse.message,
+    });
+
+    return dataResponse.data;
+  } catch (error) {
+    console.error("Error al registrar impresora:", error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al registrar impresora. Inténtalo de nuevo más tarde. " + error.message,
+    });
+  } finally {
+    hideLoading();
+  }
+
+}
+
+export const obtenerImpresora = async ()=>{
+  try {
+    console.log("Obtenidbdo impresora")
+    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerImpresora");
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al obtener impresoras, " + (error.message || "desconocido")
+    });
+  } finally {
+    // Puedes limpiar algún estado aquí si lo necesitas
+    hideLoading()
+  }
+
+}
+export const asignarImpresoraEquipoComputo = async (formData)=>{
+  try {
+    showLoading()
+    const response = await fetch("/GestionPlantas/AsignarImpresoraEquipoComputo", {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    Swal.fire({
+      icon: "success",
+      text: data.message
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al asignar impresora, " + (error.message || "desconocido")
+    });
+  }finally{
+    hideLoading()
+  }
+
+
+}
+
+export const registrarSoporte = async (formData) => {
+  showLoading();
+
+  try {
+    const respuesta = await fetch("/GestionPlantas/RegistrarSoporte", {
+      method: 'POST',
+      body: formData,
+    });
+
+    // Verifica si la respuesta es exitosa
+    if (!respuesta.ok) {
+      throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+    }
+
+    const dataResponse = await respuesta.json();
+
+    Swal.fire({
+      icon: "success",
+      text: dataResponse.message,
+    });
+
+    return dataResponse.data;
+  } catch (error) {
+    console.error("Error al registrar soporte:", error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al registrar soporte. Inténtalo de nuevo más tarde. " + error.message,
+    });
+  } finally {
+    hideLoading();
+  }
+
+}
+
+export const obtenerSoportesHoy =  async ()=>{
+
+  try {
+    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerSoportesHoy");
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al obtener soportes de hoy, " + (error.message || "desconocido")
+    });
+  } finally {
+    // Puedes limpiar algún estado aquí si lo necesitas
+    hideLoading()
+  }
+
+}

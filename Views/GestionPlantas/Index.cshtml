@@ -23,6 +23,10 @@
     <div class="container-buttons-listado">
       <button data-tippy-content="Opciones de registro disponibles" class="btn btn-primary btn-sm"
         id="btnRegistrarOpciones">Registrar</button>
+
+        <button data-tippy-content="Soporte de hoy" class="btn btn-primary btn-sm"
+        id="btnSoportesHoy">Soportes</button>
+        
       @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
     </div>
     <hr />
@@ -31,6 +35,31 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- MODAL LISTADO SOPORTES HOY-->
+<div class="modal fade" id="exampleModalSoportesHoy" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarEquipo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Listado de soportes hoy</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-soportes">
+
+        </div>
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 
 <!-- MODAL OPTCIONES DE REGISTRO-->
@@ -89,6 +118,13 @@
               <h3>Registrar software</h3>
             </div>
 
+            <div class="card card-options" id="btnRegistrarImpresoraEquipoComputo">
+              <div class="icon">
+                <i class="fas fa-printer"></i>
+              </div>
+              <h3>Registrar impresora</h3>
+            </div>
+
           </div>
         </div>
 
@@ -109,6 +145,41 @@
       <div class="modal-body">
 
         <form id="formRegistrarEquipoComputo">
+          <div class="mb-2">
+            <label for="">Hostname</label>
+            <input type="text" class="form-control form-control-sm" name="hostname">
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL REGISTRAR IMPRESORA -->
+<div class="modal fade" id="exampleModalRegistrarImpresoraEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalRegistrarEquipo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar equipo de computo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarImpresoraEquipoComputo">
+           <div class="mb-2">
+            <label for="">Nombre</label>
+            <input type="text" class="form-control form-control-sm" name="nombre">
+          </div> <div class="mb-2">
+            <label for="">Modelo</label>
+            <input type="text" class="form-control form-control-sm" name="modelo">
+          </div>
           <div class="mb-2">
             <label for="">Hostname</label>
             <input type="text" class="form-control form-control-sm" name="hostname">
@@ -290,7 +361,8 @@
               <h3>Historial de actualizaciones</h3>
              
             </div>
-
+            
+            
              <div class="card card-options" id="btnAlmacenamientoEquipoComputo">
               <div class="icon">
                 <i class="fas fa-hdd"></i>
@@ -336,6 +408,26 @@
                <i class="fas fa-cogs"></i>
               </div>
               <h3>Usuarios</h3>
+            
+            
+            
+            
+            <div class="card card-options" id="btnAsignarImpresoraEquipoComputo">
+              <div class="icon">
+                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-eraser"></i> *@
+              </div>
+              <h3>Asignar impresora</h3>
+             
+            </div>
+
+            <div class="card card-options" id="btnRegistrarSoporteEquipoComputo">
+              <div class="icon">
+                <i class="fas fa-laptop-code"></i>
+                @* <i class="fas fa-eraser"></i> *@
+              </div>
+              <h3>Registrar Soporte</h3>
+              
             </div>
           </div>
         </div>
@@ -346,6 +438,8 @@
 </div>
 </div>
 </div>
+
+
 
 <!-- MODAL CERRAR SOFTWARE-->
 <div class="modal fade" id="exampleModalCerrarSoftware" tabindex="-1" aria-labelledby="exampleModalCerrarSoftware"
@@ -588,6 +682,87 @@
   </div>
 </div>
 
+
+<!-- MODAL ASIGNAR IMPRESORA EQUIPO COMPUTO -->
+
+<div class="modal fade" id="exampleModalAsignarImpresoraEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalAgregarSoftwareEquipoComputo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar software</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formAsignarImpresoraEquipoComputo">
+          <div class="mb-2">
+            @* <label class="form-label">Planta</label> *@
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectImpresoraEquipoComputo" name="idImpresora">
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique la impresora que desea
+              agregar.</label>
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL REGISTRAR SOPORTE -->
+<div class="modal fade" id="exampleModalRegistrarSoporteEquipoComputo" tabindex="-1"
+  aria-labelledby="exampleModalAgregarSoftwareEquipoComputo" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar soporte</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form id="formRegistrarSoporteEquipoComputo">
+           <div class="mb-2">
+            <label for="">Descripción</label>
+            <input type="text" class="form-control form-control-sm" name="descripcion">
+          </div>
+          <div class="mb-2">
+            <label for="">Solución (Opcional)</label>
+            <input type="text" class="form-control form-control-sm" name="solucion">
+          </div>
+          <div class="mb-2">
+            <label for="">Responsable </label>
+            <input type="text" class="form-control form-control-sm" name="responsable">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Estado</label>
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example"
+              id="selectSoftwareEquipoComputo" name="estado">
+              <option value="Pendiente">Pendiente</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Resuelto">Resuelto</option>
+
+            </select>
+            <label style="color:var(--ColorSecundario);font-size: .8rem;" for="">Indique el estado donde se encuentra el soporte.</label>
+          </div>
+
+          <div class="container-buttons">
+            <button type="submit" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
 @section Scripts {
 
   <script src="/lib/datatables/js/jquery.dataTables.min.js"></script>
@@ -598,6 +773,53 @@
   @*excel*@
   <script src="/lib/datatables/js/jszip.min.js"></script>
   <script src="/lib/datatables/js/buttons.html5.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   @*pdf*@
   <script src="/lib/datatables/js/pdfmake.min.js"></script>

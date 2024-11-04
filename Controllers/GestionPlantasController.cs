@@ -67,6 +67,50 @@ public class GestionPlantasController : Controller
 
 
 
+
+    [HttpPost]
+    public async Task<IActionResult> GuardarImpresora(GestionPlantasImpresora gestionPlantasImpresora)
+    {
+        try
+        {
+            var cliente = new HttpClient();
+
+            string json = JsonConvert.SerializeObject(gestionPlantasImpresora);
+
+            // Define el contenido de la solicitud HTTP
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/impresora", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "Impresora registrada",
+                    data = gestionPlantasImpresora
+                });
+            }
+
+            return StatusCode((int)response.StatusCode, new
+            {
+                success = false,
+                message = "Error al registrar impresora.",
+                statusCode = response.StatusCode
+            });
+        }
+        catch (HttpRequestException ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "Error en la comunicación con el servicio externo.",
+                error = ex.Message
+            });
+        }
+
+    }
+
     [HttpPost]
     public async Task<IActionResult> GuardarEquipoComputo(GestionPlantasEquipoComputo gestionPlantasEquipoComputo)
     {
@@ -408,11 +452,168 @@ public class GestionPlantasController : Controller
         return StatusCode((int)response.StatusCode, new { success = false, message = "Error al registrar la estación." });
     }
 
+
+ [HttpPost]
+    public async Task<IActionResult> AsignarImpresoraEquipoComputo(string idEquipoComputo, string idImpresora)
+    {
+        using var cliente = new HttpClient();
+
+        var data = new
+        {
+            idEquipoComputo = idEquipoComputo,
+            idImpresora = idImpresora
+        };
+
+        string json = JsonConvert.SerializeObject(data);
+
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/add/impresora", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Retorna un JSON indicando éxito
+                return Ok(new
+                {
+                    success = true,
+                    message = "Impresora asignada correctamente al equipo de cómputo.",
+                    data = new { idEquipoComputo, idImpresora }
+                });
+            }
+            else
+            {
+                // Retorna un JSON en caso de error en la solicitud
+                return StatusCode((int)response.StatusCode, new
+                {
+                    success = false,
+                    message = "Error al asignar impresora al equipo de cómputo.",
+                    statusCode = response.StatusCode
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            // Retorna un JSON en caso de excepción
+            return StatusCode(500, new
+            {
+                success = false,
+                message = "Ocurrió un error en el servidor.",
+                error = ex.Message
+            });
+        }
+    }
+
+       [HttpGet]
+    public async Task<IActionResult> ObtenerImpresora()
+    {
+        var cliente = new HttpClient();
+
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo/impresora");
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return Content(respuesta);
+
+        }
+
+        return BadRequest();
+    }
+
+     [HttpGet]
+    public async Task<IActionResult> ObtenerSoportesHoy()
+    {
+        var cliente = new HttpClient();
+
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo/soporte/hoy");
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return Content(respuesta);
+
+        }
+
+        return BadRequest();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RegistrarSoporte(SoporteDto soporteDto)
+    {
+        
+
+        var data = new { 
+            descripcion = soporteDto.Descripcion, 
+            solucion = soporteDto.Solucion, 
+            responsable = soporteDto.Responsable, 
+            idEquipoComputo = soporteDto.IdEquipoComputo, 
+            estado = soporteDto.Estado
+        };
+
+        string json = JsonConvert.SerializeObject(data);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+         var cliente = new HttpClient();
+        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/soporte", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Ok(new { success = true, message = "Soporte registrado correctamente." ,data = data});
+        }
+
+        return StatusCode((int)response.StatusCode, new { success = false, message = "Error al registrar el soporte." });
+    }
+
+     [HttpPatch]
+    public async Task<IActionResult> SoporteAccion(string? solucion,string? estado ,string id){
+
+        // Validar que al menos uno de los parámetros sea proporcionado
+    if (string.IsNullOrEmpty(solucion) && string.IsNullOrEmpty(estado))
+    {
+        return BadRequest("Debe proporcionar al menos 'solucion' o 'estado'.");
+    }
+      
+        var data = new {
+            solucion = solucion,
+            estado = estado
+        };
+
+         string json = JsonConvert.SerializeObject(data);
+        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+         var cliente = new HttpClient();
+        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/soporte/"+id, content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return Ok(new { success = true, message = "Soporte actualizado correctamente." ,data = data});
+        }
+
+        return StatusCode((int)response.StatusCode, new { success = false, message = "Error al actualizar el soporte." });
+
+    }
+
+
+
+
     // DTOs para las solicitudes
     public class PlantaDto
     {
         public string Nombre { get; set; }
         public bool Estado { get; set; } = true; // Valor por defecto
+    }
+
+    public class SoporteDto
+    {
+        public string Descripcion { get; set;}
+        public string? Solucion { get; set; }
+        public string Responsable { get; set; }
+        public string Estado { get; set; } //"Pendiente", "En Proceso", "Resuelto"
+        public string IdEquipoComputo { get; set; }
     }
 
     public class LineaDto
@@ -427,7 +628,7 @@ public class GestionPlantasController : Controller
         public string Nombre { get; set; }
         public bool Estado { get; set; } = true; // Valor por defecto
     }
-     public class SoftwareDto
+    public class SoftwareDto
     {
         public string Nombre { get; set; }
         public bool Estado { get; set; } = true; // Valor por defecto

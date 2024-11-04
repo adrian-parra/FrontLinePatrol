@@ -1,4 +1,13 @@
 
+.container-soportes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.container-soportes .card {
+  padding: 10px;
+}
+
 p{
   margin: 0 !important;
 }
