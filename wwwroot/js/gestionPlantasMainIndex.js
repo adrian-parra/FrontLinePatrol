@@ -848,6 +848,12 @@ container.innerHTML = content;
   // Usar innerHTML para obtener el contenido HTML del contenedor
 Swal.fire({
   html: container.innerHTML, // Cambiar aquí para usar innerHTML
+  allowOutsideClick: false,
+  preConfirm: () => {
+    // Abrir la segunda alerta si se confirma
+    // abrirAlerta();
+    //return false; // Evita cerrar el modal
+}
 });
 
   document.querySelector(".container-items-process").addEventListener("click", async (e)=>{
