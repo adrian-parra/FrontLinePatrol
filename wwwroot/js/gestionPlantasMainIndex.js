@@ -11,7 +11,12 @@ import {
   registrarLinea,
   obtenerPlantas,
   registrarSoftware,
-  confirmarPlantaRecorrido
+  confirmarPlantaRecorrido,
+  registrarImpresora,
+  obtenerImpresora,
+  asignarImpresoraEquipoComputo,
+  registrarSoporte,
+  obtenerSoportesHoy
 } from "./gestionPlantasIndex.js";
 import { 
   restartDeviceWmi, 
@@ -114,6 +119,25 @@ const $loalContainerButton =  document.querySelector(".loal-container-button-flo
 
 
 const $btnHistorialActualizacionEquipoComputo = document.querySelector("#btnHistorialActualizacionEquipoComputo")
+
+const $btnRegistrarImpresoraEquipoComputo = document.querySelector("#btnRegistrarImpresoraEquipoComputo")
+const $modalRegistrarImpresoraEquipoComputo = document.querySelector("#exampleModalRegistrarImpresoraEquipoComputo")
+const $formRegistrarImpresoraEquipoComputo = document.querySelector("#formRegistrarImpresoraEquipoComputo")
+
+const $btnAsignarImpresoraEquipoComputo = document.querySelector("#btnAsignarImpresoraEquipoComputo")
+const $modalAsignarImpresoraEquipoComputo = document.querySelector("#exampleModalAsignarImpresoraEquipoComputo")
+const $formAsignarImpresoraEquipoComputo = document.querySelector("#formAsignarImpresoraEquipoComputo")
+
+const $btnRegistrarSoporteEquipoComputo = document.querySelector("#btnRegistrarSoporteEquipoComputo");
+const $modalRegistrarSoporteEquipoComputo = document.querySelector("#exampleModalRegistrarSoporteEquipoComputo");
+const $formRegistrarSoporteEquipoComputo = document.querySelector("#formRegistrarSoporteEquipoComputo");
+
+const $btnSoportesHoy = document.querySelector("#btnSoportesHoy");
+const $modalSoportesHoy = document.querySelector("#exampleModalSoportesHoy");
+//const $formSoportesHoy = document.querySelector("#formSoportesHoy");
+
+
+
 
 
 
@@ -577,7 +601,116 @@ $btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
 })
 
 
+$btnRegistrarImpresoraEquipoComputo.addEventListener("click",async ()=>{
+  showModal($modalRegistrarImpresoraEquipoComputo)
+})
+
+
+$formRegistrarImpresoraEquipoComputo.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  await registrarImpresora(dataForm)
+
+  updateInterfaz()
+})
+
+
+$btnAsignarImpresoraEquipoComputo.addEventListener("click",async ()=>{
+  const impresora = await obtenerImpresora();
+
+  document.querySelector("#selectImpresoraEquipoComputo").innerHTML = ``;
+  impresora.forEach((item) => {
+    document.querySelector("#selectImpresoraEquipoComputo").innerHTML += `
+    <option value="${item.id}">${item.nombre}</option>`;
+  });
+
+  showModal($modalAsignarImpresoraEquipoComputo)
+})
+
+$formAsignarImpresoraEquipoComputo.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  dataForm.append("idEquipoComputo",idEquipoComputoGlobal)
+
+  await asignarImpresoraEquipoComputo(dataForm)
+
+  updateInterfaz()
+})
+
+$btnRegistrarSoporteEquipoComputo.addEventListener("click",()=>{
+  showModal($modalRegistrarSoporteEquipoComputo);
+})
+
+$formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  dataForm.append("idEquipoComputo",idEquipoComputoGlobal)
+
+  await registrarSoporte(dataForm)
+
+  updateInterfaz()
+
+})
+
+document.querySelector(".container-soportes").addEventListener("click",(e)=>{
+  console.log(e.target)
+
+  if (e.target.tagName === "BUTTON") {
+    // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
+    const estadoSoporte = e.target.closest(".card").querySelector(".estado-soporte");
+    console.log(estadoSoporte)
+    if (estadoSoporte) {
+      console.log("Estado del soporte:", estadoSoporte.textContent); // Muestra el valor del estado
+    }
+  }
+})
+
+
+$btnSoportesHoy.addEventListener("click",async ()=>{
+  const datos = await obtenerSoportesHoy()
+
+  const containerSoportes = document.querySelector(".container-soportes")
+
+  containerSoportes.innerHTML = ``
+
+  datos.forEach(item =>{
+    console.log(item)
+    containerSoportes.innerHTML += `
+    <div class="card">
+    <p>Linea: <span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre}</span></p>
+    <p>Estacion: <span class="text-primary">${item.equipoComputo.lineas[0].estacion.nombre}</span></p>
+    <p>Problema: <span class="text-primary">${item.descripcion}</span></p>
+    <p>Responsable: <span class="text-primary">${item.responsable}</span></p>
+    <p>Solucion: <span class="text-primary">${item.solucion}</span></p>
+    <p>Estado: <span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></p>
+    <button style="${item.estado === "Resuelto" ? "display:none" : ""}" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : item.estado === 'Resuelto' ? 'bg-success' : 'bg-secondary'}">${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : item.estado === 'Resuelto' ? 'Resuelto' : 'Pendiente'}</button>
+    </div>
+    `
+  })
+
+  console.log(datos)
+  showModal($modalSoportesHoy)
+})
+
+
+
 }); // FINN EVENTO ONLOAD
+
+function getEstadoClass(estado) {
+  switch (estado) {
+    case 'Pendiente':
+      return 'text-danger';
+    case 'En proceso':
+      return 'text-warning';
+    case 'Resuelto':
+      return 'text-success';
+    default:
+      return 'text-secondary'; // Clase por defecto si el estado no coincide
+  }
+}
 
 
 const updateInterfaz = async ()=>{
