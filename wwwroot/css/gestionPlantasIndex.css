@@ -1,8 +1,19 @@
 
+.separador {
+  display: flex;
+  width: 100%;
+ 
+  padding: 10px;
+}
+.separador p {
+  color: white;
+  font-weight: bold;
+}
 .container-soportes {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 3px;
 }
 .container-soportes .card {
   padding: 10px;
@@ -10,6 +21,14 @@
 
 p{
   margin: 0 !important;
+}
+
+#exampleModalSoportesHoy .modal-dialog{
+  max-width: 950px !important;
+}
+
+#exampleModalSoportesHoy .container-soportes .table tr{
+  font-size: .8rem !important;
 }
 
 .respuesta-info-pc {
@@ -314,6 +333,11 @@ p{
 @media (max-width: 480px) {
   .grid-container {
     grid-template-columns: 1fr;
+  }
+  .container-buttons-listado {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
 }

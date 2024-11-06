@@ -22,8 +22,7 @@ public class KaizenController : Controller
         [HttpPost]
     public async Task<IActionResult> Filter(Kaizen kaizen)
     {
-   var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-        string hostName = string.Empty;
+   
 
         // Aquí puedes configurar la URL de la API externa
     string apiUrl = "http://c7share.sewsus.com.mx:9001/Kaizen/MostrarKaizen.php";
@@ -48,12 +47,27 @@ public class KaizenController : Controller
 
         if (response.IsSuccessStatusCode)
         {
-              Logger logger = new Logger();
+                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
 
-          var hostEntry = Dns.GetHostEntry(ipAddress);
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            Logger logger = new Logger();
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(ipAddress);
                 hostName = hostEntry.HostName;
                 Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
                 logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Kaizen");
+
+     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message} :IP: {ipAddress}");
+                logger.Log($"IP: {ipAddress}, Error al obtener el hostname: {ex.Message}");
+            }
+        }
             var htmlTable = await response.Content.ReadAsStringAsync();
             return Content(htmlTable, "text/html");
         }

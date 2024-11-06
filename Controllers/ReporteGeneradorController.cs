@@ -10,6 +10,7 @@ using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using System.Net;
 
 namespace LinePatrol.Controllers;
 
@@ -34,13 +35,36 @@ public class ReporteGeneradorController : Controller
     {
         try
         {
+
+           
              var cliente = new HttpClient();
 
         var response = await cliente.GetAsync($"http://localhost:3000/api/reporteGenerador");
 
         if (response.IsSuccessStatusCode)
         {
+            
+               var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        string hostName = string.Empty;
 
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            Logger logger = new Logger();
+            try
+            {
+                var hostEntry = Dns.GetHostEntry(ipAddress);
+                hostName = hostEntry.HostName;
+                Console.WriteLine($"IP: {ipAddress}, Hostname: {hostName}");
+                logger.Log($"IP: {ipAddress}, Hostname: {hostName}, Interfaz: Reporte generador");
+
+     
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener el hostname: {ex.Message} :IP: {ipAddress}");
+                logger.Log($"IP: {ipAddress}, Error al obtener el hostname: {ex.Message}");
+            }
+        }
             var respuesta = await response.Content.ReadAsStringAsync();
 
             return Content(respuesta);

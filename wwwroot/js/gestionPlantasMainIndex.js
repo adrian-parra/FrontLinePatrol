@@ -948,7 +948,7 @@ $btnAsignarImpresoraEquipoComputo.addEventListener("click",async ()=>{
   document.querySelector("#selectImpresoraEquipoComputo").innerHTML = ``;
   impresora.forEach((item) => {
     document.querySelector("#selectImpresoraEquipoComputo").innerHTML += `
-    <option value="${item.id}">${item.nombre}</option>`;
+    <option value="${item.id}">${item.modelo}</option>`;
   });
 
   showModal($modalAsignarImpresoraEquipoComputo)
@@ -984,6 +984,16 @@ $formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
 document.querySelector(".container-soportes").addEventListener("click",(e)=>{
   console.log(e.target)
 
+  html2canvas(document.querySelector(".container-soportes")).then(function(canvas) {
+    var imgData = canvas.toDataURL('image/png');
+    var link = document.createElement('a');
+    link.href = imgData;
+    link.download = 'soportes.png';
+    link.click();
+}).catch(function(error) {
+    console.error('Error al capturar el div:', error);
+});
+
   if (e.target.tagName === "BUTTON") {
     // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
     const estadoSoporte = e.target.closest(".card").querySelector(".estado-soporte");
@@ -1002,20 +1012,51 @@ $btnSoportesHoy.addEventListener("click",async ()=>{
 
   containerSoportes.innerHTML = ``
 
-  datos.forEach(item =>{
-    console.log(item)
-    containerSoportes.innerHTML += `
-    <div class="card">
-    <p>Linea: <span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre}</span></p>
-    <p>Estacion: <span class="text-primary">${item.equipoComputo.lineas[0].estacion.nombre}</span></p>
-    <p>Problema: <span class="text-primary">${item.descripcion}</span></p>
-    <p>Responsable: <span class="text-primary">${item.responsable}</span></p>
-    <p>Solucion: <span class="text-primary">${item.solucion}</span></p>
-    <p>Estado: <span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></p>
-    <button style="${item.estado === "Resuelto" ? "display:none" : ""}" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : item.estado === 'Resuelto' ? 'bg-success' : 'bg-secondary'}">${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : item.estado === 'Resuelto' ? 'Resuelto' : 'Pendiente'}</button>
-    </div>
-    `
-  })
+  // Crear una variable para almacenar el contenido de la tabla
+  let tablaHTML = `
+  <table class="table">
+      <thead>
+          <tr>
+              <th>Linea</th>
+              <th>Estación/Ubicación</th>
+              <th>Problema/Descripción</th>
+              <th>Responsable</th>
+              <th>Solución/Acción</th>
+              <th>Estado</th>
+          </tr>
+      </thead>
+      <tbody>
+  `;
+
+  // Agregar los datos a la tabla
+  datos.forEach(item => {
+      console.log(item);
+      tablaHTML += `
+          <tr>
+              <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre}</span></td>
+              <td><span class="text-primary">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
+              <td><span class="text-primary">${item.descripcion}</span></td>
+              <td><span class="text-primary">${item.responsable}</span></td>
+              <td><span class="text-primary">${item.solucion}</span></td>
+              <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+              <td>
+                  <button style="${item.estado === "Resuelto" ? "display:none" : ""}" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
+                      ${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
+                  </button>
+              </td>
+          </tr>
+      `;
+  });
+
+  // Cerrar las etiquetas de la tabla
+  tablaHTML += `
+      </tbody>
+  </table>
+  `;
+
+  // Asignar el contenido de la tabla al contenedor
+  containerSoportes.innerHTML = tablaHTML;
+
 
   console.log(datos)
   showModal($modalSoportesHoy)

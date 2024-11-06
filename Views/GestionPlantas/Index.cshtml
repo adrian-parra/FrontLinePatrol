@@ -44,7 +44,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Listado de soportes hoy</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Listado de soportes de hoy</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -292,7 +292,9 @@
 
         </div>
         <div class="container options-grid-container">
-
+          <!-- <div class="separador bg-secondary">
+            <p>WMI</p>
+          </div> -->
           <div class="grid-container">
             <div class="card card-options" id="btnApagarEquipoComputo">
               <div class="icon">
@@ -391,9 +393,9 @@
 
             <div class="card card-options" id="btnGetProcessEquipoComputo">
               <div class="icon">
-               <i class="fas fa-cogs"></i>
+              <i class="fas fa-th-large"></i>
               </div>
-              <h3>Procesos</h3>
+              <h3>Apps abiertas</h3>
             </div>
 
              <div class="card card-options" id="btnDeleteTempEquipoComputo">
@@ -405,16 +407,16 @@
 
             <div class="card card-options" id="btnGetUsuariosEquipoComputo">
               <div class="icon">
-               <i class="fas fa-cogs"></i>
+               <i class="fas fa-users"></i>
               </div>
               <h3>Usuarios</h3>
             
             
-            
-            
-            <div class="card card-options" id="btnAsignarImpresoraEquipoComputo">
+
+          </div>
+          <div class="card card-options" id="btnAsignarImpresoraEquipoComputo">
               <div class="icon">
-                <i class="fas fa-laptop-code"></i>
+               <i class="fas fa-print"></i>
                 @* <i class="fas fa-eraser"></i> *@
               </div>
               <h3>Asignar impresora</h3>
@@ -423,13 +425,12 @@
 
             <div class="card card-options" id="btnRegistrarSoporteEquipoComputo">
               <div class="icon">
-                <i class="fas fa-laptop-code"></i>
+                <i class="fas fa-headset"></i>
                 @* <i class="fas fa-eraser"></i> *@
               </div>
               <h3>Registrar Soporte</h3>
               
             </div>
-          </div>
         </div>
 
       </div>
@@ -774,53 +775,6 @@
   <script src="/lib/datatables/js/jszip.min.js"></script>
   <script src="/lib/datatables/js/buttons.html5.min.js"></script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   @*pdf*@
   <script src="/lib/datatables/js/pdfmake.min.js"></script>
   <script src="/lib/datatables/js/vfs_fonts.js"></script>
@@ -838,6 +792,8 @@
 <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script> *@
   <script src="/lib/tippy/popper.min.js"></script>
   <script src="/lib/tippy/tippy-bundle.umd.js"></script>
+
+  <script src="/lib/html-to-canvas/html-to-canvas.js"></script>
 
 
   <script src="~/js/GestionPlantasMainIndex.js" type="module"></script>
