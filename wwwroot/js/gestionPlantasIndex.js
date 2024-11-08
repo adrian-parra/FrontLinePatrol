@@ -578,3 +578,37 @@ export const obtenerSoportesHoy =  async ()=>{
   }
 
 }
+
+export const completarSoporte = async (formData)=>{
+  console.log("completar soporte js")
+  showLoading();
+
+  try {
+    const respuesta = await fetch("/GestionPlantas/SoporteAccion", {
+      method: 'PATCH',
+      body: formData,
+    });
+
+    // Verifica si la respuesta es exitosa
+    if (!respuesta.ok) {
+      throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+    }
+
+    const dataResponse = await respuesta.json();
+
+    Swal.fire({
+      icon: "success",
+      text: dataResponse.message,
+    });
+
+    return dataResponse.data;
+  } catch (error) {
+    console.error("Error al completar soporte:", error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al completar soporte. Inténtalo de nuevo más tarde. " + error.message,
+    });
+  } finally {
+    hideLoading();
+  }
+}

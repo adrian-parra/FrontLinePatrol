@@ -16,7 +16,8 @@ import {
   obtenerImpresora,
   asignarImpresoraEquipoComputo,
   registrarSoporte,
-  obtenerSoportesHoy
+  obtenerSoportesHoy,
+  completarSoporte
 } from "./gestionPlantasIndex.js";
 import { 
   restartDeviceWmi, 
@@ -156,11 +157,17 @@ const $formRegistrarSoporteEquipoComputo = document.querySelector("#formRegistra
 const $btnSoportesHoy = document.querySelector("#btnSoportesHoy");
 const $modalSoportesHoy = document.querySelector("#exampleModalSoportesHoy");
 //const $formSoportesHoy = document.querySelector("#formSoportesHoy");
+const $formCompletarSoporte = document.querySelector("#formCompletarSoporte");
+
+
 
 
 let hostnameGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
 let idEquipoComputoGlobal; // SE ASIGNA VALOR CUANDO USUARIO DA CLICK EN ACCIONES DE EQUIPO DE COMPUTO
 let dataGlobal; // SE ASIGNA VALOR CUANDO CARGA LA PAGINA POR COMPLETO
+
+let estadoSoporteGlobal;
+let idSoporteGlobal
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -981,32 +988,77 @@ $formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
 
 })
 
-document.querySelector(".container-soportes").addEventListener("click",(e)=>{
+document.querySelector(".container-soportes").addEventListener("click",async (e)=>{
   console.log(e.target)
 
-  html2canvas(document.querySelector(".container-soportes")).then(function(canvas) {
-    var imgData = canvas.toDataURL('image/png');
-    var link = document.createElement('a');
-    link.href = imgData;
-    link.download = 'soportes.png';
-    link.click();
-}).catch(function(error) {
-    console.error('Error al capturar el div:', error);
-});
+  
 
   if (e.target.tagName === "BUTTON") {
     // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
-    const estadoSoporte = e.target.closest(".card").querySelector(".estado-soporte");
-    console.log(estadoSoporte)
+    const estadoSoporte = e.target.closest("td").closest("tr").querySelector(".estado-soporte");
+    const idSoporte = e.target.closest("td").closest("tr").querySelector(".id-soporte");
     if (estadoSoporte) {
-      console.log("Estado del soporte:", estadoSoporte.textContent); // Muestra el valor del estado
+      estadoSoporteGlobal = estadoSoporte.textContent.trim()
+      idSoporteGlobal = idSoporte.textContent.trim()
+
+      if(estadoSoporteGlobal == "Pendiente"){
+        estadoSoporteGlobal = "En proceso"
+
+        let dataForm = new FormData()
+        dataForm.append("id",idSoporteGlobal)
+        dataForm.append("estado",estadoSoporteGlobal)
+
+
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: `¿Quieres actualizar el estado de la actividad?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí",
+          cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // Swal.fire(
+            //     'Cerrando!',
+            //     'La aplicación se cerrará ahora.',
+            //     'success'
+            // );
+            await completarSoporte(dataForm)
+
+          }
+        });
+
+       
+
+
+      }else if(estadoSoporteGlobal == "En proceso"){
+         estadoSoporteGlobal = "Resuelto"
+        showModal("#exampleModalCompletarSoporte")
+      }
+     
     }
+
+
+  }else{
+    html2canvas(document.querySelector(".container-soportes")).then(function(canvas) {
+      var imgData = canvas.toDataURL('image/png');
+      var link = document.createElement('a');
+      link.href = imgData;
+      link.download = 'soportes.png';
+      link.click();
+  }).catch(function(error) {
+      console.error('Error al capturar el div:', error);
+  });
   }
 })
 
 
 $btnSoportesHoy.addEventListener("click",async ()=>{
   const datos = await obtenerSoportesHoy()
+
+  console.log(datos)
 
   const containerSoportes = document.querySelector(".container-soportes")
 
@@ -1023,6 +1075,7 @@ $btnSoportesHoy.addEventListener("click",async ()=>{
               <th>Responsable</th>
               <th>Solución/Acción</th>
               <th>Estado</th>
+              <th>Opción</th>
           </tr>
       </thead>
       <tbody>
@@ -1031,16 +1084,19 @@ $btnSoportesHoy.addEventListener("click",async ()=>{
   // Agregar los datos a la tabla
   datos.forEach(item => {
       console.log(item);
+
+      
       tablaHTML += `
-          <tr>
-              <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre}</span></td>
-              <td><span class="text-primary">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
+          <tr >
+              <td style="display:none;" class="id-soporte">${item.id}</td>
+              <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
+              <td><span class="text-primary estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
               <td><span class="text-primary">${item.descripcion}</span></td>
               <td><span class="text-primary">${item.responsable}</span></td>
               <td><span class="text-primary">${item.solucion}</span></td>
               <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
               <td>
-                  <button style="${item.estado === "Resuelto" ? "display:none" : ""}" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
+                  <button style="${item.estado === "Resuelto" ? "display:none;" : ""} width:100px;" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
                       ${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
                   </button>
               </td>
@@ -1058,8 +1114,24 @@ $btnSoportesHoy.addEventListener("click",async ()=>{
   containerSoportes.innerHTML = tablaHTML;
 
 
-  console.log(datos)
+
   showModal($modalSoportesHoy)
+
+ 
+})
+
+
+$formCompletarSoporte.addEventListener("submit",async (e)=>{
+  e.preventDefault()
+  const dataForm = new FormData(e.target)
+
+  dataForm.append("id",idSoporteGlobal)
+  dataForm.append("estado",estadoSoporteGlobal)
+
+
+  await completarSoporte(dataForm)
+
+
 })
 
 

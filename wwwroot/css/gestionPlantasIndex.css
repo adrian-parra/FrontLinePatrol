@@ -1,4 +1,17 @@
 
+.estacion-ubicacion-soporte {
+  text-transform: uppercase; /* Convierte todo a minúsculas */
+}
+
+.estacion-ubicacion-soporte::first-letter {
+  text-transform: lowercase !important; /* Convierte la primera letra a mayúscula */
+  color: red;
+}
+
+#exampleModalSoportesHoy .modal-body {
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+}
 .separador {
   display: flex;
   width: 100%;
@@ -24,7 +37,7 @@ p{
 }
 
 #exampleModalSoportesHoy .modal-dialog{
-  max-width: 950px !important;
+  max-width: 970px !important;
 }
 
 #exampleModalSoportesHoy .container-soportes .table tr{

@@ -577,21 +577,31 @@ public class GestionPlantasController : Controller
     {
         return BadRequest("Debe proporcionar al menos 'solucion' o 'estado'.");
     }
-      
-        var data = new {
-            solucion = solucion,
-            estado = estado
-        };
 
-         string json = JsonConvert.SerializeObject(data);
+    
+      
+        string json = "";
+        if(solucion == "" || solucion == null){
+            var data = new {
+            estado = estado,
+        };
+             json = JsonConvert.SerializeObject(data);
+        }else{
+           var data = new {
+            solucion = solucion,
+            estado = estado,
+        };
+             json = JsonConvert.SerializeObject(data);
+        }
+        
         var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
          var cliente = new HttpClient();
-        var response = await cliente.PostAsync("http://localhost:3000/api/gestion/planta/equipoComputo/soporte/"+id, content);
+        var response = await cliente.PatchAsync("http://localhost:3000/api/gestion/planta/equipoComputo/soporte/"+id, content);
 
         if (response.IsSuccessStatusCode)
         {
-            return Ok(new { success = true, message = "Soporte actualizado correctamente." ,data = data});
-        }
+            return Ok(new { success = true, message = "Soporte actualizado correctamente."});
+        }   
 
         return StatusCode((int)response.StatusCode, new { success = false, message = "Error al actualizar el soporte." });
 
