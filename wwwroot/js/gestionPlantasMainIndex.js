@@ -984,7 +984,7 @@ $formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
 
   await registrarSoporte(dataForm)
 
-  updateInterfaz()
+  // updateInterfaz()
 
 })
 
@@ -1074,8 +1074,8 @@ $btnSoportesHoy.addEventListener("click",async ()=>{
               <th>Problema/Descripción</th>
               <th>Responsable</th>
               <th>Solución/Acción</th>
-              <th>Estado</th>
-              <th>Opción</th>
+              <th>Estado/Situación</th>
+              <th>Cambio de Es.</th>
           </tr>
       </thead>
       <tbody>
