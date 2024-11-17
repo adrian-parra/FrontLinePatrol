@@ -17,7 +17,8 @@ import {
   asignarImpresoraEquipoComputo,
   registrarSoporte,
   obtenerSoportesHoy,
-  completarSoporte
+  completarSoporte,
+  SoportesPorHostname
 } from "./gestionPlantasIndex.js";
 import { 
   restartDeviceWmi, 
@@ -158,6 +159,10 @@ const $btnSoportesHoy = document.querySelector("#btnSoportesHoy");
 const $modalSoportesHoy = document.querySelector("#exampleModalSoportesHoy");
 //const $formSoportesHoy = document.querySelector("#formSoportesHoy");
 const $formCompletarSoporte = document.querySelector("#formCompletarSoporte");
+
+const $btnObtenerSoporteEquipoComputo = document.querySelector("#btnObtenerSoporteEquipoComputo");
+const $modalObtenerSoporteEquipoComputo = document.querySelector("#exampleModalObtenerSoporteEquipoComputo");
+
 
 
 
@@ -730,48 +735,6 @@ $btnSistemaOperativoEquipoComputo.addEventListener("click",async ()=>{
  
 })  
 
-// document.addEventListener("click", (e) => {
-//   // Verifica si el elemento clickeado es un botón con la clase "btn-exportar"
-//   if (e.target.classList.contains("btn-exportar")) {
-//     // Obtiene el tipo de exportación del atributo "data-export" del botón
-//     const exportType = e.target.getAttribute("data-export");
-
-//     // Crea una instancia de la clase DataTable
-//     const table = $("#equiposTable").DataTable();
-
-//     // Llama al método de exportación correspondiente según el tipo de exportación
-//     if (exportType === "excel") {
-//       table.button(0).trigger();
-//     } else if (exportType === "pdf") {
-//       table.button(1).trigger();
-//     } else if (exportType === "print") {
-//       table.button(2).trigger();
-//     }
-//   }
-// });
-
-// document.addEventListener("click", (e) => {
-//   // Verifica si el elemento clickeado es un botón con la clase "btn-exportar"
-//   if (e.target.classList.contains("btn-exportar")) {
-//     // Obtiene el tipo de exportación del atributo "data-export" del botón
-//     const exportType = e.target.getAttribute("data-export");
-
-//     // Crea una instancia de la clase DataTable
-//     const table = $("#equiposTable").DataTable();
-
-//     // Llama al método de exportación correspondiente según el tipo de exportación
-//     if (exportType === "excel") {
-//       table.button(0).trigger();
-//     } else if (exportType === "pdf") {
-//       table.button(1).trigger();
-//     } else if (exportType === "print") {
-//       table.button(2).trigger();
-//     }
-//   }
-// })
-
-
-
 $btnGetServicesEquipoComputo.addEventListener("click", async ()=>{
   const formData = new FormData()
   formData.append("ip",hostnameGlobal)
@@ -988,6 +951,16 @@ $formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
 
 })
 
+document.querySelector(".container-soportes-por-hostname").addEventListener("click",async (e)=>{
+  html2canvas(document.querySelector(".container-soportes-por-hostname")).then(function(canvas) {
+    var imgData = canvas.toDataURL('image/png');
+    var link = document.createElement('a');
+    link.href = imgData;
+    link.download = `soportes-de-${hostnameGlobal}.png`;
+    link.click();
+  })
+})
+
 document.querySelector(".container-soportes").addEventListener("click",async (e)=>{
 
 
@@ -1073,9 +1046,31 @@ $formCompletarSoporte.addEventListener("submit",async (e)=>{
   
 })
 
+$btnObtenerSoporteEquipoComputo.addEventListener("click",async (e)=>{
+
+  const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + localStorage.getItem("plantaSeleccionadaG") || "")
+
+  dataGlobal = await response.json()
+
+  const soportes = obtenerSoportesPorHostname(hostnameGlobal)
+
+  if(soportes.length == 0){
+    Swal.fire({
+      icon: "error",
+      text: "No se encontraron soportes",
+    })
+    return false
+  }
+
+  SoportesPorHostname({
+    soportes:soportes
+  })
+
+  showModal($modalObtenerSoporteEquipoComputo)
+})
 
 
-}); // FINN EVENTO ONLOAD
+}); // ! FINN EVENTO ONLOAD
 
 
 
@@ -1149,6 +1144,21 @@ function obtenerSoftwarePorHostname(hostname) {
   // Retorna un array de nombres de software del equipo encontrado
   return equipo.equiposComputoSoftware.map(
     (softwareData) => softwareData.software.nombre
+  );
+}
+
+function obtenerSoportesPorHostname(hostname) {
+  // Encuentra el equipo con el hostname dado
+  const equipo = dataGlobal.find((equipo) => equipo.hostname === hostname);
+
+  // Si no se encuentra el equipo, retorna un array vacío
+  if (!equipo) {
+    return [];
+  }
+
+  // Retorna un array de nombres de software del equipo encontrado
+  return equipo.soportes.map(
+    (soporte) => soporte
   );
 }
 

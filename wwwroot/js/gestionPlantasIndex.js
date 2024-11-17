@@ -2,6 +2,8 @@
 import { $ } from "/js/utils.js";
 import { showLoading,hideLoading } from "/js/utils.js";
 import { getEstadoClass } from "./utils.js";
+import { tiempoTranscurrido } from "/js/utils.js";
+import { diferenciaTiempo } from "/js/utils.js"
 
 
 
@@ -555,6 +557,60 @@ export const registrarSoporte = async (formData) => {
     hideLoading();
   }
 
+}
+
+export const SoportesPorHostname = ({soportes})=>{
+
+
+  const containerSoportes = document.querySelector(".container-soportes-por-hostname")
+  
+    containerSoportes.innerHTML = ``
+  
+    // Crear una variable para almacenar el contenido de la tabla
+    let tablaHTML = `
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Problema/Descripción</th>
+                <th>Responsable</th>
+                <th>Solución/Acción</th>
+                <th>Estado/Situación</th>
+                <th>Tiempo transcurrido</th>
+                <th>Actualización</th>
+                <th>Diferencia</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+    `;
+  
+    // Agregar los datos a la tabla
+    soportes.forEach(item => {
+        
+        tablaHTML += `
+            <tr >
+                <td><span class="text-primary">${item.descripcion}</span></td>
+                <td><span class="text-primary">${item.responsable}</span></td>
+                <td><span class="text-primary">${item.solucion}</span></td>
+                <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+                <td><span class="text-primary">${tiempoTranscurrido(item.createdAt)}</span></td>
+                <td><span class="text-primary">${tiempoTranscurrido(item.updatedAt)}</span></td>
+                <td><span class="text-primary">${diferenciaTiempo(item.createdAt,item.updatedAt)}</span></td>
+
+
+            </tr>
+        `;
+    });
+  
+    // Cerrar las etiquetas de la tabla
+    tablaHTML += `
+        </tbody>
+    </table>
+    `;
+  
+    // Asignar el contenido de la tabla al contenedor
+    containerSoportes.innerHTML = tablaHTML;
 }
 
 export const obtenerSoportesHoy =  async ()=>{
