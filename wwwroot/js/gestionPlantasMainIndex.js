@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   if (plantaGuardada) {
-    document.querySelector(".loal-button-flotante-planta").textContent = `Planta ${plantaGuardada}`;
+    document.querySelector(".loal-button-flotante-planta").innerHTML = `<i class="fas fa-building"></i> Planta ${plantaGuardada}`;
     document.querySelector("#selectPlanta").value = plantaGuardada;
 
     const formData = new FormData()
@@ -982,16 +982,14 @@ $formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
 
   dataForm.append("idEquipoComputo",idEquipoComputoGlobal)
 
-  await registrarSoporte(dataForm)
-
+  if(await registrarSoporte(dataForm)) e.target.reset()
+    
   // updateInterfaz()
 
 })
 
 document.querySelector(".container-soportes").addEventListener("click",async (e)=>{
-  console.log(e.target)
 
-  
 
   if (e.target.tagName === "BUTTON") {
     // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
@@ -1026,6 +1024,7 @@ document.querySelector(".container-soportes").addEventListener("click",async (e)
             //     'success'
             // );
             await completarSoporte(dataForm)
+            await obtenerSoportesHoy()
 
           }
         });
@@ -1056,68 +1055,7 @@ document.querySelector(".container-soportes").addEventListener("click",async (e)
 
 
 $btnSoportesHoy.addEventListener("click",async ()=>{
-  const datos = await obtenerSoportesHoy()
-
-  console.log(datos)
-
-  const containerSoportes = document.querySelector(".container-soportes")
-
-  containerSoportes.innerHTML = ``
-
-  // Crear una variable para almacenar el contenido de la tabla
-  let tablaHTML = `
-  <table class="table">
-      <thead>
-          <tr>
-              <th>Linea</th>
-              <th>Estación/Ubicación</th>
-              <th>Problema/Descripción</th>
-              <th>Responsable</th>
-              <th>Solución/Acción</th>
-              <th>Estado/Situación</th>
-              <th>Cambio de Es.</th>
-          </tr>
-      </thead>
-      <tbody>
-  `;
-
-  // Agregar los datos a la tabla
-  datos.forEach(item => {
-      console.log(item);
-
-      
-      tablaHTML += `
-          <tr >
-              <td style="display:none;" class="id-soporte">${item.id}</td>
-              <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
-              <td><span class="text-primary estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
-              <td><span class="text-primary">${item.descripcion}</span></td>
-              <td><span class="text-primary">${item.responsable}</span></td>
-              <td><span class="text-primary">${item.solucion}</span></td>
-              <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
-              <td>
-                  <button style="${item.estado === "Resuelto" ? "display:none;" : ""} width:100px;" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
-                      ${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
-                  </button>
-              </td>
-          </tr>
-      `;
-  });
-
-  // Cerrar las etiquetas de la tabla
-  tablaHTML += `
-      </tbody>
-  </table>
-  `;
-
-  // Asignar el contenido de la tabla al contenedor
-  containerSoportes.innerHTML = tablaHTML;
-
-
-
-  showModal($modalSoportesHoy)
-
- 
+  if(await obtenerSoportesHoy())showModal($modalSoportesHoy)
 })
 
 
@@ -1128,28 +1066,18 @@ $formCompletarSoporte.addEventListener("submit",async (e)=>{
   dataForm.append("id",idSoporteGlobal)
   dataForm.append("estado",estadoSoporteGlobal)
 
-
-  await completarSoporte(dataForm)
-
-
+  if(await completarSoporte(dataForm)) {
+    e.target.reset()
+    await obtenerSoportesHoy()
+  }
+  
 })
 
 
 
 }); // FINN EVENTO ONLOAD
 
-function getEstadoClass(estado) {
-  switch (estado) {
-    case 'Pendiente':
-      return 'text-danger';
-    case 'En proceso':
-      return 'text-warning';
-    case 'Resuelto':
-      return 'text-success';
-    default:
-      return 'text-secondary'; // Clase por defecto si el estado no coincide
-  }
-}
+
 
 
 const updateInterfaz = async ()=>{

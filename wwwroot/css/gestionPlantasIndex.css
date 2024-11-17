@@ -89,6 +89,7 @@ p{
 }
 .items-table td p {
   display: inline;
+  text-transform: uppercase;
 }
 
 .items-table tr {

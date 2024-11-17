@@ -1,5 +1,5 @@
 @{
-  ViewData["Title"] = "Index";
+  ViewData["Title"] = "GESTIÓN DE PLANTA";
 }
 
 @section Styles {
@@ -16,16 +16,16 @@
   <link rel="stylesheet" href="/css/gestionPlantasIndex.css">
 }
 
-<!-- CARD VIEW CON TABLE GESTION DE EQUIPOS POR PLANTA -->
+<!-- CARD VIEW CON TABLE GESTIÓN DE EQUIPOS POR PLANTA -->
 <div class="card movil">
   <div class="card-header">Gestión de equipos en planta</div>
   <div class="card-body">
     <div class="container-buttons-listado">
       <button data-tippy-content="Opciones de registro disponibles" class="btn btn-primary btn-sm"
-        id="btnRegistrarOpciones">Registrar</button>
+        id="btnRegistrarOpciones"><i class="fas fa-plus"></i> Registrar</button>
 
         <button data-tippy-content="Soporte de hoy" class="btn btn-primary btn-sm"
-        id="btnSoportesHoy">Soportes</button>
+        id="btnSoportesHoy"><i class="fas fa-headset"></i> Soportes</button>
         
       @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
     </div>
@@ -35,8 +35,6 @@
     </div>
   </div>
 </div>
-
-
 
 <!-- MODAL LISTADO SOPORTES HOY-->
 <div class="modal fade" id="exampleModalSoportesHoy" tabindex="-1"
@@ -86,10 +84,7 @@
 </div>
 
 
-
-
-
-<!-- MODAL OPTCIONES DE REGISTRO-->
+<!-- MODAL OPCIONES DE REGISTRO-->
 <div class="modal fade" id="exampleModalOpcionesRegistro" tabindex="-1" aria-labelledby="exampleModalOpcionesRegistro"
   aria-hidden="true">
   <div class="modal-dialog">
@@ -99,14 +94,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
-        @* <div class="mb-2">
-        <button class="btn btn-primary" id="btnRegistrarEquipoComputo">Equipo computo</button>
-        <button class="btn btn-primary">Linea</button>
-        <button class="btn btn-primary">Estacion</button>
-        <button class="btn btn-primary">Planta</button>
-
-        </div> *@
 
         <div class="container options-grid-container">
           <div class="grid-container">
@@ -186,7 +173,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- MODAL REGISTRAR IMPRESORA -->
 <div class="modal fade" id="exampleModalRegistrarImpresoraEquipoComputo" tabindex="-1"
@@ -276,7 +262,7 @@
   </div>
 </div>
 
-<!-- MODAL REGISTRO DE ESTACION-->
+<!-- MODAL REGISTRO DE ESTACIÓN-->
 <div class="modal fade" id="exampleModalRegistrarEstacion" tabindex="-1" aria-labelledby="exampleModalRegistrarEstacion"
   aria-hidden="true">
   <div class="modal-dialog">
@@ -466,8 +452,6 @@
 </div>
 </div>
 </div>
-
-
 
 <!-- MODAL CERRAR SOFTWARE-->
 <div class="modal fade" id="exampleModalCerrarSoftware" tabindex="-1" aria-labelledby="exampleModalCerrarSoftware"
@@ -757,16 +741,16 @@
 
         <form id="formRegistrarSoporteEquipoComputo">
            <div class="mb-2">
-            <label for="">Descripción</label>
-            <input type="text" class="form-control form-control-sm" name="descripcion">
+            <label for="">Problema/Descripción</label>
+            <input type="text" class="form-control form-control-sm" name="descripcion" placeholder="CMS Congelado">
           </div>
           <div class="mb-2">
-            <label for="">Solución (Opcional)</label>
-            <input type="text" class="form-control form-control-sm" name="solucion">
+            <label for="">Solución/Acción (Opcional)</label>
+            <input type="text" class="form-control form-control-sm" name="solucion" placeholder="Se reinicio app">
           </div>
           <div class="mb-2">
             <label for="">Responsable </label>
-            <input type="text" class="form-control form-control-sm" name="responsable">
+            <input type="text" class="form-control form-control-sm" name="responsable" placeholder="Adrian Parra">
           </div>
           <div class="mb-2">
             <label class="form-label">Estado</label>
@@ -809,19 +793,14 @@
   @*imprimir*@
   <script src="/lib/datatables/js/buttons.print.min.js"></script>
 
-
-
   @*filter columns*@
   <script src="/lib/datatables/js/dataTables.fixedHeader.min.js"></script>
 
   <!-- Development -->
-  @* <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
-<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script> *@
   <script src="/lib/tippy/popper.min.js"></script>
   <script src="/lib/tippy/tippy-bundle.umd.js"></script>
 
   <script src="/lib/html-to-canvas/html-to-canvas.js"></script>
-
 
   <script src="~/js/GestionPlantasMainIndex.js" type="module"></script>
 }
