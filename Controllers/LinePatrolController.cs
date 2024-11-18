@@ -174,29 +174,42 @@ public class LinePatrolController : Controller
 
 
             // Comprimir la imagen antes de guardarla
-            using (var inputStream = linePatrolRegister.imagen.OpenReadStream())
-            {
-                using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
-                {
-                    // Cargar la imagen utilizando ImageSharp
-                    using (var image = Image.Load(inputStream))
-                    {
-                        // Aplicar la compresión a la imagen
-                        image.Mutate(x => x
-                            .Resize(image.Width, image.Height)); // Ajustar el tamaño si es necesario
+using (var inputStream = linePatrolRegister.imagen.OpenReadStream())
+{
+    using (var outputStream = new FileStream(rutaImagen, FileMode.Create))
+    {
+        // Cargar la imagen utilizando ImageSharp
+        using (var image = Image.Load(inputStream))
+        {
+            // Mostrar metadatos antes de eliminarlos
+            
+            // Redimensionar la imagen para reducir resolución
+            //image.Mutate(x => x.Resize(800, 600)); // Puedes ajustar el tamaño a tus necesidades
 
-                        // Configurar la calidad de compresión
-                        var encoder = new JpegEncoder
-                        {
-                            Quality = 70 // Ajustar la calidad de compresión según sea necesario
-                        };
+            image.Mutate(x => x.Resize(new ResizeOptions
+{
+    Mode = ResizeMode.Max, // Esto ajusta la imagen para que encaje dentro de los límites
+    Size = new Size(800, 600)
+}));
 
-                        // Guardar la imagen comprimida en el sistema de archivos
-                        image.Save(outputStream, encoder);
-                    }
-                }
-            }
-            // Guardar la imagen en el sistema de archivos
+            // Eliminar metadatos
+            image.Metadata.ExifProfile = null; 
+            image.Metadata.IccProfile = null;
+
+            
+           var encoder = new JpegEncoder
+{
+    Quality = 80,          
+OptimizeScans = true
+   
+};
+
+            // Guardar la imagen comprimida
+            image.Save(outputStream, encoder);
+        }
+    }
+}
+         // Guardar la imagen en el sistema de archivos
             // using (var fileStream = new FileStream(rutaImagen, FileMode.Create))
             // {
             //     linePatrolRegister.imagen.CopyTo(fileStream);
@@ -222,6 +235,8 @@ public class LinePatrolController : Controller
             return BadRequest("Error al guardar los datos.");
 
     }
+
+  
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
