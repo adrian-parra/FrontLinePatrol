@@ -1,10 +1,12 @@
 
-import { $ } from "/js/utils.js";
-import { showLoading,hideLoading } from "/js/utils.js";
-import { getEstadoClass } from "./utils.js";
-import { tiempoTranscurrido } from "/js/utils.js";
-import { diferenciaTiempo } from "/js/utils.js"
-
+import { 
+  $, 
+  showLoading, 
+  hideLoading, 
+  getEstadoClass, 
+  tiempoTranscurrido, 
+  diferenciaTiempo } 
+from "/js/utils.js";
 
 
 export const obtenerEquiposComputo = async (dataForm) =>{

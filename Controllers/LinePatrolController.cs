@@ -187,10 +187,10 @@ using (var inputStream = linePatrolRegister.imagen.OpenReadStream())
             //image.Mutate(x => x.Resize(800, 600)); // Puedes ajustar el tamaño a tus necesidades
 
             image.Mutate(x => x.Resize(new ResizeOptions
-{
-    Mode = ResizeMode.Max, // Esto ajusta la imagen para que encaje dentro de los límites
-    Size = new Size(800, 600)
-}));
+            {
+                Mode = ResizeMode.Max, // Esto ajusta la imagen para que encaje dentro de los límites
+                Size = new Size(800, 600)
+            }));
 
             // Eliminar metadatos
             image.Metadata.ExifProfile = null; 
@@ -198,11 +198,9 @@ using (var inputStream = linePatrolRegister.imagen.OpenReadStream())
 
             
            var encoder = new JpegEncoder
-{
-    Quality = 80,          
-OptimizeScans = true
-   
-};
+            {
+                Quality = 80
+            };
 
             // Guardar la imagen comprimida
             image.Save(outputStream, encoder);

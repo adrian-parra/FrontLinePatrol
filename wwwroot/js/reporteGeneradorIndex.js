@@ -1,5 +1,5 @@
 import { showLoading, hideLoading, showModal } from "/js/utils.js";
-import { obtenerPlantas } from "/js/GestionPlantasIndex.js";
+import { obtenerPlantas } from "/js/gestionPlantasIndex.js";
 
 const $selectPlantaReporteGenrador = document.querySelector(
   "#selectPlantaReporteGenrador"
