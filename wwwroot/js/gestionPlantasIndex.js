@@ -1,6 +1,9 @@
 
 import { $ } from "/js/utils.js";
 import { showLoading,hideLoading } from "/js/utils.js";
+import { getEstadoClass } from "./utils.js";
+import { tiempoTranscurrido } from "/js/utils.js";
+import { diferenciaTiempo } from "/js/utils.js"
 
 
 
@@ -12,7 +15,7 @@ export const obtenerEquiposComputo = async (dataForm) =>{
 
     const data = await response.json()
 
-    console.log(data)
+
 
     $(".container-items").innerHTML = `
     <table id="equiposTable" class="table">
@@ -57,7 +60,7 @@ export const obtenerEquiposComputo = async (dataForm) =>{
          <p data-tippy-content="${softwareNames || 'Sin información'}">${softwareNames ? softwareNames : '<span class="text-danger">N/A</span>'}</p>
        </td>  
        <td>
-         <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles">Acciones</button>
+         <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles"> <i class="fas fa-tasks"></i> Acciones</button>
        </td>
      </tr>
      `;
@@ -410,7 +413,7 @@ export const confirmarPlantaRecorrido = async (formData) => {
     // ACTUALIZAR EL TEXTO DEL BOTÓN FLOTANTE CON LA PLANTA SELECCIONADA
     $(
       ".loal-button-flotante-planta"
-    ).textContent = `Planta ${plantaSeleccionada}`;
+    ).innerHTML = `<i class="fas fa-building"></i> Planta ${plantaSeleccionada}`;
 
     // MANTENER LA SELECCIÓN EN EL SELECTOR
     $("#selectPlanta").value = plantaSeleccionada;
@@ -541,6 +544,7 @@ export const registrarSoporte = async (formData) => {
       text: dataResponse.message,
     });
 
+
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar soporte:", error);
@@ -548,10 +552,65 @@ export const registrarSoporte = async (formData) => {
       icon: "error",
       text: "Error al registrar soporte. Inténtalo de nuevo más tarde. " + error.message,
     });
+    return false;
   } finally {
     hideLoading();
   }
 
+}
+
+export const SoportesPorHostname = ({soportes})=>{
+
+
+  const containerSoportes = document.querySelector(".container-soportes-por-hostname")
+  
+    containerSoportes.innerHTML = ``
+  
+    // Crear una variable para almacenar el contenido de la tabla
+    let tablaHTML = `
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Problema/Descripción</th>
+                <th>Responsable</th>
+                <th>Solución/Acción</th>
+                <th>Estado/Situación</th>
+                <th>Tiempo transcurrido</th>
+                <th>Actualización</th>
+                <th>Diferencia</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+    `;
+  
+    // Agregar los datos a la tabla
+    soportes.forEach(item => {
+        
+        tablaHTML += `
+            <tr >
+                <td><span class="text-primary">${item.descripcion}</span></td>
+                <td><span class="text-primary">${item.responsable}</span></td>
+                <td><span class="text-primary">${item.solucion}</span></td>
+                <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+                <td><span class="text-primary">${tiempoTranscurrido(item.createdAt)}</span></td>
+                <td><span class="text-primary">${tiempoTranscurrido(item.updatedAt)}</span></td>
+                <td><span class="text-primary">${diferenciaTiempo(item.createdAt,item.updatedAt)}</span></td>
+
+
+            </tr>
+        `;
+    });
+  
+    // Cerrar las etiquetas de la tabla
+    tablaHTML += `
+        </tbody>
+    </table>
+    `;
+  
+    // Asignar el contenido de la tabla al contenedor
+    containerSoportes.innerHTML = tablaHTML;
 }
 
 export const obtenerSoportesHoy =  async ()=>{
@@ -564,14 +623,67 @@ export const obtenerSoportesHoy =  async ()=>{
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const data = await response.json();
-    return data;
+    const datos = await response.json();
+
+
+    const containerSoportes = document.querySelector(".container-soportes")
+  
+    containerSoportes.innerHTML = ``
+  
+    // Crear una variable para almacenar el contenido de la tabla
+    let tablaHTML = `
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Linea</th>
+                <th>Estación/Ubicación</th>
+                <th>Problema/Descripción</th>
+                <th>Responsable</th>
+                <th>Solución/Acción</th>
+                <th>Estado/Situación</th>
+                <th>Cambio de Es.</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+  
+    // Agregar los datos a la tabla
+    datos.forEach(item => {
+        
+        tablaHTML += `
+            <tr >
+                <td style="display:none;" class="id-soporte">${item.id}</td>
+                <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
+                <td><span class="text-primary estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
+                <td><span class="text-primary">${item.descripcion}</span></td>
+                <td><span class="text-primary">${item.responsable}</span></td>
+                <td><span class="text-primary">${item.solucion}</span></td>
+                <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+                <td>
+                    <button style="${item.estado === "Resuelto" ? "display:none;" : ""} width:100px;" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
+                        ${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+  
+    // Cerrar las etiquetas de la tabla
+    tablaHTML += `
+        </tbody>
+    </table>
+    `;
+  
+    // Asignar el contenido de la tabla al contenedor
+    containerSoportes.innerHTML = tablaHTML;
+    return datos;
   } catch (error) {
     console.log(error);
     Swal.fire({
       icon: "error",
       text: "Error al obtener soportes de hoy, " + (error.message || "desconocido")
     });
+    return false;
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -580,7 +692,6 @@ export const obtenerSoportesHoy =  async ()=>{
 }
 
 export const completarSoporte = async (formData)=>{
-  console.log("completar soporte js")
   showLoading();
 
   try {
@@ -600,14 +711,14 @@ export const completarSoporte = async (formData)=>{
       icon: "success",
       text: dataResponse.message,
     });
-
-    return dataResponse.data;
+    return true;
   } catch (error) {
-    console.error("Error al completar soporte:", error);
+
     Swal.fire({
       icon: "error",
       text: "Error al completar soporte. Inténtalo de nuevo más tarde. " + error.message,
     });
+    return false;
   } finally {
     hideLoading();
   }

@@ -8,7 +8,8 @@
   color: red;
 }
 
-#exampleModalSoportesHoy .modal-body {
+#exampleModalSoportesHoy .modal-body,
+#exampleModalObtenerSoporteEquipoComputo .modal-body {
   max-height: calc(100vh - 150px);
   overflow: auto;
 }
@@ -22,13 +23,15 @@
   color: white;
   font-weight: bold;
 }
-.container-soportes {
+.container-soportes,
+.container-soportes-por-hostname {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 3px;
 }
-.container-soportes .card {
+.container-soportes .card ,
+.container-soportes-por-hostname .card{
   padding: 10px;
 }
 
@@ -36,11 +39,13 @@ p{
   margin: 0 !important;
 }
 
-#exampleModalSoportesHoy .modal-dialog{
+#exampleModalSoportesHoy .modal-dialog,
+#exampleModalObtenerSoporteEquipoComputo .modal-dialog {
   max-width: 970px !important;
 }
 
-#exampleModalSoportesHoy .container-soportes .table tr{
+#exampleModalSoportesHoy .container-soportes .table tr,
+#exampleModalObtenerSoporteEquipoComputo .container-soportes-por-hostname .table tr{
   font-size: .8rem !important;
 }
 
@@ -89,6 +94,7 @@ p{
 }
 .items-table td p {
   display: inline;
+  text-transform: uppercase;
 }
 
 .items-table tr {
