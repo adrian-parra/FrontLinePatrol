@@ -1,4 +1,8 @@
 
+.table > tbody {
+  vertical-align: middle !important;
+}
+
 .estacion-ubicacion-soporte {
   text-transform: uppercase; /* Convierte todo a minúsculas */
 }

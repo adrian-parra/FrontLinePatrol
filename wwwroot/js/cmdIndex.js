@@ -475,6 +475,35 @@ export const GetUsersInfoEquipoComputo = async (formData) => {
     }
 }
 
+export const GetPuntoRestauracion = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/PuntoRestauracion", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener puntos de restauración:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener puntos de restauración. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+
+}
+
 
 
 

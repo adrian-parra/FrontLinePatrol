@@ -684,6 +684,69 @@ public async Task<IActionResult> DiskSpace(string ip)
     }
 }
 
+private string FormatCreationTime(string creationTimeRaw)
+{
+    // Parse the raw creation time string to a DateTime object
+    DateTime creationTime = DateTime.ParseExact(creationTimeRaw.Substring(0, 14), "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+
+    // Format the DateTime object to the desired format "MM/dd/yyyy"
+    return creationTime.ToString("MM/dd/yyyy");
+}
+
+[HttpPost]
+public async Task<IActionResult> PuntoRestauracion(string ip)
+{
+    try
+    {
+        string computerName = ip;
+        List<object> restorePoints = new List<object>();
+
+        ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\default");
+        scope.Connect();
+
+        ObjectQuery query = new ObjectQuery("SELECT * FROM SystemRestore");
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+        foreach (ManagementObject restorePoint in searcher.Get())
+        {
+
+             string creationTimeRaw = restorePoint["CreationTime"].ToString();
+            string formattedCreationTime = FormatCreationTime(creationTimeRaw);
+
+             DateTime? creationTime = null;
+             
+                if (DateTime.TryParse(formattedCreationTime, out DateTime parsedDate))
+                {
+                    creationTime = parsedDate;
+                }
+
+            var restorePointData = new
+            {
+                Description = restorePoint["Description"],
+                CreationTime = formattedCreationTime,
+                CreationTimeFormatted = creationTime.HasValue ? CalcularTiempoDesde(creationTime.Value) : "N/A",
+                SequenceNumber = restorePoint["SequenceNumber"],
+                RestorePointType = restorePoint["RestorePointType"]
+            };
+
+            restorePoints.Add(restorePointData);
+        }
+
+        return Json(restorePoints);
+    }
+    catch (ManagementException mex)
+    {
+        return BadRequest(new { error = "WMI Error: " + mex.Message });
+    }
+    catch (UnauthorizedAccessException uae)
+    {
+        return BadRequest(new { error = "Access Denied: " + uae.Message });
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(new { error = ex.Message });
+    }
+}
 
 
 public string ObtenerTipoDeMemoria(uint memoryType)
@@ -735,7 +798,8 @@ public string ObtenerTipoDeMemoria(uint memoryType)
 
 
 [HttpPost]
-public async Task<IActionResult> PhysicalMemory(string ip){
+public async Task<IActionResult> PhysicalMemory(string ip)
+{
     try
     {
         string computerName = ip;

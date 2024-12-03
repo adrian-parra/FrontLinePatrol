@@ -37,7 +37,8 @@ import {
   GetServicesEquipoComputo,
   DeleteTempEquipoComputo,
   GetProcessEquipoComputo,
-  GetUsersInfoEquipoComputo
+  GetUsersInfoEquipoComputo,
+  GetPuntoRestauracion
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -162,6 +163,11 @@ const $formCompletarSoporte = document.querySelector("#formCompletarSoporte");
 
 const $btnObtenerSoporteEquipoComputo = document.querySelector("#btnObtenerSoporteEquipoComputo");
 const $modalObtenerSoporteEquipoComputo = document.querySelector("#exampleModalObtenerSoporteEquipoComputo");
+
+const $btnObtenerPuntoRestauracionEquipoComputo = document.querySelector("#btnObtenerPuntoRestauracionEquipoComputo");
+const $modalObtenerPuntoRestauracionEquipoComputo = document.querySelector("#exampleModalObtenerPuntoRestauracionEquipoComputo");
+
+
 
 
 
@@ -638,6 +644,35 @@ $btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
     `,
   })
  
+})
+
+$btnObtenerPuntoRestauracionEquipoComputo.addEventListener("click",async ()=>{
+  const dataForm = new FormData()
+  dataForm.append("ip",hostnameGlobal)
+
+  const data = await GetPuntoRestauracion(dataForm)
+
+  let content = ""
+  data.forEach(item =>{
+
+    content +=  `
+      <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
+        <p>Descripcion:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.description}</span></p>
+        <p>Fecha de creación:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.creationTime}</span></p> 
+        <p>Tiempo TRanscurrido:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.creationTimeFormatted}</span></p>
+      </div>
+      <hr>
+    `
+  })
+
+
+  Swal.fire({
+    html: `
+      ${content}
+    `,
+  })
+
+
 })
 
 $btnAlmacenamientoEquipoComputo.addEventListener("click",async ()=>{

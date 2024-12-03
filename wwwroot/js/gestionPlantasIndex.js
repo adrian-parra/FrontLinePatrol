@@ -634,16 +634,16 @@ export const obtenerSoportesHoy =  async ()=>{
   
     // Crear una variable para almacenar el contenido de la tabla
     let tablaHTML = `
-    <table class="table">
-        <thead>
+    <table  class="table table-hover table-bordered">
+        <thead class="table-dark">
             <tr>
-                <th>Linea</th>
-                <th>Estación/Ubicación</th>
-                <th>Problema/Descripción</th>
-                <th>Responsable</th>
-                <th>Solución/Acción</th>
-                <th>Estado/Situación</th>
-                <th>Cambio de Es.</th>
+                <th scope="col">Linea</th>
+                <th scope="col">Estación/Ubicación</th>
+                <th scope="col">Problema/Descripción</th>
+                <th scope="col">Solución/Acción</th>
+                 <th scope="col">Responsable</th>
+                <th scope="col">Estado/Situación</th>
+                <th scope="col">Cambio de Es.</th>
             </tr>
         </thead>
         <tbody>
@@ -655,16 +655,18 @@ export const obtenerSoportesHoy =  async ()=>{
         tablaHTML += `
             <tr >
                 <td style="display:none;" class="id-soporte">${item.id}</td>
-                <td><span class="text-primary">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
-                <td><span class="text-primary estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
-                <td><span class="text-primary">${item.descripcion}</span></td>
-                <td><span class="text-primary">${item.responsable}</span></td>
-                <td><span class="text-primary">${item.solucion}</span></td>
+                <td><span class="text-extra">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
+                <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
+                <td><span class="text-extra">${item.descripcion}</span></td>
+                <td><span class="text-extra">${item.solucion}</span></td>
+                <td><span class="text-extra">${item.responsable}</span></td>
                 <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
                 <td>
-                    <button style="${item.estado === "Resuelto" ? "display:none;" : ""} width:100px;" class="btn btn-sm ${item.estado === 'Pendiente' ? 'bg-warning' : item.estado === 'En proceso' ? 'bg-success' : 'bg-secondary'}">
-                        ${item.estado === "Pendiente" ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
-                    </button>
+                    <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
+        class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
+    <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
+    ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
+</button>
                 </td>
             </tr>
         `;
