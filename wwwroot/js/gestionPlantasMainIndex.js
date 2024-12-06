@@ -178,10 +178,9 @@ const $modalAccionesGenerales = document.querySelector("#exampleModalAccionesGen
 
 const $btnEstadisticasSoportes = document.querySelector("#btnEstadisticasSoportes");
 const $modalEstadisticasSoportes = document.querySelector("#exampleModalEstadisticasSoportes");
-
-
-
-
+const $btnAccionesDispositivoTemporal = document.querySelector("#btnAccionesDispositivoTemporal");
+const $modalAccionesDispositivoTemporal = document.querySelector("#exampleModalAccionesDispositivoTemporal");
+const $formDispositivoTemporal = document.querySelector("#formDispositivoTemporal");
 
 
 
@@ -1129,6 +1128,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   })
 
   btnBuscarEstadisticasSoportesPorMes.addEventListener("click", () => pintarGraficasEstadisticasDeSoportes(inputMesEstadisticasSoportes.value.trim()))
+
+
+  $btnAccionesDispositivoTemporal.addEventListener("click",()=>{
+    showModal($modalAccionesDispositivoTemporal)
+  })
+
+  $formDispositivoTemporal.addEventListener("submit", async (e)=>{
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
+
+   hostnameGlobal = dataForm.get("inputHostnameTemporal")
+
+ document.querySelector(
+   "#exampleModalAccionesLabel"
+ ).textContent = `Acciones para ${hostnameGlobal}`;
+
+ //VERIFICAR LA CONEXION DE HOST
+ const testConection = await ping(hostnameGlobal)
+
+ if (testConection.estatus == "ok") {
+   document.querySelector(".test-conection").classList.add("bg-success")
+   document.querySelector(".test-conection").classList.remove("bg-danger")
+   document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
+ } else {
+   document.querySelector(".test-conection").classList.add("bg-danger")
+   document.querySelector(".test-conection").classList.remove("bg-success")
+   document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
+ }
+
+ showModal($modalExampleModalAccionesRegistro);
+    e.target.reset()
+  })
+
 
 
 }); // ! FINN EVENTO ONLOAD
