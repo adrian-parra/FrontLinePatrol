@@ -13,7 +13,8 @@
 }
 
 #exampleModalSoportesHoy .modal-body,
-#exampleModalObtenerSoporteEquipoComputo .modal-body {
+#exampleModalObtenerSoporteEquipoComputo .modal-body,
+#exampleModalEstadisticasSoportes .modal-body {
   max-height: calc(100vh - 150px);
   overflow: auto;
 }
@@ -44,7 +45,8 @@ p{
 }
 
 #exampleModalSoportesHoy .modal-dialog,
-#exampleModalObtenerSoporteEquipoComputo .modal-dialog {
+#exampleModalObtenerSoporteEquipoComputo .modal-dialog,
+#exampleModalEstadisticasSoportes .modal-dialog {
   max-width: 970px !important;
 }
 
@@ -283,13 +285,9 @@ p{
   
 }
 
-
-
-
-#exampleModalAccionesRegistro {
- 
-}
-#exampleModalAccionesRegistro .modal-dialog {
+#exampleModalAccionesRegistro .modal-dialog,
+#exampleModalOpcionesRegistro .modal-dialog,
+#exampleModalAccionesGenerales .modal-dialog {
   max-width: 800px;
   /* width: 900px; */
 

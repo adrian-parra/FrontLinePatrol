@@ -543,6 +543,45 @@ public class GestionPlantasController : Controller
         return BadRequest();
     }
 
+     [HttpGet]
+    public async Task<IActionResult> ObtenerSoportesSeamanas(string mes)
+    {
+        var cliente = new HttpClient();
+
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/soportes/estadisticas/semana?mes="+mes);
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return Content(respuesta);
+
+        }
+
+        return BadRequest();
+    }
+
+
+     [HttpGet]
+    public async Task<IActionResult> ObtenerTopSoportes(string mes)
+    {
+        var cliente = new HttpClient();
+
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/soportes/estadisticas/top-estaciones?mes="+mes);
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return Content(respuesta);
+
+        }
+
+        return BadRequest();
+    }
+
     [HttpPost]
     public async Task<IActionResult> RegistrarSoporte(SoporteDto soporteDto)
     {

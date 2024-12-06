@@ -727,3 +727,54 @@ export const completarSoporte = async (formData)=>{
     hideLoading();
   }
 }
+
+// ESTADISTICAS DE SOPORTES USANDO CHART.JS
+
+export const obtenerTopSoportes = async (formData)=>{
+  try {
+    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerTopSoportes?mes=" + formData.get("mes") || "");
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al obtener top soportes, " + (error.message || "desconocido")
+    });
+  }finally{
+    hideLoading()
+  }
+
+
+}
+
+export const obtenerSoportesSemana = async (formData)=>{
+  try {
+    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerSoportesSeamanas?mes=" + formData.get("mes") || "");
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al obtener soportes de la semana, " + (error.message || "desconocido")
+    });
+  }finally{
+    hideLoading()
+  }
+
+}

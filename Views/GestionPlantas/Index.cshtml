@@ -27,11 +27,76 @@
         <button data-tippy-content="Soporte de hoy" class="btn btn-primary btn-sm"
         id="btnSoportesHoy"><i class="fas fa-headset"></i> Soportes</button>
         
-      @* <a class="btn btn-primary btn-sm" id="btnFiltrar">&#9881;</a> *@
+      <button data-tippy-content="Acciones generales" class="btn btn-primary btn-sm"
+        id="btnAccionesGenerales"><i class="fas fa-headset"></i> Acciones</button>
     </div>
     <hr />
     <div class="container-items">
 
+    </div>
+  </div>
+</div>
+
+
+
+<!-- MODAL OPCIONES DE ACCIONES GENERALES-->
+<div class="modal fade" id="exampleModalAccionesGenerales" tabindex="-1" aria-labelledby="exampleModalAccionesGenerales"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Acciones Generales</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="container options-grid-container">
+          <div class="grid-container">
+            <div class="card card-options" id="btnEstadisticasSoportes">
+              <div class="icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <h3>Estadisticas de soportes</h3>
+            </div>  
+            <div class="card card-options" id="">
+              <div class="icon">
+                <i class="fas fa-desktop"></i>
+              </div>
+              <h3>Trabajando <em> func</em>......</h3>
+            </div>  
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ESTADISTICAS SOPORTES-->
+<div class="modal fade" id="exampleModalEstadisticasSoportes" tabindex="-1"
+  aria-labelledby="exampleModalEstadisticasSoportes" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Estadisticas del mes</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="container">
+        <div class="mb-3">
+            <label for="month" class="form-label">Selecciona mes especifico:</label>
+            <input type="month" id="inputMesEstadisticasSoportes" name="month" class="form-control">
+        </div>
+        <button type="button" class="btn btn-primary" id="btnBuscarEstadisticasSoportesPorMes">Buscar</button>
+    </div>
+    <hr>
+        <div class="container-search-top-soportes"> 
+          <canvas id="chartTopSoportes" width="400" height="200"></canvas>
+          <canvas id="chartSemanasSoportes" width="400" height="200"></canvas>
+        </div>
+        
+
+      </div>
     </div>
   </div>
 </div>

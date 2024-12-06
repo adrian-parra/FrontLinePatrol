@@ -18,10 +18,12 @@ import {
   registrarSoporte,
   obtenerSoportesHoy,
   completarSoporte,
-  SoportesPorHostname
+  SoportesPorHostname,
+  obtenerTopSoportes,
+  obtenerSoportesSemana
 } from "./gestionPlantasIndex.js";
-import { 
-  restartDeviceWmi, 
+import {
+  restartDeviceWmi,
   cerrarAppWmi,
   ping,
   apagarEquipoComputo,
@@ -42,6 +44,10 @@ import {
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
+
+let myChart;
+let chartSemanasSoportes;
+
 
 const $containerItems = document.querySelector(".container-items");
 const $btnRegistrarOpciones = document.querySelector("#btnRegistrarOpciones");
@@ -123,9 +129,9 @@ const $formDesinstalarSoftwareInstaladoEquipoComputo = document.querySelector(
   "#formDesinstalarSoftwareEquipoComputo"
 );
 
-const $btnConfirmarPlanta =  document.querySelector("#BtnconfirmarPlanta");
-const $modalPlantaRecorrido =  document.querySelector("#exampleModalPlantaRecorrido")
-const $loalContainerButton =  document.querySelector(".loal-container-button-flotante-planta")
+const $btnConfirmarPlanta = document.querySelector("#BtnconfirmarPlanta");
+const $modalPlantaRecorrido = document.querySelector("#exampleModalPlantaRecorrido")
+const $loalContainerButton = document.querySelector(".loal-container-button-flotante-planta")
 
 
 const $btnHistorialActualizacionEquipoComputo = document.querySelector("#btnHistorialActualizacionEquipoComputo")
@@ -167,6 +173,15 @@ const $modalObtenerSoporteEquipoComputo = document.querySelector("#exampleModalO
 const $btnObtenerPuntoRestauracionEquipoComputo = document.querySelector("#btnObtenerPuntoRestauracionEquipoComputo");
 const $modalObtenerPuntoRestauracionEquipoComputo = document.querySelector("#exampleModalObtenerPuntoRestauracionEquipoComputo");
 
+const $btnAccionesGenerales = document.querySelector("#btnAccionesGenerales");
+const $modalAccionesGenerales = document.querySelector("#exampleModalAccionesGenerales");
+
+const $btnEstadisticasSoportes = document.querySelector("#btnEstadisticasSoportes");
+const $modalEstadisticasSoportes = document.querySelector("#exampleModalEstadisticasSoportes");
+
+
+
+
 
 
 
@@ -190,7 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector("#selectPlanta").value = plantaGuardada;
 
     const formData = new FormData()
-    formData.append("idPlanta",plantaGuardada)
+    formData.append("idPlanta", plantaGuardada)
 
     dataGlobal = await obtenerEquiposComputo(formData);
   } else {
@@ -198,7 +213,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }
 
- 
+
   //dataGlobal = await obtenerEquiposComputo();
 
 
@@ -251,9 +266,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     ],
   });
 
-  $btnConfirmarPlanta.addEventListener("click",async ()=>{
+  $btnConfirmarPlanta.addEventListener("click", async () => {
     const formData = new FormData()
-    formData.append("idPlanta",document.querySelector("#selectPlanta").value)
+    formData.append("idPlanta", document.querySelector("#selectPlanta").value)
 
     await confirmarPlantaRecorrido(formData)
 
@@ -300,7 +315,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dataForm.append("ip", hostnameGlobal);
 
     const software = obtenerSoftwarePorHostname(hostnameGlobal);
-   
+
     if (software == "") {
       Swal.fire({
         icon: "error",
@@ -315,7 +330,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     <i class="fas fa-chevron-down"></i>
     <i class="fas fa-chevron-up" style="display: none;"></i>
     `;
-    
+
     document.querySelector(".options").innerHTML = ``
     software.forEach((item) => {
       document.querySelector(".options").innerHTML += `
@@ -370,8 +385,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   $formCerrarSoftware.addEventListener("submit", async (e) => {
     e.preventDefault();
     const dataForm = new FormData(e.target);
-   
-    if(dataForm.get("app") == ""){
+
+    if (dataForm.get("app") == "") {
       Swal.fire({
         icon: "error",
         text: "Selecciona una opción",
@@ -396,12 +411,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   });
 
-  $btnEstacionUbicacion.addEventListener("click",async()=>{
+  $btnEstacionUbicacion.addEventListener("click", async () => {
     const estaciones = await obtenerEstaciones();
 
     document.querySelector("#selectEstacionEquipoComputo").innerHTML = ``;
 
-    estaciones.forEach((estacion)=>{
+    estaciones.forEach((estacion) => {
       document.querySelector("#selectEstacionEquipoComputo").innerHTML += `
       <option value="${estacion.id}">${estacion.nombre}</option>`;
     })
@@ -409,31 +424,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelector("#selectLineaEquipoComputo").innerHTML = ``;
 
-    lineas.forEach((linea)=>{
+    lineas.forEach((linea) => {
       document.querySelector("#selectLineaEquipoComputo").innerHTML += `
       <option value="${linea.id}">${linea.nombre}</option>`;
     })
 
-   
+
     showModal("#exampleModalAgregarEstacionEquipoComputo")
   })
 
-  $formAgregarEstacionEquipoComputo.addEventListener("submit",async (e)=>{
+  $formAgregarEstacionEquipoComputo.addEventListener("submit", async (e) => {
     e.preventDefault()
     const dataForm = new FormData(e.target)
 
-    dataForm.append("idEquipo",idEquipoComputoGlobal)
+    dataForm.append("idEquipo", idEquipoComputoGlobal)
 
     await asignarEstacionUbicacionEquipoComputo(dataForm)
 
     updateInterfaz()
   })
 
-  $btnRegistrarPlanta.addEventListener("click",()=>{
+  $btnRegistrarPlanta.addEventListener("click", () => {
     showModal($modalRegistrarPlanta)
   })
 
-  $formRegistrarPlanta.addEventListener("submit",async (e)=>{
+  $formRegistrarPlanta.addEventListener("submit", async (e) => {
     e.preventDefault()
     const dataForm = new FormData(e.target)
 
@@ -443,79 +458,79 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateInterfaz()
   })
 
-  $btnRegistrarEstacion.addEventListener("click",()=>{
+  $btnRegistrarEstacion.addEventListener("click", () => {
     showModal($modalRegistrarEstacion)
   })
 
-$formRegistrarEstacion.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
+  $formRegistrarEstacion.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-  await registrarEstacion(dataForm)
-  e.target.reset()
+    await registrarEstacion(dataForm)
+    e.target.reset()
 
-  updateInterfaz()
-})
-
-$btnRegistrarLinea.addEventListener("click",async()=>{
-
-  const plantas = await obtenerPlantas();
-
-  document.querySelector("#selectPlantaEquipoComputo").innerHTML = ``;
-
-  plantas.forEach((planta)=>{
-    document.querySelector("#selectPlantaEquipoComputo").innerHTML += `
-    <option value="${planta.id}">${planta.nombre}</option>`;
+    updateInterfaz()
   })
 
+  $btnRegistrarLinea.addEventListener("click", async () => {
 
-  showModal($modalRegistrarLinea)
-})
+    const plantas = await obtenerPlantas();
 
-$formRegistrarLinea.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
+    document.querySelector("#selectPlantaEquipoComputo").innerHTML = ``;
 
-  await registrarLinea(dataForm)
-  e.target.reset()
+    plantas.forEach((planta) => {
+      document.querySelector("#selectPlantaEquipoComputo").innerHTML += `
+    <option value="${planta.id}">${planta.nombre}</option>`;
+    })
 
-  updateInterfaz()
-})
 
-$btnApagarEquipoComputo.addEventListener("click",async()=>{
-  const dataForm = new FormData();
-  dataForm.append("ip", hostnameGlobal);
+    showModal($modalRegistrarLinea)
+  })
 
-  Swal.fire({
-    title: "¿Estás seguro?",
-    text: "¿Quieres apagar el equipo?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Sí",
-    cancelButtonText: "Cancelar",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      //showLoading();
-      await apagarEquipoComputo(dataForm);
-      //hideLoading();
-    }
-  });
-})
+  $formRegistrarLinea.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-$btnInformacionEquipoComputo.addEventListener("click",async()=>{
+    await registrarLinea(dataForm)
+    e.target.reset()
 
-  var formData = new FormData();
-  formData.append("ip", hostnameGlobal);
+    updateInterfaz()
+  })
 
-  const data = await obtenerInfoEquipoComputo(formData)
+  $btnApagarEquipoComputo.addEventListener("click", async () => {
+    const dataForm = new FormData();
+    dataForm.append("ip", hostnameGlobal);
 
- // document.querySelector(".respuesta-info-pc").innerHTML = `<pre>${recorrerCadena(data)}</pre>`;
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¿Quieres apagar el equipo?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        //showLoading();
+        await apagarEquipoComputo(dataForm);
+        //hideLoading();
+      }
+    });
+  })
 
- let htmlContent =  ``
- data.forEach(item =>{
-   htmlContent += `
+  $btnInformacionEquipoComputo.addEventListener("click", async () => {
+
+    var formData = new FormData();
+    formData.append("ip", hostnameGlobal);
+
+    const data = await obtenerInfoEquipoComputo(formData)
+
+    // document.querySelector(".respuesta-info-pc").innerHTML = `<pre>${recorrerCadena(data)}</pre>`;
+
+    let htmlContent = ``
+    data.forEach(item => {
+      htmlContent += `
     <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
             <p>Domain:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.domain}</span></p>
       <p>Fabricante:<span class="text-white bg-info p-1" style="padding:10px;border-radius:4px"> ${item.manufacturer}</span></p>
@@ -525,103 +540,103 @@ $btnInformacionEquipoComputo.addEventListener("click",async()=>{
     </div>
     <hr>
   `
- })
+    })
 
-  Swal.fire({
-    html:`${htmlContent}`
+    Swal.fire({
+      html: `${htmlContent}`
+    })
+    //showModal("#exampleModalInformacionEquipoComputo")
   })
-  //showModal("#exampleModalInformacionEquipoComputo")
-})
 
-$btnUptimeEquipoComputo.addEventListener("click",async()=>{
-  var formData = new FormData();
-  formData.append("ip", hostnameGlobal);
+  $btnUptimeEquipoComputo.addEventListener("click", async () => {
+    var formData = new FormData();
+    formData.append("ip", hostnameGlobal);
 
-  const data = await obtenerUptimeDevice(formData)
+    const data = await obtenerUptimeDevice(formData)
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       <div>
         <p><span>Tiempo de encendido:</span> ${data.tiempoEncendido}</p>
         <p><span>Fecha de encendido:</span> ${data.fechaEncendido}</p>
       </div>
     `,
+    })
+    //document.querySelector(".respuesta-uptime-pc").innerHTML = `<pre>${data.tiempoEncendido}</pre>`;
+    //document.querySelector(".respuesta-fecha-encendido-pc").innerHTML = `<pre>${data.fechaEncendido}</pre>`;
+    //showModal("#exampleModalUptimeEquipoComputo")
   })
-  //document.querySelector(".respuesta-uptime-pc").innerHTML = `<pre>${data.tiempoEncendido}</pre>`;
-  //document.querySelector(".respuesta-fecha-encendido-pc").innerHTML = `<pre>${data.fechaEncendido}</pre>`;
-  //showModal("#exampleModalUptimeEquipoComputo")
-})
 
 
-$btnRegistrarSoftwareEquipoComputo.addEventListener("click",()=>{
-  showModal($modalRegistrarSoftwareEquipoComputo)
-})
+  $btnRegistrarSoftwareEquipoComputo.addEventListener("click", () => {
+    showModal($modalRegistrarSoftwareEquipoComputo)
+  })
 
-$formRegistrarSoftwareEquipoComputo.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
+  $formRegistrarSoftwareEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-  const data = await registrarSoftware(dataForm)
-
-
-  e.target.reset()
-
-  await updateInterfaz()
-
-  Swal.fire({
-    icon: "success",
-    text: data.message,
-  });
-})
-
-$btnDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("click",async (e)=>{
-
-  const dataForm = new FormData()
-  dataForm.append("ip",hostnameGlobal)
-
-  const data = await obtenerSoftwareInstalado(dataForm);
+    const data = await registrarSoftware(dataForm)
 
 
-  document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML = ``;
-  data.softwareInstalado.forEach((item) => {
-    document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML += `
+    e.target.reset()
+
+    await updateInterfaz()
+
+    Swal.fire({
+      icon: "success",
+      text: data.message,
+    });
+  })
+
+  $btnDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("click", async (e) => {
+
+    const dataForm = new FormData()
+    dataForm.append("ip", hostnameGlobal)
+
+    const data = await obtenerSoftwareInstalado(dataForm);
+
+
+    document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML = ``;
+    data.softwareInstalado.forEach((item) => {
+      document.querySelector("#selectListadoSoftwareInstaladoEquipoComputo").innerHTML += `
     <option value="${item}">${item}</option>`;
-  });
+    });
 
-  showModal($modalDesinstalarSoftwareInstaladoEquipoComputo)
-})
+    showModal($modalDesinstalarSoftwareInstaladoEquipoComputo)
+  })
 
-$formDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
+  $formDesinstalarSoftwareInstaladoEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-  dataForm.append("ip",hostnameGlobal)
+    dataForm.append("ip", hostnameGlobal)
 
-  const data = await DesinstalarSoftwareDeEquipoWmi(dataForm)
-
-
-  e.target.reset()
-
-  await updateInterfaz()
-
-  Swal.fire({
-    icon: "success",
-    text: data.message,
-  });
-})
-
-$btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
-  const dataForm = new FormData()
-  dataForm.append("ip",hostnameGlobal)
-
-  const data = await HistorialActualizacionEquipoComputo(dataForm)
+    const data = await DesinstalarSoftwareDeEquipoWmi(dataForm)
 
 
+    e.target.reset()
 
-  let htmlContent = ``
-  data.forEach(item =>{
-    htmlContent += `
+    await updateInterfaz()
+
+    Swal.fire({
+      icon: "success",
+      text: data.message,
+    });
+  })
+
+  $btnHistorialActualizacionEquipoComputo.addEventListener("click", async () => {
+    const dataForm = new FormData()
+    dataForm.append("ip", hostnameGlobal)
+
+    const data = await HistorialActualizacionEquipoComputo(dataForm)
+
+
+
+    let htmlContent = ``
+    data.forEach(item => {
+      htmlContent += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>hotFixID:${item.hotFixID}</p>
         <p>installedOn:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px">${item.installedOn}</span></p>
@@ -634,28 +649,28 @@ $btnHistorialActualizacionEquipoComputo.addEventListener("click",async ()=>{
         <hr>
       </div>
     `
-  })
+    })
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       <div>
         ${htmlContent}
       </div>
     `,
+    })
+
   })
- 
-})
 
-$btnObtenerPuntoRestauracionEquipoComputo.addEventListener("click",async ()=>{
-  const dataForm = new FormData()
-  dataForm.append("ip",hostnameGlobal)
+  $btnObtenerPuntoRestauracionEquipoComputo.addEventListener("click", async () => {
+    const dataForm = new FormData()
+    dataForm.append("ip", hostnameGlobal)
 
-  const data = await GetPuntoRestauracion(dataForm)
+    const data = await GetPuntoRestauracion(dataForm)
 
-  let content = ""
-  data.forEach(item =>{
+    let content = ""
+    data.forEach(item => {
 
-    content +=  `
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>Descripcion:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.description}</span></p>
         <p>Fecha de creación:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.creationTime}</span></p> 
@@ -663,30 +678,30 @@ $btnObtenerPuntoRestauracionEquipoComputo.addEventListener("click",async ()=>{
       </div>
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
+    })
+
+
   })
 
+  $btnAlmacenamientoEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
 
-})
-
-$btnAlmacenamientoEquipoComputo.addEventListener("click",async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
-
-  const data = await DiskSpace(formData)
+    const data = await DiskSpace(formData)
 
 
 
-  let content = ""
-  data.forEach(item =>{
+    let content = ""
+    data.forEach(item => {
 
-    content +=  `
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p><span>Device:</span> ${item.deviceID}</p>
         <p>Espacio libre:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.freeSpace}</span></p>
@@ -697,29 +712,29 @@ $btnAlmacenamientoEquipoComputo.addEventListener("click",async ()=>{
 
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
+    })
+
   })
- 
-})
 
-$btnMemoriaFisicaEquipoComputo.addEventListener("click",async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
+  $btnMemoriaFisicaEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
 
-  const data = await PhysicalMemory(formData)
+    const data = await PhysicalMemory(formData)
 
 
 
-  let content = ""
-  data.forEach(item =>{
+    let content = ""
+    data.forEach(item => {
 
-    content +=  `
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>Velocidad:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.capacity}</span></p>
         <p>Velocidad:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.speed}</span></p>
@@ -728,59 +743,59 @@ $btnMemoriaFisicaEquipoComputo.addEventListener("click",async ()=>{
 
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
+    })
+
   })
- 
-})
 
-$btnSistemaOperativoEquipoComputo.addEventListener("click",async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
+  $btnSistemaOperativoEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
 
-  const data = await SistemaOperativo(formData)
+    const data = await SistemaOperativo(formData)
 
 
 
-  let content = ""
-  data.forEach(item =>{
-  
-    // <p>Build:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.buildNumber}</span></p>
-    // <p>Fabricante:<span class="text-white bg-info p-1" style="padding:10px;border-radius:4px"> ${item.manufacturer}</span></p>
-    content +=  `
+    let content = ""
+    data.forEach(item => {
+
+      // <p>Build:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.buildNumber}</span></p>
+      // <p>Fabricante:<span class="text-white bg-info p-1" style="padding:10px;border-radius:4px"> ${item.manufacturer}</span></p>
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.caption}</span></p>
         <p>Versión:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.version}</span></p> 
       </div>
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
+    })
+
   })
- 
-})  
 
-$btnGetServicesEquipoComputo.addEventListener("click", async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
+  $btnGetServicesEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
 
-  const data = await GetServicesEquipoComputo(formData)
-// <p>Tipo:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.type}</span></p>
-//<p>Inicio:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.startMode}</span></p>
-  let content = ""
-  data.forEach(item =>{
+    const data = await GetServicesEquipoComputo(formData)
+    // <p>Tipo:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.type}</span></p>
+    //<p>Inicio:<span class="text-white bg-primary p-1" style="padding:10px;border-radius:4px"> ${item.startMode}</span></p>
+    let content = ""
+    data.forEach(item => {
 
-    content +=  `
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.name}</span></p>
         <p>Descripción:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.displayName}</span></p> 
@@ -788,90 +803,90 @@ $btnGetServicesEquipoComputo.addEventListener("click", async ()=>{
       </div>
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
-  })
- 
-})
-
-
-$btnDeleteTempEquipoComputo.addEventListener("click",async ()=>{
-  var formData = new FormData();
-  formData.append("ip", hostnameGlobal);
-
-  const data = await obtenerInfoEquipoComputo(formData)
-
-  const userName = data[0].userName
-
-  if(!userName){
-    Swal.fire({
-      icon:"error",
-      text:"Pc no tiene usuario iniciado"
     })
-    return
-  }
 
-  console.log(userName)
-
-  const extractedUser = userName.split('\\')[1]; // Divide la cadena y toma el segundo elemento
-
-  formData.append("user", extractedUser);
-
-  const deleteTemp = await DeleteTempEquipoComputo(formData)
-
-  console.log(deleteTemp)
-
-})
-
-$btnGetProcessEquipoComputo.addEventListener("click",async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
-
-  const data = await GetProcessEquipoComputo(formData)
+  })
 
 
+  $btnDeleteTempEquipoComputo.addEventListener("click", async () => {
+    var formData = new FormData();
+    formData.append("ip", hostnameGlobal);
+
+    const data = await obtenerInfoEquipoComputo(formData)
+
+    const userName = data[0].userName
+
+    if (!userName) {
+      Swal.fire({
+        icon: "error",
+        text: "Pc no tiene usuario iniciado"
+      })
+      return
+    }
+
+    console.log(userName)
+
+    const extractedUser = userName.split('\\')[1]; // Divide la cadena y toma el segundo elemento
+
+    formData.append("user", extractedUser);
+
+    const deleteTemp = await DeleteTempEquipoComputo(formData)
+
+    console.log(deleteTemp)
+
+  })
+
+  $btnGetProcessEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
+
+    const data = await GetProcessEquipoComputo(formData)
 
 
-  let content = "<div class='container-items-process'></div>";
-// Convertir la cadena HTML en un elemento DOM
-let container = document.createElement('div');
-container.innerHTML = content;
-  data.forEach(item =>{
 
-    container.querySelector(
-      ".container-items-process"
-    ).innerHTML += `<div class="item" style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px;">
+
+    let content = "<div class='container-items-process'></div>";
+    // Convertir la cadena HTML en un elemento DOM
+    let container = document.createElement('div');
+    container.innerHTML = content;
+    data.forEach(item => {
+
+      container.querySelector(
+        ".container-items-process"
+      ).innerHTML += `<div class="item" style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px;">
         <p><span class="text-white bg-success p-1 text-proccess-open" style="padding:10px;border-radius:4px;cursor:pointer"> ${item.name}</span></p>
       </div>
       <hr>`
-  })
+    })
 
-  // Usar innerHTML para obtener el contenido HTML del contenedor
-Swal.fire({
-  html: container.innerHTML, // Cambiar aquí para usar innerHTML
-  allowOutsideClick: false,
-  preConfirm: () => {
-    // Abrir la segunda alerta si se confirma
-    // abrirAlerta();
-    //return false; // Evita cerrar el modal
-}
-});
+    // Usar innerHTML para obtener el contenido HTML del contenedor
+    Swal.fire({
+      html: container.innerHTML, // Cambiar aquí para usar innerHTML
+      allowOutsideClick: false,
+      preConfirm: () => {
+        // Abrir la segunda alerta si se confirma
+        // abrirAlerta();
+        //return false; // Evita cerrar el modal
+      }
+    });
 
-  document.querySelector(".container-items-process").addEventListener("click", async (e)=>{
-    console.log(e.target)
-        if (e.target.closest('.item')) {
-         const itemName = e.target.closest('.item').querySelector('span').textContent;
+    document.querySelector(".container-items-process").addEventListener("click", async (e) => {
+      console.log(e.target)
+      if (e.target.closest('.item')) {
+        const itemName = e.target.closest('.item').querySelector('span').textContent;
         console.log(`Se hizo clic en el item: ${itemName}`);
 
 
-        var dataForm =  new FormData()
-        dataForm.append("ip",hostnameGlobal)
-        dataForm.append("app",itemName.trim())
+        var dataForm = new FormData()
+        dataForm.append("ip", hostnameGlobal)
+        dataForm.append("app", itemName.trim())
 
         Swal.fire({
           title: "¿Estás seguro?",
@@ -895,24 +910,24 @@ Swal.fire({
           }
         });
 
-       
-        
-    }
+
+
+      }
+    })
+
+
   })
- 
- 
-})
 
-$btnGetUsuariosEquipoComputo.addEventListener("click",async ()=>{
-  const formData = new FormData()
-  formData.append("ip",hostnameGlobal)
+  $btnGetUsuariosEquipoComputo.addEventListener("click", async () => {
+    const formData = new FormData()
+    formData.append("ip", hostnameGlobal)
 
-  const data = await GetUsersInfoEquipoComputo(formData)
+    const data = await GetUsersInfoEquipoComputo(formData)
 
-  let content = ""
-  data.forEach(item =>{
+    let content = ""
+    data.forEach(item => {
 
-    content +=  `
+      content += `
       <div style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px">
         <p>Nombre:<span class="text-white bg-success p-1" style="padding:10px;border-radius:4px"> ${item.localPath}</span></p>
         <p>Ultimo uso:<span class="text-white bg-warning p-1" style="padding:10px;border-radius:4px"> ${item.lastUserTime}</span></p> 
@@ -920,199 +935,312 @@ $btnGetUsuariosEquipoComputo.addEventListener("click",async ()=>{
       </div>
       <hr>
     `
-  })
+    })
 
 
-  Swal.fire({
-    html: `
+    Swal.fire({
+      html: `
       ${content}
     `,
+    })
+
   })
- 
-})
 
 
-$btnRegistrarImpresoraEquipoComputo.addEventListener("click",async ()=>{
-  showModal($modalRegistrarImpresoraEquipoComputo)
-})
+  $btnRegistrarImpresoraEquipoComputo.addEventListener("click", async () => {
+    showModal($modalRegistrarImpresoraEquipoComputo)
+  })
 
 
-$formRegistrarImpresoraEquipoComputo.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
+  $formRegistrarImpresoraEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-  await registrarImpresora(dataForm)
+    await registrarImpresora(dataForm)
 
-  updateInterfaz()
-})
+    updateInterfaz()
+  })
 
 
-$btnAsignarImpresoraEquipoComputo.addEventListener("click",async ()=>{
-  const impresora = await obtenerImpresora();
+  $btnAsignarImpresoraEquipoComputo.addEventListener("click", async () => {
+    const impresora = await obtenerImpresora();
 
-  document.querySelector("#selectImpresoraEquipoComputo").innerHTML = ``;
-  impresora.forEach((item) => {
-    document.querySelector("#selectImpresoraEquipoComputo").innerHTML += `
+    document.querySelector("#selectImpresoraEquipoComputo").innerHTML = ``;
+    impresora.forEach((item) => {
+      document.querySelector("#selectImpresoraEquipoComputo").innerHTML += `
     <option value="${item.id}">${item.modelo}</option>`;
-  });
+    });
 
-  showModal($modalAsignarImpresoraEquipoComputo)
-})
-
-$formAsignarImpresoraEquipoComputo.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
-
-  dataForm.append("idEquipoComputo",idEquipoComputoGlobal)
-
-  await asignarImpresoraEquipoComputo(dataForm)
-
-  updateInterfaz()
-})
-
-$btnRegistrarSoporteEquipoComputo.addEventListener("click",()=>{
-  showModal($modalRegistrarSoporteEquipoComputo);
-})
-
-$formRegistrarSoporteEquipoComputo.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
-
-  dataForm.append("idEquipoComputo",idEquipoComputoGlobal)
-
-  if(await registrarSoporte(dataForm)) e.target.reset()
-    
-  // updateInterfaz()
-
-})
-
-document.querySelector(".container-soportes-por-hostname").addEventListener("click",async (e)=>{
-  html2canvas(document.querySelector(".container-soportes-por-hostname")).then(function(canvas) {
-    var imgData = canvas.toDataURL('image/png');
-    var link = document.createElement('a');
-    link.href = imgData;
-    link.download = `soportes-de-${hostnameGlobal}.png`;
-    link.click();
+    showModal($modalAsignarImpresoraEquipoComputo)
   })
-})
 
-document.querySelector(".container-soportes").addEventListener("click",async (e)=>{
+  $formAsignarImpresoraEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
+    dataForm.append("idEquipoComputo", idEquipoComputoGlobal)
 
-  if (e.target.tagName === "BUTTON") {
-    // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
-    const estadoSoporte = e.target.closest("td").closest("tr").querySelector(".estado-soporte");
-    const idSoporte = e.target.closest("td").closest("tr").querySelector(".id-soporte");
-    if (estadoSoporte) {
-      estadoSoporteGlobal = estadoSoporte.textContent.trim()
-      idSoporteGlobal = idSoporte.textContent.trim()
+    await asignarImpresoraEquipoComputo(dataForm)
 
-      if(estadoSoporteGlobal == "Pendiente"){
-        estadoSoporteGlobal = "En proceso"
+    updateInterfaz()
+  })
 
-        let dataForm = new FormData()
-        dataForm.append("id",idSoporteGlobal)
-        dataForm.append("estado",estadoSoporteGlobal)
+  $btnRegistrarSoporteEquipoComputo.addEventListener("click", () => {
+    showModal($modalRegistrarSoporteEquipoComputo);
+  })
 
+  $formRegistrarSoporteEquipoComputo.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
 
-        Swal.fire({
-          title: "¿Estás seguro?",
-          text: `¿Quieres actualizar el estado de la actividad?`,
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#d33",
-          cancelButtonColor: "#3085d6",
-          confirmButtonText: "Sí",
-          cancelButtonText: "Cancelar",
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            // Swal.fire(
-            //     'Cerrando!',
-            //     'La aplicación se cerrará ahora.',
-            //     'success'
-            // );
-            await completarSoporte(dataForm)
-            await obtenerSoportesHoy()
+    dataForm.append("idEquipoComputo", idEquipoComputoGlobal)
 
-          }
-        });
+    if (await registrarSoporte(dataForm)) e.target.reset()
 
-       
+    // updateInterfaz()
 
+  })
 
-      }else if(estadoSoporteGlobal == "En proceso"){
-         estadoSoporteGlobal = "Resuelto"
-        showModal("#exampleModalCompletarSoporte")
-      }
-     
-    }
-
-
-  }else{
-    html2canvas(document.querySelector(".container-soportes")).then(function(canvas) {
+  document.querySelector(".container-soportes-por-hostname").addEventListener("click", async (e) => {
+    html2canvas(document.querySelector(".container-soportes-por-hostname")).then(function (canvas) {
       var imgData = canvas.toDataURL('image/png');
       var link = document.createElement('a');
       link.href = imgData;
-      link.download = 'soportes.png';
+      link.download = `soportes-de-${hostnameGlobal}.png`;
       link.click();
-  }).catch(function(error) {
-      console.error('Error al capturar el div:', error);
-  });
-  }
-})
-
-
-$btnSoportesHoy.addEventListener("click",async ()=>{
-  if(await obtenerSoportesHoy())showModal($modalSoportesHoy)
-})
-
-
-$formCompletarSoporte.addEventListener("submit",async (e)=>{
-  e.preventDefault()
-  const dataForm = new FormData(e.target)
-
-  dataForm.append("id",idSoporteGlobal)
-  dataForm.append("estado",estadoSoporteGlobal)
-
-  if(await completarSoporte(dataForm)) {
-    e.target.reset()
-    await obtenerSoportesHoy()
-  }
-  
-})
-
-$btnObtenerSoporteEquipoComputo.addEventListener("click",async (e)=>{
-
-  const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + localStorage.getItem("plantaSeleccionadaG") || "")
-
-  dataGlobal = await response.json()
-
-  const soportes = obtenerSoportesPorHostname(hostnameGlobal)
-
-  if(soportes.length == 0){
-    Swal.fire({
-      icon: "error",
-      text: "No se encontraron soportes",
     })
-    return false
-  }
-
-  SoportesPorHostname({
-    soportes:soportes
   })
 
-  showModal($modalObtenerSoporteEquipoComputo)
-})
+  document.querySelector(".container-soportes").addEventListener("click", async (e) => {
+
+
+    if (e.target.tagName === "BUTTON") {
+      // Encuentra el elemento <p> con la clase "estado-soporte" en el mismo contenedor del botón
+      const estadoSoporte = e.target.closest("td").closest("tr").querySelector(".estado-soporte");
+      const idSoporte = e.target.closest("td").closest("tr").querySelector(".id-soporte");
+      if (estadoSoporte) {
+        estadoSoporteGlobal = estadoSoporte.textContent.trim()
+        idSoporteGlobal = idSoporte.textContent.trim()
+
+        if (estadoSoporteGlobal == "Pendiente") {
+          estadoSoporteGlobal = "En proceso"
+
+          let dataForm = new FormData()
+          dataForm.append("id", idSoporteGlobal)
+          dataForm.append("estado", estadoSoporteGlobal)
+
+
+          Swal.fire({
+            title: "¿Estás seguro?",
+            text: `¿Quieres actualizar el estado de la actividad?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí",
+            cancelButtonText: "Cancelar",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              // Swal.fire(
+              //     'Cerrando!',
+              //     'La aplicación se cerrará ahora.',
+              //     'success'
+              // );
+              await completarSoporte(dataForm)
+              await obtenerSoportesHoy()
+
+            }
+          });
+
+
+
+
+        } else if (estadoSoporteGlobal == "En proceso") {
+          estadoSoporteGlobal = "Resuelto"
+          showModal("#exampleModalCompletarSoporte")
+        }
+
+      }
+
+
+    } else {
+      html2canvas(document.querySelector(".container-soportes")).then(function (canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        var link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'soportes.png';
+        link.click();
+      }).catch(function (error) {
+        console.error('Error al capturar el div:', error);
+      });
+    }
+  })
+
+
+  $btnSoportesHoy.addEventListener("click", async () => {
+    if (await obtenerSoportesHoy()) showModal($modalSoportesHoy)
+  })
+
+
+  $formCompletarSoporte.addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const dataForm = new FormData(e.target)
+
+    dataForm.append("id", idSoporteGlobal)
+    dataForm.append("estado", estadoSoporteGlobal)
+
+    if (await completarSoporte(dataForm)) {
+      e.target.reset()
+      await obtenerSoportesHoy()
+    }
+
+  })
+
+  $btnObtenerSoporteEquipoComputo.addEventListener("click", async (e) => {
+
+    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + localStorage.getItem("plantaSeleccionadaG") || "")
+
+    dataGlobal = await response.json()
+
+    const soportes = obtenerSoportesPorHostname(hostnameGlobal)
+
+    if (soportes.length == 0) {
+      Swal.fire({
+        icon: "error",
+        text: "No se encontraron soportes",
+      })
+      return false
+    }
+
+    SoportesPorHostname({
+      soportes: soportes
+    })
+
+    showModal($modalObtenerSoporteEquipoComputo)
+  })
+
+  $btnAccionesGenerales.addEventListener("click", () => {
+    showModal($modalAccionesGenerales)
+  })
+
+  $btnEstadisticasSoportes.addEventListener("click", async () => {
+    await pintarGraficasEstadisticasDeSoportes()
+    showModal($modalEstadisticasSoportes)
+  })
+
+  btnBuscarEstadisticasSoportesPorMes.addEventListener("click", () => pintarGraficasEstadisticasDeSoportes(inputMesEstadisticasSoportes.value.trim()))
 
 
 }); // ! FINN EVENTO ONLOAD
 
 
 
+const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
+  const dataF = new FormData()
 
-const updateInterfaz = async ()=>{
-  const dataForm =  new FormData()
-  dataForm.append("idPlanta",localStorage.getItem("plantaSeleccionadaG") || "")
+
+  if (mesSelected) {
+    dataF.append("mes", mesSelected)
+  } else {
+    // Obtener la fecha actual
+    const fechaActual = new Date();
+    // Obtener el año y el mes actual
+    const anio = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // getMonth() devuelve el mes de 0 a 11
+
+    // Formatear la fecha en "YYYY-MM"
+    const fechaFormateada = `${anio}-${mes}`;
+    dataF.append("mes", fechaFormateada)
+  }
+
+  // Usar la fecha formateada en dataF
+  //  dataF.append("mes", fechaFormateada);
+  //  dataF.append("mes","2024-11")
+  const data = await obtenerTopSoportes(dataF)
+
+  // Crear las gráficas
+  const ctx = document.getElementById('chartTopSoportes').getContext('2d');
+  const ctxSemanas = document.getElementById('chartSemanasSoportes').getContext('2d');
+
+  if (myChart) {
+    myChart.destroy();
+  }
+  if (chartSemanasSoportes) {
+    chartSemanasSoportes.destroy();
+  }
+
+  myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.map(item => `${item.estacion} (${item.linea === 'NO APLICA MCH3' ? 'N/A' : item.linea})`),
+      datasets: [{
+        label: 'Top 10 estacion/ubicacion',
+        data: data.map(item => item.total),
+        backgroundColor: 'rgba(255, 0, 0, 0.6)', // Color rojo
+        borderColor: 'rgba(255, 0, 0, 1)', // Borde rojo
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        datalabels: {
+
+          formatter: (value) => value, // Mostrar el valor total
+          color: 'white', // Color del texto
+          font: {
+            weight: 'bold',
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
+  });
+
+  // OBTENER ESTADISTICAS SEMANAS
+  const estatisticasSemanas = await obtenerSoportesSemana(dataF)
+
+  chartSemanasSoportes = new Chart(ctxSemanas, {
+    type: 'bar',
+    data: {
+      labels: estatisticasSemanas.map(item => `${item.semana}`),
+      datasets: [{
+        label: 'Semanas',
+        data: estatisticasSemanas.map(item => item.total),
+        backgroundColor: 'rgba(255, 0, 0, 0.6)', // Color rojo
+        borderColor: 'rgba(255, 0, 0, 1)', // Borde rojo
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        datalabels: {
+
+          formatter: (value) => value, // Mostrar el valor total
+          color: 'white', // Color del texto
+          font: {
+            weight: 'bold',
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
+  });
+}
+
+
+const updateInterfaz = async () => {
+  const dataForm = new FormData()
+  dataForm.append("idPlanta", localStorage.getItem("plantaSeleccionadaG") || "")
 
   dataGlobal = await obtenerEquiposComputo(dataForm);
 
@@ -1251,11 +1379,11 @@ const initAccionesEquipoSoftware = async (target) => {
   //VERIFICAR LA CONEXION DE HOST
   const testConection = await ping(hostnameGlobal)
 
-  if(testConection.estatus == "ok"){
+  if (testConection.estatus == "ok") {
     document.querySelector(".test-conection").classList.add("bg-success")
     document.querySelector(".test-conection").classList.remove("bg-danger")
     document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
-  }else{
+  } else {
     document.querySelector(".test-conection").classList.add("bg-danger")
     document.querySelector(".test-conection").classList.remove("bg-success")
     document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
