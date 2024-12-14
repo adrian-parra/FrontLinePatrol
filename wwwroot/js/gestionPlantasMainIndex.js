@@ -1206,12 +1206,48 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
     data: {
       labels: data.map(item => `${item.estacion} (${item.linea === 'NO APLICA MCH3' ? 'N/A' : item.linea})`),
       datasets: [{
-        label: 'Top 10 estacion/ubicacion',
+        label: 'Top 10 de Soportes por Ubicación/Estación',
+        type: 'bar',
         data: data.map(item => item.total),
-        backgroundColor: 'rgba(255, 0, 0, 0.6)', // Color rojo
-        borderColor: 'rgba(255, 0, 0, 1)', // Borde rojo
-        borderWidth: 1
-      }]
+        backgroundColor: 'rgba(54, 162, 235, 0.6)', // Color azul suave
+        borderColor: 'rgba(54, 162, 235, 1)', // Borde azul
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(54, 162, 235, 0.8)', // Color al pasar el mouse
+        hoverBorderColor: 'rgba(54, 162, 235, 1)', // Borde al pasar el mouse
+        shadowOffsetX: 2,
+        shadowOffsetY: 2,
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
+        shadowBlur: 5,
+         // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
+         datalabels: {
+          formatter: (value) => value, // Mostrar el valor total
+          font: {
+              size: '0', // Tamaño de la fuente
+          },
+      }
+    },{
+        label: 'Total',
+        type: 'line',
+        data: data.map(item => item.total), // Asegúrate de que 'gastos' sea el campo correcto
+        borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea
+        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Color de fondo de la línea
+        fill: true, // Rellenar el área bajo la línea
+        tension: 0.4, // Suavizar la línea
+        pointRadius: 15, // Tamaño de los puntos
+        pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color de los puntos
+        pointBorderColor: '#fff', // Color del borde de los puntos
+        pointHoverRadius: 16 , // Tamaño de los puntos al pasar el mouse
+        datalabels: {
+          formatter: (value) => value, // Mostrar el valor total
+          color: 'white', // Color del texto
+          font: {
+              weight: 'bold',
+              size: '20', // Tamaño de la fuente
+          },
+          offset: 4 // Espaciado entre la barra y la etiqueta
+      }
+       
+    }]
     },
     options: {
       scales: {
@@ -1220,15 +1256,11 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         }
       },
       plugins: {
+        // Solo incluir el plugin de etiquetas de datos aquí
         datalabels: {
-
-          formatter: (value) => value, // Mostrar el valor total
-          color: 'white', // Color del texto
-          font: {
-            weight: 'bold',
-          }
+            display: true // Desactivar el plugin de etiquetas de datos globalmente
         }
-      }
+    }
     },
     plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
   });
@@ -1241,12 +1273,47 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
     data: {
       labels: estatisticasSemanas.map(item => `${item.semana}`),
       datasets: [{
-        label: 'Semanas',
+        label: 'Total de Soportes por Semana',
         data: estatisticasSemanas.map(item => item.total),
-        backgroundColor: 'rgba(255, 0, 0, 0.6)', // Color rojo
-        borderColor: 'rgba(255, 0, 0, 1)', // Borde rojo
-        borderWidth: 1
-      }]
+        backgroundColor: 'rgba(54, 162, 235, 0.6)', // Color azul suave
+        borderColor: 'rgba(54, 162, 235, 1)', // Borde azul
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(54, 162, 235, 0.8)', // Color al pasar el mouse
+        hoverBorderColor: 'rgba(54, 162, 235, 1)', // Borde al pasar el mouse
+        shadowOffsetX: 2,
+        shadowOffsetY: 2,
+        shadowColor: 'rgba(0, 0, 0, 0.2)',
+        shadowBlur: 5,
+         // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
+         datalabels: {
+          formatter: (value) => value, // Mostrar el valor total
+          font: {
+              size: '0', // Tamaño de la fuente
+          },
+      }
+      },{
+        label: 'Total',
+        type: 'line',
+        data: estatisticasSemanas.map(item => item.total), // Asegúrate de que 'gastos' sea el campo correcto
+        borderColor: 'rgba(255, 99, 132, 1)', // Color de la línea
+        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Color de fondo de la línea
+        fill: true, // Rellenar el área bajo la línea
+        tension: 0.4, // Suavizar la línea
+        pointRadius: 15, // Tamaño de los puntos
+        pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color de los puntos
+        pointBorderColor: '#fff', // Color del borde de los puntos
+        pointHoverRadius: 16 , // Tamaño de los puntos al pasar el mouse
+        datalabels: {
+          formatter: (value) => value, // Mostrar el valor total
+          color: 'white', // Color del texto
+          font: {
+              weight: 'bold',
+              size: '20', // Tamaño de la fuente
+          },
+          offset: 4 // Espaciado entre la barra y la etiqueta
+      }
+       
+    }]
     },
     options: {
       scales: {
@@ -1255,15 +1322,11 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         }
       },
       plugins: {
+        // Solo incluir el plugin de etiquetas de datos aquí
         datalabels: {
-
-          formatter: (value) => value, // Mostrar el valor total
-          color: 'white', // Color del texto
-          font: {
-            weight: 'bold',
-          }
+            display: true // Desactivar el plugin de etiquetas de datos globalmente
         }
-      }
+    }
     },
     plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
   });
