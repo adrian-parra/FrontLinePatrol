@@ -26,25 +26,30 @@
         </div>
         <br>
 
-       <table class="table table-striped table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var file in Model)
-        {
-            <tr>
-                <td>@file.FileName</td>
-                <td>
-                    <a asp-action="Download" asp-route-filePath="@file.FilePath" class="btn btn-success btn-sm">Descargar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="container-items-files">
+                @foreach (var file in Model)
+                {
+                    <tr>
+                        <td>@file.FileName</td>
+                        <td>
+                            <a asp-action="Download" asp-route-filePath="@file.FilePath"
+                                class="btn btn-success btn-sm">Descargar</a>
+                               <a id="btnDelete" href="javascript:void(0);" class="btn btn-danger btn-sm delete-btn"
+                                data-url="@Url.Action("DeleteFile", new { filePath = file.FilePath })">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
 
 
@@ -53,3 +58,71 @@
 
 
 </div>
+
+<script>
+
+    const $containerItemsFiles = document.querySelector(".container-items-files")
+
+
+    $containerItemsFiles.addEventListener("click", async (e) => {
+        console.log(e.target.id)
+        const $target= e.target
+
+        if($target.id === 'btnDelete'){
+            const deleteUrl = $target.getAttribute('data-url'); // Obtener la URL del atributo data-url
+            console.log(deleteUrl)
+                // Mostrar confirmación con SweetAlert
+               // Mostrar confirmación con SweetAlert
+                const result = await Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                });
+
+                // Si el usuario confirma
+                if (result.isConfirmed) {
+                    try {
+                        // Realizar la solicitud DELETE con fetch
+                        const response = await fetch(deleteUrl, {
+                            method: 'POST' // Cambia a POST si el controlador lo requiere
+                        });
+
+                        // Validar la respuesta
+                        if (response.ok) {
+                            const message = await response.text(); // Obtener el mensaje del servidor
+                            
+                            // Mostrar mensaje de éxito
+                            await Swal.fire(
+                                'Eliminado',
+                                message,
+                                'success'
+                            );
+
+                            // Opcional: eliminar el elemento del DOM o recargar la página
+                            location.reload(); // Recargar la página para reflejar los cambios
+                        
+                        } else if (response.status === 404) {
+                            throw new Error("El archivo no fue encontrado.");
+                        }else if(response.status === 403){
+                            throw new Error("Este archivo está protegido y no se puede eliminar");
+                        }
+                         else {
+                            throw new Error("Ocurrió un error inesperado.");
+                        }
+                    } catch (error) {
+                        // Mostrar mensaje de error
+                        await Swal.fire(
+                            'Error',
+                            error.message,
+                            'error'
+                        );
+                    }
+                }
+        }
+    })
+</script>
