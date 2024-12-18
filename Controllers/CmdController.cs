@@ -1086,6 +1086,36 @@ public class ComputerSystem
     public int WakeUpType { get; set; }
     public object Workgroup { get; set; }
 }
+
+[HttpPost]
+public async Task<IActionResult> GetBiosSerialNumber(string ip)
+    {
+        try
+        {
+            string computerName = ip;
+            string serialNumber = "";
+
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
+
+            ObjectQuery query = new ObjectQuery("SELECT SerialNumber FROM Win32_BIOS");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                serialNumber = obj["SerialNumber"]?.ToString();
+                break; // Assuming only one BIOS entry
+            }
+
+            return Json(new { serialNumber = serialNumber });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> ObtenerInfoDeviceWmi(string ip)
     {

@@ -40,7 +40,8 @@ import {
   DeleteTempEquipoComputo,
   GetProcessEquipoComputo,
   GetUsersInfoEquipoComputo,
-  GetPuntoRestauracion
+  GetPuntoRestauracion,
+  GetBiosSerialNumber
 } from "./cmdIndex.js";
 
 import { hideLoading, showLoading, showModal } from "./utils.js";
@@ -1161,6 +1162,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.target.reset()
   })
 
+  btnObtenerSerialNumber.addEventListener("click",async ()=>{
+
+    const formData = new FormData()
+    formData.append("ip",hostnameGlobal)
+
+    const data = await GetBiosSerialNumber(formData)
+
+    console.log(data)
+
+    // Swal.fire({
+    //   title: 'Serial Number',
+    //   input: 'text',
+    //   inputValue: data.serialNumber, // Set the serial number as the input value
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Copy',
+    //   preConfirm: () => {
+    //     const inputValue = Swal.getInput().value;
+    //     // Optionally, you can copy the value to the clipboard
+    //     navigator.clipboard.writeText(inputValue).then(() => {
+    //       Swal.fire('Copied!', 'The serial number has been copied to your clipboard.', 'success');
+    //     });
+    //   }
+    // });
+    await Swal.fire({
+      title: "Enter your Serial Number",
+      input: "text",
+      inputLabel: "Your Serial Number",
+      inputValue: data.serialNumber,
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to write something!";
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(`Your Serial Number is ${result.value}`);
+      }
+    });
+  
+
+  })
 
 
 }); // ! FINN EVENTO ONLOAD

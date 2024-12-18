@@ -504,6 +504,35 @@ export const GetPuntoRestauracion = async (formData) => {
 
 }
 
+export const GetBiosSerialNumber = async (formData) => {
+    showLoading();
+  
+    try {
+      const respuesta = await fetch("/Cmd/GetBiosSerialNumber", {
+        method: 'POST',
+        body: formData,
+      });
+  
+      // Verifica si la respuesta es exitosa
+      if (!respuesta.ok) {
+        throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+      }
+  
+      const dataResponse = await respuesta.json();
+  
+      return dataResponse;
+    } catch (error) {
+      console.error("Error al obtener serial number de BIOS:", error);
+      Swal.fire({
+        icon: "error",
+        text: "Error al obtener serial number de BIOS. Inténtalo de nuevo más tarde. "+error.message,
+      });
+    } finally {
+      hideLoading();
+    }
+
+}
+
 
 
 
