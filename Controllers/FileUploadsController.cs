@@ -7,7 +7,10 @@ using Newtonsoft.Json;
 
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using System.Text;
+using System.Net;
 namespace LinePatrol.Controllers;
+
 
 public class FileUploadsController : Controller
 {
@@ -80,7 +83,32 @@ public class FileUploadsController : Controller
             filePath = $"uploads/{nombreArchivo}"
         };
 
+        // OBTENER HOSTNAME E IP
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string hostName = string.Empty;
+
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                try
+                {
+                    var hostEntry = Dns.GetHostEntry(ipAddress);
+                    hostName = hostEntry.HostName;
+                }
+                catch (Exception ex)
+                {
+                    hostName = "NOT DEFINED";
+                }
+            }
+
         var cliente = new HttpClient();
+
+          string headerValue = ipAddress + ":" + hostName;
+
+
+            // Agregar el encabezado personalizado
+            cliente.DefaultRequestHeaders.Add("X-Custom-Host", headerValue);
+
+
 
         await cliente.PostAsJsonAsync("http://localhost:3000/api/files", payload);
 
@@ -119,20 +147,44 @@ public class FileUploadsController : Controller
         try
         {
             var payload = new
-        {
-            filePath = filePath
-        };
+            {
+                filePath = filePath
+            };
+
+            // OBTENER HOSTNAME E IP
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            string hostName = string.Empty;
+
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                try
+                {
+                    var hostEntry = Dns.GetHostEntry(ipAddress);
+                    hostName = hostEntry.HostName;
+                }
+                catch (Exception ex)
+                {
+                    hostName = "NOT DEFINED";
+                }
+            }
+
 
             var cliente = new HttpClient();
 
-        var response = await cliente.PutAsJsonAsync($"http://localhost:3000/api/files", payload);
+            string headerValue = ipAddress + ":" + hostName;
 
 
-        // Asegúrate de que la respuesta fue exitosa
-        if (!response.IsSuccessStatusCode)
-        {
-            return StatusCode(403, "Este archivo está protegido y no se puede eliminar.");
-        }
+            // Agregar el encabezado personalizado
+            cliente.DefaultRequestHeaders.Add("X-Custom-Host", headerValue);
+
+            var response = await cliente.PutAsJsonAsync($"http://localhost:3000/api/files", payload);
+
+
+            // Asegúrate de que la respuesta fue exitosa
+            if (!response.IsSuccessStatusCode)
+            {
+                return StatusCode(403, "Este archivo está protegido y no se puede eliminar.");
+            }
 
             // Construir la ruta absoluta
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);

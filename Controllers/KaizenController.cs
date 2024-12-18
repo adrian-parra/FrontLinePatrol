@@ -47,7 +47,7 @@ public class KaizenController : Controller
 
         if (response.IsSuccessStatusCode)
         {
-                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         string hostName = string.Empty;
 
         if (!string.IsNullOrEmpty(ipAddress))
