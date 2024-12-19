@@ -831,7 +831,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       return
     }
 
-    console.log(userName)
 
     const extractedUser = userName.split('\\')[1]; // Divide la cadena y toma el segundo elemento
 
@@ -839,7 +838,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const deleteTemp = await DeleteTempEquipoComputo(formData)
 
-    console.log(deleteTemp)
 
   })
 
@@ -847,10 +845,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formData = new FormData()
     formData.append("ip", hostnameGlobal)
 
-    const data = await GetProcessEquipoComputo(formData)
-
-
-
+    let data = await GetProcessEquipoComputo(formData)
 
     let content = "<div class='container-items-process'></div>";
     // Convertir la cadena HTML en un elemento DOM
@@ -861,28 +856,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       container.querySelector(
         ".container-items-process"
       ).innerHTML += `<div class="item" style="display:flex;flex-direction:column;justify-content:left;align-items:left;text-align:left;padding:10px;">
-        <p><span class="text-white bg-success p-1 text-proccess-open" style="padding:10px;border-radius:4px;cursor:pointer"> ${item.name}</span></p>
+        <p><span class="text-white bg-primary p-1 text-proccess-open" style="padding:10px;border-radius:4px;cursor:pointer"> ${item.name} <i class="fas fa-hand-pointer"></i></span></p>
       </div>
       <hr>`
     })
 
-    // Usar innerHTML para obtener el contenido HTML del contenedor
-    Swal.fire({
-      html: container.innerHTML, // Cambiar aquí para usar innerHTML
-      allowOutsideClick: false,
-      preConfirm: () => {
-        // Abrir la segunda alerta si se confirma
-        // abrirAlerta();
-        //return false; // Evita cerrar el modal
-      }
-    });
+    showModal(exampleModalCerrarSoftwareEquipoComputo)
+
+    containerListSoftwareAbierto.innerHTML = container.innerHTML
 
     document.querySelector(".container-items-process").addEventListener("click", async (e) => {
       console.log(e.target)
       if (e.target.closest('.item')) {
         const itemName = e.target.closest('.item').querySelector('span').textContent;
-        console.log(`Se hizo clic en el item: ${itemName}`);
-
 
         var dataForm = new FormData()
         dataForm.append("ip", hostnameGlobal)
@@ -899,11 +885,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           cancelButtonText: "Cancelar",
         }).then(async (result) => {
           if (result.isConfirmed) {
-            // Swal.fire(
-            //     'Cerrando!',
-            //     'La aplicación se cerrará ahora.',
-            //     'success'
-            // );
             showLoading();
             await cerrarAppWmi(dataForm);
             hideLoading();
@@ -1131,41 +1112,41 @@ document.addEventListener("DOMContentLoaded", async () => {
   btnBuscarEstadisticasSoportesPorMes.addEventListener("click", () => pintarGraficasEstadisticasDeSoportes(inputMesEstadisticasSoportes.value.trim()))
 
 
-  $btnAccionesDispositivoTemporal.addEventListener("click",()=>{
+  $btnAccionesDispositivoTemporal.addEventListener("click", () => {
     showModal($modalAccionesDispositivoTemporal)
   })
 
-  $formDispositivoTemporal.addEventListener("submit", async (e)=>{
+  $formDispositivoTemporal.addEventListener("submit", async (e) => {
     e.preventDefault()
     const dataForm = new FormData(e.target)
 
-   hostnameGlobal = dataForm.get("inputHostnameTemporal")
+    hostnameGlobal = dataForm.get("inputHostnameTemporal")
 
- document.querySelector(
-   "#exampleModalAccionesLabel"
- ).textContent = `Acciones para ${hostnameGlobal}`;
+    document.querySelector(
+      "#exampleModalAccionesLabel"
+    ).textContent = `Acciones para ${hostnameGlobal}`;
 
- //VERIFICAR LA CONEXION DE HOST
- const testConection = await ping(hostnameGlobal)
+    //VERIFICAR LA CONEXION DE HOST
+    const testConection = await ping(hostnameGlobal)
 
- if (testConection.estatus == "ok") {
-   document.querySelector(".test-conection").classList.add("bg-success")
-   document.querySelector(".test-conection").classList.remove("bg-danger")
-   document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
- } else {
-   document.querySelector(".test-conection").classList.add("bg-danger")
-   document.querySelector(".test-conection").classList.remove("bg-success")
-   document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
- }
+    if (testConection.estatus == "ok") {
+      document.querySelector(".test-conection").classList.add("bg-success")
+      document.querySelector(".test-conection").classList.remove("bg-danger")
+      document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
+    } else {
+      document.querySelector(".test-conection").classList.add("bg-danger")
+      document.querySelector(".test-conection").classList.remove("bg-success")
+      document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
+    }
 
- showModal($modalExampleModalAccionesRegistro);
+    showModal($modalExampleModalAccionesRegistro);
     e.target.reset()
   })
 
-  btnObtenerSerialNumber.addEventListener("click",async ()=>{
+  btnObtenerSerialNumber.addEventListener("click", async () => {
 
     const formData = new FormData()
-    formData.append("ip",hostnameGlobal)
+    formData.append("ip", hostnameGlobal)
 
     const data = await GetBiosSerialNumber(formData)
 
@@ -1201,7 +1182,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Swal.fire(`Your Serial Number is ${result.value}`);
       }
     });
-  
+
 
   })
 
@@ -1261,14 +1242,14 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         shadowOffsetY: 2,
         shadowColor: 'rgba(0, 0, 0, 0.2)',
         shadowBlur: 5,
-         // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
-         datalabels: {
+        // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
+        datalabels: {
           formatter: (value) => value, // Mostrar el valor total
           font: {
-              size: '0', // Tamaño de la fuente
+            size: '0', // Tamaño de la fuente
           },
-      }
-    },{
+        }
+      }, {
         label: 'Total',
         type: 'line',
         data: data.map(item => item.total), // Asegúrate de que 'gastos' sea el campo correcto
@@ -1279,18 +1260,18 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         pointRadius: 15, // Tamaño de los puntos
         pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color de los puntos
         pointBorderColor: '#fff', // Color del borde de los puntos
-        pointHoverRadius: 16 , // Tamaño de los puntos al pasar el mouse
+        pointHoverRadius: 16, // Tamaño de los puntos al pasar el mouse
         datalabels: {
           formatter: (value) => value, // Mostrar el valor total
           color: 'white', // Color del texto
           font: {
-              weight: 'bold',
-              size: '20', // Tamaño de la fuente
+            weight: 'bold',
+            size: '20', // Tamaño de la fuente
           },
           offset: 4 // Espaciado entre la barra y la etiqueta
-      }
-       
-    }]
+        }
+
+      }]
     },
     options: {
       scales: {
@@ -1301,9 +1282,9 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
       plugins: {
         // Solo incluir el plugin de etiquetas de datos aquí
         datalabels: {
-            display: true // Desactivar el plugin de etiquetas de datos globalmente
+          display: true // Desactivar el plugin de etiquetas de datos globalmente
         }
-    }
+      }
     },
     plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
   });
@@ -1327,14 +1308,14 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         shadowOffsetY: 2,
         shadowColor: 'rgba(0, 0, 0, 0.2)',
         shadowBlur: 5,
-         // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
-         datalabels: {
+        // Configuración del plugin de etiquetas de datos solo para la gráfica de barras
+        datalabels: {
           formatter: (value) => value, // Mostrar el valor total
           font: {
-              size: '0', // Tamaño de la fuente
+            size: '0', // Tamaño de la fuente
           },
-      }
-      },{
+        }
+      }, {
         label: 'Total',
         type: 'line',
         data: estatisticasSemanas.map(item => item.total), // Asegúrate de que 'gastos' sea el campo correcto
@@ -1345,18 +1326,18 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
         pointRadius: 15, // Tamaño de los puntos
         pointBackgroundColor: 'rgba(255, 99, 132, 1)', // Color de los puntos
         pointBorderColor: '#fff', // Color del borde de los puntos
-        pointHoverRadius: 16 , // Tamaño de los puntos al pasar el mouse
+        pointHoverRadius: 16, // Tamaño de los puntos al pasar el mouse
         datalabels: {
           formatter: (value) => value, // Mostrar el valor total
           color: 'white', // Color del texto
           font: {
-              weight: 'bold',
-              size: '20', // Tamaño de la fuente
+            weight: 'bold',
+            size: '20', // Tamaño de la fuente
           },
           offset: 4 // Espaciado entre la barra y la etiqueta
-      }
-       
-    }]
+        }
+
+      }]
     },
     options: {
       scales: {
@@ -1367,9 +1348,9 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
       plugins: {
         // Solo incluir el plugin de etiquetas de datos aquí
         datalabels: {
-            display: true // Desactivar el plugin de etiquetas de datos globalmente
+          display: true // Desactivar el plugin de etiquetas de datos globalmente
         }
-    }
+      }
     },
     plugins: [ChartDataLabels] // Asegúrate de incluir el plugin aquí
   });

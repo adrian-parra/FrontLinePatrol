@@ -12,9 +12,11 @@
   color: red;
 }
 
+/* APLICAR SCROLL A MODALES*/
 #exampleModalSoportesHoy .modal-body,
 #exampleModalObtenerSoporteEquipoComputo .modal-body,
-#exampleModalEstadisticasSoportes .modal-body {
+#exampleModalEstadisticasSoportes .modal-body,
+#exampleModalCerrarSoftwareEquipoComputo .modal-body {
   max-height: calc(100vh - 150px);
   overflow: auto;
 }
