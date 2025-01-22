@@ -1088,6 +1088,51 @@ public class ComputerSystem
 }
 
 [HttpPost]
+public async Task<IActionResult> GetStatusUpdateAutomatic(string ip){
+    {
+        try
+        {
+            string computerName = ip;
+            string automaticUpdatesStatus = "";
+
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
+
+            //ObjectQuery query = new ObjectQuery("SELECT AutomaticUpdatesEnabled FROM Win32_OperatingSystem");
+            ObjectQuery query = new ObjectQuery("SELECT Name, State, StartMode FROM Win32_Service WHERE Name='wuauserv'");
+
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+            foreach (ManagementObject service in searcher.Get())
+            {
+                //automaticUpdatesStatus = obj["AutomaticUpdatesEnabled"]?.ToString();
+
+                //break; // Assuming only one OS entry
+                string name = service["Name"]?.ToString();
+                    string state = service["State"]?.ToString();
+                    string startMode = service["StartMode"]?.ToString();
+
+                    return Ok(new
+                    {
+                        ServiceName = name,
+                        State = state,
+                        StartMode = startMode
+                    });
+            }
+
+            //return Json(new { automaticUpdatesStatus = automaticUpdatesStatus });
+            // Si no se encuentra el servicio
+            return NotFound("El servicio 'wuauserv' no se encontró en el equipo remoto.");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+}
+
+[HttpPost]
 public async Task<IActionResult> GetBiosSerialNumber(string ip)
     {
         try

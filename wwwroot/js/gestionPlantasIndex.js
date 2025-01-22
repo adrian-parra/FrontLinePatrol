@@ -637,10 +637,11 @@ export const obtenerSoportesHoy =  async ()=>{
     <table  class="table table-hover table-bordered">
         <thead class="table-dark">
             <tr>
+                <th style="min-width: 80px;" scope="col">Planta</th>
                 <th scope="col">Linea</th>
                 <th scope="col">Estación/Ubicación</th>
-                <th scope="col">Problema/Descripción</th>
-                <th scope="col">Solución/Acción</th>
+                <th style="min-width: 200px;" scope="col">Problema/Descripción</th>
+                <th style="min-width: 200px;" scope="col">Solución/Acción</th>
                  <th scope="col">Responsable</th>
                 <th scope="col">Estado/Situación</th>
                 <th scope="col">Cambio de Es.</th>
@@ -648,14 +649,20 @@ export const obtenerSoportesHoy =  async ()=>{
         </thead>
         <tbody>
     `;
-  
+  console.log(datos)
     // Agregar los datos a la tabla
     datos.forEach(item => {
         
         tablaHTML += `
+        
             <tr >
                 <td style="display:none;" class="id-soporte">${item.id}</td>
-                <td><span class="text-extra">${item.equipoComputo.lineas[0].linea.nombre === "NO APLICA MCH3" ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}</span></td>
+                <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].linea.planta.nombre}</span></td>
+               <td>
+    <span class="text-extra">
+        ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
+    </span>
+</td>
                 <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
                 <td><span class="text-extra">${item.descripcion}</span></td>
                 <td><span class="text-extra">${item.solucion}</span></td>

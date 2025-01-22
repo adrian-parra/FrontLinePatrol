@@ -49,7 +49,7 @@ p{
 #exampleModalSoportesHoy .modal-dialog,
 #exampleModalObtenerSoporteEquipoComputo .modal-dialog,
 #exampleModalEstadisticasSoportes .modal-dialog {
-  max-width: 970px !important;
+  max-width: 1200px !important;
 }
 
 #exampleModalSoportesHoy .container-soportes .table tr,
