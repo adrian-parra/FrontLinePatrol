@@ -143,6 +143,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div class="container-filter-soportes">
+          <div class="input-group mb-3" style="max-width: 600px;">
+            <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
+            <input type="date" id="fechaInicio" name="fecha_inicio" class="form-control" aria-label="Fecha Inicio" aria-describedby="basic-addon1" />
+            <span class="input-group-text" id="basic-addon2">Fecha Fin</span>
+            <input type="date" id="fechaFin" name="fecha_fin" class="form-control" aria-label="Fecha Fin" aria-describedby="basic-addon2" />
+            <button class="btn btn-outline-secondary" type="button" id="btnBuscarSoporteHoy">Buscar</button>
+          </div>
+        </div>
         <div class="container-soportes">
 
         </div>
@@ -894,6 +903,10 @@
           <div class="mb-2">
             <label for="">Responsable </label>
             <input type="text" class="form-control form-control-sm" name="responsable" placeholder="Adrian Parra">
+          </div>
+          <div class="mb-2">
+            <label for="">Requerido por </label>
+            <input type="text" class="form-control form-control-sm" name="requeridoPor" placeholder="Ramon Almeida">
           </div>
           <div class="mb-2">
             <label class="form-label">Estado</label>

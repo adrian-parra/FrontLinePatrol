@@ -20,7 +20,8 @@ import {
   completarSoporte,
   SoportesPorHostname,
   obtenerTopSoportes,
-  obtenerSoportesSemana
+  obtenerSoportesSemana,
+  ObtenerSoportesPorFechas
 } from "./gestionPlantasIndex.js";
 import {
   restartDeviceWmi,
@@ -264,6 +265,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       //extra
       "pageLength",
     ],
+  });
+
+  btnBuscarSoporteHoy.addEventListener("click", async () => {
+    const fechaInicio = document.querySelector("#fechaInicio").value;
+    const fechaFin = document.querySelector("#fechaFin").value;
+
+    const formData = new FormData();
+    formData.append("fechaInicio", fechaInicio);
+    formData.append("fechaFin", fechaFin);
+
+    console.log(fechaInicio);
+    console.log(fechaFin);
+
+    const soportes = await ObtenerSoportesPorFechas(formData);
+
+    // await getSoportes(formData);
   });
 
   $btnConfirmarPlanta.addEventListener("click", async () => {

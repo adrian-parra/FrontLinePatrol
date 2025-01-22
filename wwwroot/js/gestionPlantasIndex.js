@@ -615,6 +615,70 @@ export const SoportesPorHostname = ({soportes})=>{
     containerSoportes.innerHTML = tablaHTML;
 }
 
+const pintarSoportesTable = (datos) => {
+  const containerSoportes = document.querySelector(".container-soportes")
+  
+  containerSoportes.innerHTML = ``
+
+  // Crear una variable para almacenar el contenido de la tabla
+  let tablaHTML = `
+  <table  class="table table-hover table-bordered">
+      <thead class="table-dark">
+          <tr>
+              <th style="min-width: 80px;" scope="col">Planta</th>
+              <th scope="col">Linea</th>
+              <th scope="col">Estación/Ubicación</th>
+              <th style="min-width: 200px;" scope="col">Problema/Descripción</th>
+              <th style="min-width: 200px;" scope="col">Solución/Acción</th>
+               <th scope="col">Responsable</th>
+               <th scope="col">Requerido por</th>
+              <th scope="col">Estado/Situación</th>
+              <th scope="col">Cambio de Es.</th>
+          </tr>
+      </thead>
+      <tbody>
+  `;
+  
+  // Agregar los datos a la tabla
+  datos.forEach(item => {
+      
+      tablaHTML += `
+      
+          <tr >
+              <td style="display:none;" class="id-soporte">${item.id}</td>
+              <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].linea.planta.nombre}</span></td>
+             <td>
+  <span class="text-extra">
+      ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
+  </span>
+</td>
+              <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
+              <td><span class="text-extra">${item.descripcion}</span></td>
+              <td><span class="text-extra">${item.solucion}</span></td>
+              <td><span class="text-extra">${item.responsable}</span></td>
+              <td><span class="text-extra">${item.requeridoPor ? item.requeridoPor : 'N/A'}</span></td>
+              <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+              <td>
+                  <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
+      class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
+  <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
+  ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
+</button>
+              </td>
+          </tr>
+      `;
+  });
+
+  // Cerrar las etiquetas de la tabla
+  tablaHTML += `
+      </tbody>
+  </table>
+  `;
+
+  // Asignar el contenido de la tabla al contenedor
+  containerSoportes.innerHTML = tablaHTML;
+}
+
 export const obtenerSoportesHoy =  async ()=>{
 
   try {
@@ -627,66 +691,8 @@ export const obtenerSoportesHoy =  async ()=>{
     
     const datos = await response.json();
 
+    pintarSoportesTable(datos)
 
-    const containerSoportes = document.querySelector(".container-soportes")
-  
-    containerSoportes.innerHTML = ``
-  
-    // Crear una variable para almacenar el contenido de la tabla
-    let tablaHTML = `
-    <table  class="table table-hover table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th style="min-width: 80px;" scope="col">Planta</th>
-                <th scope="col">Linea</th>
-                <th scope="col">Estación/Ubicación</th>
-                <th style="min-width: 200px;" scope="col">Problema/Descripción</th>
-                <th style="min-width: 200px;" scope="col">Solución/Acción</th>
-                 <th scope="col">Responsable</th>
-                <th scope="col">Estado/Situación</th>
-                <th scope="col">Cambio de Es.</th>
-            </tr>
-        </thead>
-        <tbody>
-    `;
-  console.log(datos)
-    // Agregar los datos a la tabla
-    datos.forEach(item => {
-        
-        tablaHTML += `
-        
-            <tr >
-                <td style="display:none;" class="id-soporte">${item.id}</td>
-                <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].linea.planta.nombre}</span></td>
-               <td>
-    <span class="text-extra">
-        ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
-    </span>
-</td>
-                <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
-                <td><span class="text-extra">${item.descripcion}</span></td>
-                <td><span class="text-extra">${item.solucion}</span></td>
-                <td><span class="text-extra">${item.responsable}</span></td>
-                <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
-                <td>
-                    <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
-        class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
-    <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
-    ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
-</button>
-                </td>
-            </tr>
-        `;
-    });
-  
-    // Cerrar las etiquetas de la tabla
-    tablaHTML += `
-        </tbody>
-    </table>
-    `;
-  
-    // Asignar el contenido de la tabla al contenedor
-    containerSoportes.innerHTML = tablaHTML;
     return datos;
   } catch (error) {
     console.log(error);
@@ -779,6 +785,35 @@ export const obtenerSoportesSemana = async (formData)=>{
     Swal.fire({
       icon: "error",
       text: "Error al obtener soportes de la semana, " + (error.message || "desconocido")
+    });
+  }finally{
+    hideLoading()
+  }
+
+}
+
+export const ObtenerSoportesPorFechas = async (formData)=>{
+  try {
+
+    console.log(formData.get("fechaInicio"))
+    console.log(formData.get("fechaFin"))
+    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio")  + "&fechaFin=" + formData.get("fechaFin"));
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+
+    pintarSoportesTable(data)
+    return data;
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: "error",
+      text: "Error al obtener soportes por fechas, " + (error.message || "desconocido")
     });
   }finally{
     hideLoading()

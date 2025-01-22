@@ -524,6 +524,26 @@ public class GestionPlantasController : Controller
         return BadRequest();
     }
 
+    [HttpGet]
+    public async Task<IActionResult> ObtenerSoportesPorFechas(string fechaInicio,string fechaFin)
+    {
+        var cliente = new HttpClient();
+
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo/soporte/dia/?fecha_inicio={fechaInicio}&fecha_fin={fechaFin}");
+
+        if (response.IsSuccessStatusCode)
+        {
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return Content(respuesta);
+
+        }
+
+        return BadRequest();
+    }
+
+
      [HttpGet]
     public async Task<IActionResult> ObtenerSoportesHoy()
     {
@@ -591,6 +611,7 @@ public class GestionPlantasController : Controller
             descripcion = soporteDto.Descripcion, 
             solucion = soporteDto.Solucion, 
             responsable = soporteDto.Responsable, 
+            requeridoPor = soporteDto.RequeridoPor,
             idEquipoComputo = soporteDto.IdEquipoComputo, 
             estado = soporteDto.Estado
         };
@@ -661,6 +682,7 @@ public class GestionPlantasController : Controller
         public string Descripcion { get; set;}
         public string? Solucion { get; set; }
         public string Responsable { get; set; }
+        public string? RequeridoPor { get; set; }
         public string Estado { get; set; } //"Pendiente", "En Proceso", "Resuelto"
         public string IdEquipoComputo { get; set; }
     }
