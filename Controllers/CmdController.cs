@@ -1160,6 +1160,95 @@ public async Task<IActionResult> GetBiosSerialNumber(string ip)
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> GetStatusCpuAndMemory(string ip)
+    {
+        try
+        {
+            string computerName = ip;
+            string cpuName = "";
+            string cpuSpeed = "";
+            string cpuCores = "";
+            string cpuThreads = "";
+            string cpuManufacturer = "";
+            string memoryCapacity = "";
+            string memorySpeed = "";
+
+            ManagementScope scope = new ManagementScope($"\\\\{computerName}\\root\\cimv2");
+            scope.Connect();
+
+            ObjectQuery query = new ObjectQuery("SELECT Name, MaxClockSpeed, NumberOfCores, NumberOfLogicalProcessors, Manufacturer FROM Win32_Processor");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                cpuName = obj["Name"]?.ToString();
+                cpuSpeed = obj["MaxClockSpeed"]?.ToString();
+                cpuCores = obj["NumberOfCores"]?.ToString();
+                cpuThreads = obj["NumberOfLogicalProcessors"]?.ToString();
+                cpuManufacturer = obj["Manufacturer"]?.ToString();
+                break; // Assuming only one CPU entry
+            }
+
+            ObjectQuery memoryQuery = new ObjectQuery("SELECT Capacity, Speed FROM Win32_PhysicalMemory");
+            ManagementObjectSearcher memorySearcher = new ManagementObjectSearcher(scope, memoryQuery);
+
+            foreach (ManagementObject memoryObj in memorySearcher.Get())
+            {
+                memoryCapacity = memoryObj["Capacity"]?.ToString();
+                memorySpeed = memoryObj["Speed"]?.ToString();
+                break; // Assuming only one memory entry
+            }
+
+            // CPU Usage
+            double cpuUsage = 0;
+            var searcherCpuUsage = new ManagementObjectSearcher(scope,
+                new ObjectQuery("SELECT PercentProcessorTime FROM Win32_PerfFormattedData_PerfOS_Processor WHERE Name='_Total'"));
+            foreach (ManagementObject obj in searcherCpuUsage.Get())
+            {
+                cpuUsage = Convert.ToDouble(obj["PercentProcessorTime"]?.ToString() ?? "0");
+                break;
+            }
+
+            // Memory Usage
+            double memoryUsage = 0;
+            double availableMemoryGB = 0;
+            double totalMemoryGB = 0;
+            var searcher2 = new ManagementObjectSearcher(scope,
+                new ObjectQuery("SELECT FreePhysicalMemory, TotalVisibleMemorySize FROM Win32_OperatingSystem"));
+            foreach (ManagementObject obj in searcher2.Get())
+            {
+                double freeMemoryKB = Convert.ToDouble(obj["FreePhysicalMemory"]?.ToString() ?? "0");
+                double totalMemoryKB = Convert.ToDouble(obj["TotalVisibleMemorySize"]?.ToString() ?? "0");
+                double usedMemoryKB = totalMemoryKB - freeMemoryKB;
+                memoryUsage = Math.Round((usedMemoryKB / totalMemoryKB) * 100, 2);
+                availableMemoryGB = Math.Round(freeMemoryKB / (1024 * 1024), 2);
+                totalMemoryGB = Math.Round(totalMemoryKB / (1024 * 1024), 2);
+                break;
+            }
+
+            return Json(new
+            {
+                cpuName = cpuName,
+                cpuSpeed = cpuSpeed,
+                cpuCores = cpuCores,
+                cpuThreads = cpuThreads,
+                cpuManufacturer = cpuManufacturer,
+                memoryCapacity = memoryCapacity,
+                memorySpeed = memorySpeed,
+                cpuUsagePercentage = $"{Math.Round(cpuUsage, 2):F2}%",
+                cpuUsage = cpuUsage,
+                memoryUsagePercentage = $"{memoryUsage:F2}%",
+                memoryUsage = memoryUsage,
+                availableMemoryGB = $"{availableMemoryGB:F2} GB",
+                totalMemoryGB = $"{Math.Round(Convert.ToDouble(memoryCapacity) / (1024 * 1024 * 1024), 2):F2} GB"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
 
     [HttpPost]
     public async Task<IActionResult> ObtenerInfoDeviceWmi(string ip)
