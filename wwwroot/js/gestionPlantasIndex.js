@@ -9,83 +9,61 @@ import {
 from "/js/utils.js";
 
 
-export const obtenerEquiposComputo = async (dataForm) =>{
+export const obtenerEquiposComputo = async (dataForm) => {
+    showLoading();
 
-    showLoading()
+    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + dataForm.get("idPlanta") || "");
+    const data = await response.json();
 
-    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + dataForm.get("idPlanta") || "")
-
-    const data = await response.json()
-
-
+    // Usar template literals y reduce para construcción de tabla más eficiente
+    const tableRows = data.reduce((html, equipo) => {
+        const lineaData = equipo.lineas[0] || {};
+        return html + `
+            <tr>
+                <td id="idEquipo" style="display:none;">${equipo.id || '<span class="text-danger">N/A</span>'}</td>
+                <td>${lineaData.linea?.planta?.nombre || '<span class="text-danger">N/A</span>'}</td>
+                <td>${lineaData.linea?.nombre || '<span class="text-danger">N/A</span>'}</td>
+                <td>${lineaData.estacion?.nombre || '<span class="text-danger">N/A</span>'}</td>
+                <td id="hostname">${equipo.hostname || '<span class="text-danger">N/A</span>'}</td>
+                <td>
+                    <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles">
+                        <i class="fas fa-tasks"></i> Acciones
+                    </button>
+                </td>
+            </tr>
+        `;
+    }, '');
 
     $(".container-items").innerHTML = `
-    <table id="equiposTable" class="table">
-    <thead class="table-header">
-      <tr>
-        <th style="display:none;">ID</th>
-        <th>Planta</th>
-        <th>Línea</th>
-        <th>Estación/Ubicación</th>
-         <th>Hostname</th>
-        <th>Software</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody class="items-table">
-    </tbody>
-  </table>
+        <table id="equiposTable" class="table">
+            <thead class="table-header">
+                <tr>
+                    <th style="display:none;">ID</th>
+                    <th>Planta</th>
+                    <th>Línea</th>
+                    <th>Estación/Ubicación</th>
+                    <th>Hostname</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="items-table">${tableRows}</tbody>
+        </table>
     `;
 
-    data.forEach(equipo => {
-        const softwareNames = equipo.equiposComputoSoftware.map(s => s.software.nombre).join(', ');
-        const lineaData = equipo.lineas[0];
+    // Inicializar Tippy de manera más eficiente
+    requestAnimationFrame(() => {
+        tippy('[data-tippy-content]', {
+            animation: 'scale',
+            duration: [300, 200],
+            placement: 'top',
+            arrow: true,
+            delay: [100, 50]
+        });
+    });
 
-        $(".items-table").innerHTML += `
-     <tr>
-       <td  style="display:none;">
-         <p id="idEquipo" data-tippy-content="${equipo.id || 'Sin información'}">${equipo.id || '<span class="text-danger">N/A</span>'}</p>
-       </td>
-       <td>
-         <p data-tippy-content="${lineaData?.linea?.planta?.nombre || 'Sin información'}">${lineaData?.linea?.planta?.nombre ? lineaData.linea.planta.nombre : '<span class="text-danger">N/A</span>'}</p>
-       </td>
-       <td>
-         <p data-tippy-content="${lineaData?.linea?.nombre || 'Sin información'}">${lineaData?.linea?.nombre ? lineaData.linea.nombre : '<span class="text-danger">N/A</span>'}</p>
-       </td>
-       <td>
-         <p data-tippy-content="${lineaData?.estacion?.nombre || 'Sin información'}">${lineaData?.estacion?.nombre ? lineaData.estacion.nombre : '<span class="text-danger">N/A</span>'}</p>
-       </td>
-       <td>
-         <p id="hostname" data-tippy-content="${equipo.hostname || 'Sin información'}">${equipo.hostname ? equipo.hostname : '<span class="text-danger">N/A</span>'}</p>
-       </td>
-       <td>
-         <p data-tippy-content="${softwareNames || 'Sin información'}">${softwareNames ? softwareNames : '<span class="text-danger">N/A</span>'}</p>
-       </td>  
-       <td>
-         <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles"> <i class="fas fa-tasks"></i> Acciones</button>
-       </td>
-     </tr>
-     `;
-
-// Iniciar Tippy en los elementos que tengan data-tippy-content
-tippy('[data-tippy-content]', {
-  // theme: 'custom', // Aplica el tema personalizado
-  animation: 'scale', // Animación de escalado
-  duration: [300, 200], // Duración de la animación (entrada, salida)
-  placement: 'top', // Posición del tooltip
-  arrow: true, // Mostrar la flecha del tooltip
-  delay: [100, 50], // Retraso al mostrar (entrada, salida)
-  //maxWidth: 200, // Ancho máximo del tooltip
-});
-
-    })
-
-    hideLoading()
-    return data
-
-
-
-}
+    hideLoading();
+    return data;
+};
 
 export const registrarEquipoComputo = async (formData) => {
   showLoading();

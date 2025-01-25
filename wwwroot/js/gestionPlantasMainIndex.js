@@ -111,49 +111,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   }
 
-  $("#equiposTable").DataTable({
-    language: {
-      url: "../lib/datatables/traslate/es/es-ES.json",
-    },
-    columnDefs: [
-      {
-        targets: 0,
-        visible: true,
-      },
-    ],
-    dom: "Bfrtip",
-    buttons: [
-      {
-        extend: "excelHtml5",
-        text: "Exportar Excel",
-        filename: "Reporte Empleados",
-        title: "",
-        exportOptions: {
-          columns: [1, 2, 3, 4, 5],
-        },
-        className: "btn-exportar-excel",
-      },
-      {
-        extend: "pdfHtml5",
-        text: "Exportar PDF",
-        filename: "Reporte de equipo de",
-        title: "",
-        exportOptions: {
-          columns: [1, 2, 3, 4, 5],
-        },
-        className: "btn-exportar-pdf",
-      },
-      {
-        extend: "print",
-        title: "",
-        exportOptions: {
-          columns: [1, 2, 3, 4, 5],
-        },
-        className: "btn-exportar-print",
-      },
-      "pageLength",
-    ],
-  });
+  function initDataTable() {
+      return $("#equiposTable").DataTable({
+          language: {
+              url: "../lib/datatables/traslate/es/es-ES.json",
+          },
+          columnDefs: [{
+              targets: 0,
+              visible: true,
+          }],
+          dom: "Bfrtip",
+          buttons: [
+              {
+                  extend: "excelHtml5",
+                  text: "Exportar Excel",
+                  filename: "Reporte Empleados",
+                  exportOptions: { columns: [1, 2, 3, 4] },
+                  className: "btn-exportar-excel",
+              },
+              {
+                  extend: "pdfHtml5",
+                  text: "Exportar PDF",
+                  filename: "Reporte de equipo de",
+                  exportOptions: { columns: [1, 2, 3, 4] },
+                  className: "btn-exportar-pdf",
+              },
+              {
+                  extend: "print",
+                  exportOptions: { columns: [1, 2, 3, 4] },
+                  className: "btn-exportar-print",
+              },
+              "pageLength",
+          ],
+          // Desactivar algunas características para mejorar rendimiento
+          processing: false,
+          deferRender: true,
+          scrollX: true,
+          pageLength: 10
+      });
+  }
+  
+  
 
   DOM.buttons.buscarSoporteHoy.addEventListener("click", async () => {
     const fechaInicio = document.querySelector("#fechaInicio").value;
@@ -181,6 +179,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   DOM.containers.items.addEventListener("click", async (e) => {
     const target = e.target;
+    console.log(target);
     if (target.id === "btnAcciones") {
 
       initAccionesEquipoSoftware(target)
@@ -418,6 +417,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     formData.append("ip", state.hostname);
 
     const data = await comandosWmi.obtenerInfoEquipoComputo(formData)
+
+    console.log(data)
 
     let htmlContent = ``
     data.forEach(item => {
@@ -1050,6 +1051,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   })
+
+
+  // Inicializar después de un breve retraso
+  //setTimeout(initDataTable, 100);
+  initDataTable();
 
 
 }); // ! FINN EVENTO ONLOAD

@@ -83,11 +83,9 @@ p{
   margin-bottom: var(--Margin);
 }
 
-/* #equiposTable{
-  border: 2px solid var(--ColorSecundario);
-  border-radius: 4px;
-  padding: 10px;
-} */
+#equiposTable {
+  padding: 0 !important;
+}
 #equiposTable th{
   padding: 0;
   border-bottom: 2px solid var(--ColorSecundario);
@@ -136,6 +134,11 @@ p{
     margin: 0 !important;
     width: 100% !important;
   }
+
+ .dataTables_scrollBody{
+  padding: 0 !important;
+  margin: 0 !important;
+ }
  
 
   .items-table {
@@ -350,6 +353,15 @@ p{
   .grid-container {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
+  #equiposTable {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+ .dataTables_scrollBody{
+  padding: 0 !important;
+  margin: 0 !important;
+ }
 
 }
 
