@@ -795,8 +795,6 @@ export const obtenerSoportesSemana = async (formData)=>{
 export const ObtenerSoportesPorFechas = async (formData)=>{
   try {
 
-    console.log(formData.get("fechaInicio"))
-    console.log(formData.get("fechaFin"))
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio")  + "&fechaFin=" + formData.get("fechaFin"));
 
