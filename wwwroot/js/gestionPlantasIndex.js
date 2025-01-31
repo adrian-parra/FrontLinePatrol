@@ -593,6 +593,12 @@ export const SoportesPorHostname = ({soportes})=>{
     containerSoportes.innerHTML = tablaHTML;
 }
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+// En tu función de renderizado
+
 const pintarSoportesTable = (datos) => {
   const containerSoportes = document.querySelector(".container-soportes")
   
@@ -624,20 +630,44 @@ const pintarSoportesTable = (datos) => {
       
           <tr >
               <td style="display:none;" class="id-soporte">${item.id}</td>
-              <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].linea.planta.nombre}</span></td>
-             <td>
-  <span class="text-extra">
-      ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
-  </span>
-</td>
-              <td><span class="text-extra estacion-ubicacion-soporte">${item.equipoComputo.lineas[0].estacion.nombre}</span></td>
-              <td><span class="text-extra">${item.descripcion}</span></td>
-              <td><span class="text-extra">${item.solucion}</span></td>
-              <td><span class="text-extra">${item.responsable}</span></td>
-              <td><span class="text-extra">${item.requeridoPor ? item.requeridoPor : 'N/A'}</span></td>
-              <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
+
               <td>
-                  <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
+                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                      ${item.equipoComputo.lineas[0].linea.planta.nombre}
+                  </span>
+              </td>
+              <td>
+                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                      ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
+                  </span>
+              </td>
+              <td>
+                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                      ${item.equipoComputo.lineas[0].estacion.nombre}
+                  </span>
+              </td>
+             
+              <td>
+                  <span class="text-extra fw-light text-wrap text-break">
+                      ${item.descripcion ? capitalizeFirstLetter(item.descripcion) : 'N/A'}
+                  </span>
+              </td>
+              <td>
+                  <span class="text-extra fw-light text-wrap text-break">
+                      ${item.solucion ? capitalizeFirstLetter(item.solucion) : 'N/A'}
+                  </span>
+              </td>
+             <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.responsable ? item.responsable : 'N/A'}</span></td>
+
+             <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.requeridoPor ? item.requeridoPor : 'N/A'}</span></td>
+
+             <td>
+                 <span class="${getEstadoClass(item.estado)} estado-soporte text-${getBootstrapColorForEstado(item.estado)} bg-${getBootstrapColorForEstado(item.estado)} bg-opacity-10 px-1 rounded text-uppercase fw-light">
+                     ${item.estado}
+                 </span>
+             </td>
+
+              <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
       class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
   <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
   ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
@@ -657,6 +687,15 @@ const pintarSoportesTable = (datos) => {
   containerSoportes.innerHTML = tablaHTML;
 }
 
+function getBootstrapColorForEstado(estado) {
+    switch(estado) {
+        case 'Pendiente': return 'warning';
+        case 'En Proceso': return 'primary';
+        case 'Resuelto': return 'success';
+        case 'Cancelado': return 'danger';
+        default: return 'secondary';
+    }
+}
 export const obtenerSoportesHoy =  async ()=>{
 
   try {
