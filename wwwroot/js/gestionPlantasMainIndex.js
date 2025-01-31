@@ -968,7 +968,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     state.data = await response.json()
 
-    const soportes = gestionPlantas.obtenerSoportesPorHostname(state.hostname)
+    const soportes = obtenerSoportesPorHostname(state.hostname)
 
     if (soportes.length == 0) {
       Swal.fire({
