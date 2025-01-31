@@ -144,12 +144,16 @@
       </div>
       <div class="modal-body">
         <div class="container-filter-soportes">
-          <div class="input-group mb-3" style="max-width: 600px;">
-            <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
-            <input type="date" id="fechaInicio" name="fecha_inicio" class="form-control" aria-label="Fecha Inicio" aria-describedby="basic-addon1" />
-            <span class="input-group-text" id="basic-addon2">Fecha Fin</span>
-            <input type="date" id="fechaFin" name="fecha_fin" class="form-control" aria-label="Fecha Fin" aria-describedby="basic-addon2" />
-            <button class="btn btn-outline-secondary" type="button" id="btnBuscarSoporteHoy">Buscar</button>
+          <div class="input-group mb-3" style="max-width: 800px;">
+              <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
+              <input type="date" id="fechaInicio" name="fecha_inicio" class="form-control" aria-label="Fecha Inicio" aria-describedby="basic-addon1" />
+              <input type="time" id="horaInicio" name="hora_inicio" class="form-control" aria-label="Hora Inicio" />
+              
+              <span class="input-group-text" id="basic-addon2">Fecha Fin</span>
+              <input type="date" id="fechaFin" name="fecha_fin" class="form-control" aria-label="Fecha Fin" aria-describedby="basic-addon2" />
+              <input type="time" id="horaFin" name="hora_fin" class="form-control" aria-label="Hora Fin" />
+              
+              <button class="btn btn-outline-secondary" type="button" id="btnBuscarSoporteHoy">Buscar</button>
           </div>
         </div>
         <div class="container-soportes">

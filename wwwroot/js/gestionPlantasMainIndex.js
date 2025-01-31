@@ -1,7 +1,7 @@
 // Importaciones agrupadas por módulo
 import * as gestionPlantas from "./gestionPlantasIndex.js";
 import * as comandosWmi from "./cmdIndex.js";
-import { hideLoading, showLoading, showModal } from "./utils.js";
+import { hideLoading, showLoading, showModal,convertiFechaAUTC } from "./utils.js";
 
 let myChart;
 let chartSemanasSoportes;
@@ -155,12 +155,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   DOM.buttons.buscarSoporteHoy.addEventListener("click", async () => {
     const fechaInicio = document.querySelector("#fechaInicio").value;
+    const horaInicio = document.querySelector("#horaInicio").value;
     const fechaFin = document.querySelector("#fechaFin").value;
+    const horaFin = document.querySelector("#horaFin").value;
+
+    const fechaInicioUTC = convertiFechaAUTC(fechaInicio, horaInicio);
+    const fechaFinUTC = convertiFechaAUTC(fechaFin, horaFin);
 
     const formData = new FormData();
-    formData.append("fechaInicio", fechaInicio);
-    formData.append("fechaFin", fechaFin);
-
+    formData.append("fechaInicio", fechaInicioUTC);
+    formData.append("fechaFin", fechaFinUTC);
+   
     await gestionPlantas.ObtenerSoportesPorFechas(formData);
 
     //await gestionPlantas.getSoportes(formData);

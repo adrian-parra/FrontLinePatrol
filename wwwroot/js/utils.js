@@ -68,3 +68,10 @@ export function diferenciaTiempo(createdAt, updatedAt) {
 
   return resultado.length > 0 ? resultado.join(", ") : "0 minutos";
 }
+
+export const convertiFechaAUTC = (fechaLocal,hora) =>{
+  const [yyyy, mm, dd] = fechaLocal.split("-");
+  const [hh, min] = hora.split(":");
+  const fechaUTC = new Date(Date.UTC(yyyy, mm - 1, dd, hh, min));
+  return fechaUTC.toISOString();
+}
