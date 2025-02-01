@@ -124,7 +124,7 @@
            // Configuración centralizada
            const CONFIG = {
                EMPLEADOS: [
-                   { numero: "256553", cumpleanos: "2005-01-31", nombreCompleto: "Juan Carlos Pérez Ramírez" },
+                   { numero: "256553", cumpleanos: "2005-02-01", nombreCompleto: "Juan Carlos Pérez Ramírez" },
                    { numero: "123456", cumpleanos: "2000-01-31", nombreCompleto: "María Elena Sánchez González" },
                    { numero: "789012", cumpleanos: "1995-07-30", nombreCompleto: "Luis Alberto Rodríguez Martínez" }
                ]
@@ -233,7 +233,38 @@
    
                mostrarInformacionEmpleado(empleado) {
                    if (this.elementoDisplay) {
-                       this.elementoDisplay.textContent = empleado.nombreCompleto;
+                    //    this.elementoDisplay.textContent = empleado.nombreCompleto;
+                       this.elementoDisplay.innerHTML = `
+                       <div class="nombre-empleado-checador">
+                           ${empleado.nombreCompleto}
+                       </div>
+                   `;
+
+                   // Agregar estilos dinámicos
+                   const styleId = 'nombre-empleado-styles';
+                   if (!document.getElementById(styleId)) {
+                       const style = document.createElement('style');
+                       style.id = styleId;
+                       style.textContent = `
+                           .nombre-empleado-checador {
+                               background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+                               color: white;
+                               padding: 15px 25px;
+                               border-radius: 15px;
+                               font-size: 24px;
+                               font-weight: bold;
+                               text-align: center;
+                               box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+                               text-transform: uppercase;
+                               letter-spacing: 1px;
+                               max-width: 100%;
+                               overflow: hidden;
+                               text-overflow: ellipsis;
+                               animation: fadeIn 0.5s ease-out;
+                           }
+                       `;
+                       document.head.appendChild(style);
+                   }
                    }
                },
                iniciarCarruselCumpleanos() {
@@ -295,7 +326,7 @@
                             <h3>${cumpleano.nombreCompleto}</h3>
                             
                             <div class="cumpleanos-insignia">
-                                Celebrando su día especial
+                                <i class="fas fa-birthday-cake me-2"></i>Celebrando su día especial
                             </div>
                         </div>
                     </div>
@@ -407,6 +438,7 @@
                mostrarMensajeError() {
                    if (this.elementoDisplay) {
                        this.elementoDisplay.textContent = "Número de reloj no encontrado";
+                       
                    }
                },
            avanzarCumpleanos() {
