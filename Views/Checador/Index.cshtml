@@ -121,29 +121,6 @@
    @section Scripts {
        <script>
 
-       const sendMessage = async ({ message ,number }) => {
-  try {
-    const response = await fetch(`http://localhost:3008/v1/messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        number: number,
-        message: message,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      const errorMessage = errorData.message || `Error HTTP: ${response.status} ${response.statusText}`;
-      throw new Error(errorMessage);
-    }
-  } catch (error) {
-    console.error("Error:", error);
-    throw error; // Re-lanzar el error para que lo maneje la capa superior
-  }
-};
            // Configuración centralizada
            const CONFIG = {
                EMPLEADOS: [
@@ -194,8 +171,7 @@
                    this.elementoClock = document.getElementById('clock');
                    this.actualizar();
                    this.animar();
-                   sendMessage({number:"5216683972780",message:"Se esta revisando checador web"});
-               },
+          },
    
                actualizar() {
                    if (this.elementoClock) {
