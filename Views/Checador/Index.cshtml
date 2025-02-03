@@ -9,33 +9,70 @@
             padding: 0 !important;
         }
          .app {
-            display: flex;
             padding: 0;
+            margin: 0;
             height: calc(100vh - 76px) !important;
             width: 100vw;
-            margin: 0;
             background-color: #4A92C5;
-
+            overflow: hidden;
             --color-text: #000080;
             --color-text-relog:#ffffff;
             --size-text: 24px;
             --size-text-relog: 58px;
          }
+         .app .container-app {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            height:100%;
+            width: 100%;
+         }
 
-         .app .container {
+         .app .container-app .checador {
             display: flex;
             align-items: center;
             flex-direction: column;
             gap: 10px;
+            padding:0 !important;
+            margin:0 !important;
+            width: 100%;
+            height: 100%;
          }
 
-         .app .container h4 {
-            color: var(--color-text);
-            font-size: var(--size-text);
+         .app .container-app .estadisticas {   
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            padding:0 !important;
+            margin:0 !important;
+            width: 100%;
+            height: 100%;
+
+        }
+
+        .app .container-app .estadisticas .grafica {
+            width: 100%;
+            height: 100%;
+            max-width:500px;
+            max-height:500px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding:10px;
+        }
+
+         .app .container-app h4 {
+            background-image: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
             font-weight: bold;
+            font-size: var(--size-text);
          }
 
-         .app .container time {
+         .app .container-app time {
             color: var(--color-text-relog);
             font-size: var(--size-text-relog);
             font-weight: bold;
@@ -46,7 +83,7 @@
             border: none;
             border-radius: 10px;
             font-size: calc(var(--size-text-relog) - 10px);
-            color: var(--color-text);
+            color: #4A92C5 !important;
             text-align: center;
             outline: none;
             max-width: 370px;
@@ -109,23 +146,46 @@
             animation: float-up linear forwards;
             opacity: 0.8;
         }
+        
 
     
     </style>
 }
    
    <div class="app">
-       <div class="container">
-           <h4>CONTEC SINALOA</h4>
-           <time id="clock" datetime="2025-02-02T20:29:02-07:00">06:29:09 PM</time>
-            <input id="numberInput" class="input-numero-relog" type="text" aria-label="Entrada de número">
-            <div id="inputDisplay" class="input-display" role="status"></div>
-            <div id="cumpleanosMensaje" class="input-display" role="alert"></div>
-       </div>
-   </div>
+    <div class="container-app">
+            <div class="checador">
+                <h4>CONTEC SINALOA</h4>
+                <time id="clock" datetime="2025-02-02T21:00:49-07:00">06:29:09 PM</time>
+                <input 
+                    id="numberInput" 
+                    class="input-numero-relog" 
+                    type="text" 
+                    aria-label="Entrada de número"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-lpignore="true"
+                    name="hidden"
+                >
+                <div id="inputDisplay" class="input-display" role="status"></div>
+                <div id="cumpleanosMensaje" class="input-display" role="alert"></div>
+            </div>
+            <div class="estadisticas">
+                <div class="grafica">
+                <canvas id="personnelChart" width="300" height="300"></canvas>
+                </div>
+            </div>
+    </div>
+</div>
    
    @section Scripts {
        <script>
+
+             const personnelData = {
+                direct: 45,
+                indirect: 30,
+                administrative: 15
+            };
 
            // Configuración centralizada
            const CONFIG = {
@@ -166,7 +226,150 @@
                   const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
                   
                   return `${hours}:${minutes}:${seconds} ${ampm}`;
+              },
+              actualizarGrafica(){
+                new Chart(document.getElementById('personnelChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Personal Directo', 'Personal Indirecto', 'Administrativos'],
+                        datasets: [{
+                            label: 'Número de Empleados',
+                            data: [personnelData.direct, personnelData.indirect, personnelData.administrative],
+                            backgroundColor: function(context) {
+                            const chart = context.chart;
+                            const gradient = chart.ctx.createLinearGradient(0, 0, 0, chart.height);
+                            gradient.addColorStop(0, '#2575fc');
+                            gradient.addColorStop(1, '#6a11cb');
+                            return gradient;
+                            },
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderRadius: {
+                                topLeft: 7,
+                                topRight: 7,
+                                bottomLeft: 7,
+                                bottomRight: 7
+                            },
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                         scales: {
+                            x: {
+                                ticks: {
+                                    color: '#4A92C5', // Color del texto
+                                    font: {
+                                        weight: 'bold', // Negrita
+                                        size: 14 // Tamaño de fuente
+                                    },
+                                    padding: 1, // Espaciado
+                                },
+                                
+                            },
+                            y: {
+                                 display: false,
+                                ticks: {
+                                    color: '#4A92C5', // Color del texto
+                                    font: {
+                                        weight: 'bold', // Negrita
+                                        size: 14 // Tamaño de fuente
+                                    },
+                                    padding: 1, // Espaciado
+                                    textStrokeColor: 'rgba(0,0,0,0.3)', // Contorno del texto
+                                    textStrokeWidth: 1
+                                },
+                                
+                            },
+                           
+                            
+                        },
+        
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    color: '#4A92C5', // Color del texto
+                                    font: {
+                                        weight: 'bold', // Negrita
+                                        size: 14 // Tamaño de fuente
+                                    },
+                                    padding: 1, // Espaciado
+                                    textStrokeWidth: 1
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Distribución de Personal',
+                                color: 'transparent',
+                                font: {
+                                    size: 20,
+                                    weight: 'bold'
+                                },
+                                padding: {
+                                    bottom: 20
+                                }
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                color: '#ffffff',
+                                font: {
+                                    weight: 'bold',
+                                    size: 12
+                                },
+                                backgroundColor: function(context) {
+                                    const chart = context.chart;
+                                    const gradient = chart.ctx.createLinearGradient(0, 0, 0, 50);
+                                    gradient.addColorStop(0, '#2575fc');
+                                    gradient.addColorStop(1, '#6a11cb');
+                                    return gradient;
+                                },
+                                borderRadius: 4,
+                                padding: {
+                                    top: 4,
+                                    bottom: 4,
+                                    left: 8,
+                                    right: 8
+                                },
+                                formatter: function(value) {
+                                    return value;
+                                },
+                                textShadow: {
+                                    color: 'rgba(0,0,0,0.3)',
+                                    blur: 2,
+                                    offsetX: 1,
+                                    offsetY: 1
+                                },
+                                boxShadow: {
+                                    color: 'rgba(0,0,0,0.2)',
+                                    blur: 4,
+                                    offsetX: 1,
+                                    offsetY: 1
+                                },
+                                opacity: 0.9,
+                                borderWidth: 1,
+                                borderColor: 'rgba(255,255,255,0.5)'
+                            }
+                        }
+                    },
+                    plugins: [{
+                        beforeDraw: (chart) => {
+                            const ctx = chart.canvas.getContext('2d');
+                            const gradient = ctx.createLinearGradient(0, 0, chart.width, 0);
+                            gradient.addColorStop(0, '#2575fc');
+                            gradient.addColorStop(1, '#6a11cb');
+        
+                            chart.options.plugins.title.color = gradient;
+                        }
+                    }, ChartDataLabels]
+                });
               }
+
+
            };
    
            // Módulo de Reloj
@@ -177,7 +380,7 @@
                    this.elementoClock = document.getElementById('clock');
                    this.actualizar();
                    this.animar();
-          },
+                },
    
                actualizar() {
                    if (this.elementoClock) {
@@ -211,6 +414,8 @@
                        this.elementoInput.addEventListener('keydown', this.manejarEntrada.bind(this));
                        this.elementoInput.focus();
                    }
+
+                   
                },
    
                manejarEntrada(event) {
@@ -224,6 +429,7 @@
                    const empleado = this.buscarEmpleado(inputValue);
    
                    if (!empleado) {
+                        this.elementoInput.value = '';
                        this.mostrarMensajeError();
                        return;
                    }
@@ -332,7 +538,7 @@
                             <h3>${cumpleano.nombreCompleto}</h3>
                             
                             <div class="cumpleanos-insignia">
-                                <i class="fas fa-birthday-cake me-2"></i>Celebrando su día especial
+                                🎂 Celebrando su día especial
                             </div>
                         </div>
                     </div>
@@ -441,12 +647,17 @@
                 }
             },
    
-               mostrarMensajeError() {
-                   if (this.elementoDisplay) {
-                       this.elementoDisplay.textContent = "Número de reloj no encontrado";
-                       
-                   }
-               },
+              mostrarMensajeError() {
+                  if (this.elementoDisplay) {
+                      this.elementoDisplay.textContent = "No encontrado";
+                      this.elementoDisplay.style.cssText = `
+                          color: red;
+                          font-size:var(--size-text);
+                          font-weight: bold;
+                      `;
+            
+                  }
+              },
            avanzarCumpleanos() {
                 this.currentCarouselIndex = 
                 (this.currentCarouselIndex + 1) % this.cumpleanosList.length;
@@ -501,6 +712,7 @@
            document.addEventListener('DOMContentLoaded', () => {
                Reloj.iniciar();
                GestorEmpleados.iniciar();
+               Utilidades.actualizarGrafica();
            });
 
            // Función para crear globos animados
