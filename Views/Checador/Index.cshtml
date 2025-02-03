@@ -1,8 +1,13 @@
 @{
     ViewData["Title"] = "Checador";
 }
+
+@section Styles {
     <style>
-        
+        h1,h4{
+            margin: 0 !important;
+            padding: 0 !important;
+        }
          .app {
             display: flex;
             padding: 0;
@@ -30,7 +35,7 @@
             font-weight: bold;
          }
 
-         .app .container h1 {
+         .app .container time {
             color: var(--color-text-relog);
             font-size: var(--size-text-relog);
             font-weight: bold;
@@ -107,14 +112,15 @@
 
     
     </style>
+}
    
    <div class="app">
        <div class="container">
            <h4>CONTEC SINALOA</h4>
-           <h1 id="clock">06:29:09 PM</h1>
-           <input id="numberInput" class="input-numero-relog" type="text">
-           <div id="inputDisplay" class="input-display"></div>
-           <div id="cumpleanosMensaje" class="input-display"></div>
+           <time id="clock" datetime="2025-02-02T20:29:02-07:00">06:29:09 PM</time>
+            <input id="numberInput" class="input-numero-relog" type="text" aria-label="Entrada de número">
+            <div id="inputDisplay" class="input-display" role="status"></div>
+            <div id="cumpleanosMensaje" class="input-display" role="alert"></div>
        </div>
    </div>
    
@@ -124,7 +130,7 @@
            // Configuración centralizada
            const CONFIG = {
                EMPLEADOS: [
-                   { numero: "256553", cumpleanos: "2005-02-01", nombreCompleto: "Juan Carlos Pérez Ramírez" },
+                   { numero: "256553", cumpleanos: "2005-02-02", nombreCompleto: "Juan Carlos Pérez Ramírez" },
                    { numero: "123456", cumpleanos: "2000-01-31", nombreCompleto: "María Elena Sánchez González" },
                    { numero: "789012", cumpleanos: "1995-07-30", nombreCompleto: "Luis Alberto Rodríguez Martínez" }
                ]
