@@ -1,0 +1,121 @@
+h1,h4{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+ .app {
+    padding: 0;
+    margin: 0;
+    height: calc(100vh - 76px) !important;
+    width: 100vw;
+    background-color: var(--background-color-app);
+    overflow: hidden;
+    --color-text: #000080;
+    --color-text-relog:#ffffff;
+    --size-text: 24px;
+    --size-text-relog: 58px;
+    --border-radius: 7px;
+    --gap: 20px;
+    --background-color-app: #4A92C5;
+ }
+ .app .container-app {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    height:100%;
+    width: 100%;
+ }
+
+ .app .container-app .checador {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--gap);
+    padding:0 !important;
+    margin:0 !important;
+    width: 100%;
+    height: 100%;
+ }
+
+ .app .container-app .estadisticas {   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--gap);
+    padding:0 !important;
+    margin:0 !important;
+    width: 100%;
+    height: 100%;
+
+}
+
+.app .container-app .estadisticas .grafica {
+    width: 100%;
+    height: 100%;
+    max-width:500px;
+    max-height:500px;
+    background-color: #ffffff;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding:10px;
+}
+
+ .app .container-app h4 {
+    background-image: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: var(--size-text);
+ }
+
+ .app .container-app time {
+    color: var(--color-text-relog);
+    font-size: var(--size-text-relog);
+    font-weight: bold;
+ } 
+ 
+ .input-numero-relog{
+    background-color: var(--color-text-relog);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: calc(var(--size-text-relog) - 10px);
+    color: var(--background-color-app);
+    text-align: center;
+    outline: none;
+    max-width: 370px;
+    font-weight: bold;
+ }
+
+ div.container.movil {
+    margin:0 !important;
+    padding:0 !important;
+ }
+
+
+.cumpleanos-detalle {
+margin-top: 10px;
+font-size: calc(var(--size-text-relog) - 0);
+font-weight: bold;
+}
+
+.balloon-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.balloon {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    background-color: transparent;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform: translateY(100vh);
+    animation: float-up linear forwards;
+    opacity: 0.8;
+}
