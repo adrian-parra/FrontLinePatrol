@@ -13,12 +13,15 @@
             margin: 0;
             height: calc(100vh - 76px) !important;
             width: 100vw;
-            background-color: #4A92C5;
+            background-color: var(--background-color-app);
             overflow: hidden;
             --color-text: #000080;
             --color-text-relog:#ffffff;
             --size-text: 24px;
             --size-text-relog: 58px;
+            --border-radius: 7px;
+            --gap: 20px;
+            --background-color-app: #4A92C5;
          }
          .app .container-app {
             display:grid;
@@ -31,7 +34,7 @@
             display: flex;
             align-items: center;
             flex-direction: column;
-            gap: 10px;
+            gap: var(--gap);
             padding:0 !important;
             margin:0 !important;
             width: 100%;
@@ -43,7 +46,7 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 10px;
+            gap: var(--gap);
             padding:0 !important;
             margin:0 !important;
             width: 100%;
@@ -57,7 +60,7 @@
             max-width:500px;
             max-height:500px;
             background-color: #ffffff;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             padding:10px;
         }
@@ -81,44 +84,20 @@
          .input-numero-relog{
             background-color: var(--color-text-relog);
             border: none;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             font-size: calc(var(--size-text-relog) - 10px);
-            color: #4A92C5 !important;
+            color: var(--background-color-app);
             text-align: center;
             outline: none;
             max-width: 370px;
             font-weight: bold;
          }
 
-         .input-display {
-       
-        font-size: var(--size-text-relog);
-        color: var(--color-text);
-        text-align: center;
-        width: 100%;
-        display:flex !important;
-       justify-content: center !important;
-        align-items: center !important; 
-        flex-direction: column !important;
-        gap: 10px !important;
-    }
-
          div.container.movil {
             margin:0 !important;
             padding:0 !important;
          }
 
-         .cumpleanos-mensaje {
-        background-color: #FFD700;
-        color: #000;
-        padding: 10px;
-        border-radius: 15px;
-        text-align: center;
-        font-size: calc(var(--size-text-relog) - 20px);
-        max-width: 800px !important;
-        min-width: 600px !important;
-        animation: celebracion 2s infinite;
-    }
 
     .cumpleanos-detalle {
         margin-top: 10px;
@@ -187,10 +166,12 @@
                 administrative: 15
             };
 
+            const backgroundColorApp = "#4A92C5"
+
            // Configuración centralizada
            const CONFIG = {
                EMPLEADOS: [
-                   { numero: "256553", cumpleanos: "2005-02-02", nombreCompleto: "Juan Carlos Pérez Ramírez" },
+                   { numero: "256553", cumpleanos: "2005-02-03", nombreCompleto: "Juan Carlos Pérez Ramírez" },
                    { numero: "123456", cumpleanos: "2000-01-31", nombreCompleto: "María Elena Sánchez González" },
                    { numero: "789012", cumpleanos: "1995-07-30", nombreCompleto: "Luis Alberto Rodríguez Martínez" }
                ]
@@ -261,7 +242,7 @@
                          scales: {
                             x: {
                                 ticks: {
-                                    color: '#4A92C5', // Color del texto
+                                    color: backgroundColorApp, // Color del texto
                                     font: {
                                         weight: 'bold', // Negrita
                                         size: 14 // Tamaño de fuente
@@ -271,9 +252,9 @@
                                 
                             },
                             y: {
-                                 display: false,
+                                 display: true,
                                 ticks: {
-                                    color: '#4A92C5', // Color del texto
+                                    color: backgroundColorApp, // Color del texto
                                     font: {
                                         weight: 'bold', // Negrita
                                         size: 14 // Tamaño de fuente
@@ -292,7 +273,7 @@
                             legend: {
                                 display: true,
                                 labels: {
-                                    color: '#4A92C5', // Color del texto
+                                    color: backgroundColorApp, // Color del texto
                                     font: {
                                         weight: 'bold', // Negrita
                                         size: 14 // Tamaño de fuente
@@ -319,7 +300,7 @@
                                 color: '#ffffff',
                                 font: {
                                     weight: 'bold',
-                                    size: 12
+                                    size: 17
                                 },
                                 backgroundColor: function(context) {
                                     const chart = context.chart;
@@ -328,7 +309,7 @@
                                     gradient.addColorStop(1, '#6a11cb');
                                     return gradient;
                                 },
-                                borderRadius: 4,
+                                borderRadius: 7,
                                 padding: {
                                     top: 4,
                                     bottom: 4,
@@ -429,7 +410,7 @@
                    const empleado = this.buscarEmpleado(inputValue);
    
                    if (!empleado) {
-                        this.elementoInput.value = '';
+                       this.elementoInput.value = '';
                        this.mostrarMensajeError();
                        return;
                    }
@@ -445,10 +426,9 @@
    
                mostrarInformacionEmpleado(empleado) {
                    if (this.elementoDisplay) {
-                    //    this.elementoDisplay.textContent = empleado.nombreCompleto;
                        this.elementoDisplay.innerHTML = `
                        <div class="nombre-empleado-checador">
-                           ${empleado.nombreCompleto}
+                           ${empleado.nombreCompleto} ✅
                        </div>
                    `;
 
@@ -462,7 +442,7 @@
                                background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
                                color: white;
                                padding: 15px 25px;
-                               border-radius: 15px;
+                               border-radius: var(--border-radius);
                                font-size: 24px;
                                font-weight: bold;
                                text-align: center;
@@ -497,159 +477,162 @@
                     this.avanzarCumpleanos();
                 }, 3000); // Cambiar cada 5 segundos
                 }
-     },
+                 },
    
-              verificarCumpleanos(empleado) {
-        if (!Utilidades.esCumpleanos(empleado.cumpleanos)) return;
+                 verificarCumpleanos(empleado) {
+                if (!Utilidades.esCumpleanos(empleado.cumpleanos)) return;
 
-        // Agregar al array de cumpleaños en lugar de mostrar inmediatamente
-        const edad = Utilidades.calcularEdad(empleado.cumpleanos);
-        const cumpleanoInfo = {
-            nombreCompleto: empleado.nombreCompleto,
-            edad: edad,
-            avatar: this.generarAvatarInicial(empleado.nombreCompleto)
-        };
+                // Agregar al array de cumpleaños en lugar de mostrar inmediatamente
+                const edad = Utilidades.calcularEdad(empleado.cumpleanos);
+                const cumpleanoInfo = {
+                    nombreCompleto: empleado.nombreCompleto,
+                    edad: edad,
+                    avatar: this.generarAvatarInicial(empleado.nombreCompleto)
+                };
 
-        this.cumpleanosList.push(cumpleanoInfo);
+                this.cumpleanosList.push(cumpleanoInfo);
 
-        // Si es el primer cumpleaños, iniciar carrusel
-        if (this.cumpleanosList.length >= 1) {
-            console.log('Iniciando carrusel de cumpleaños');
-            this.iniciarCarruselCumpleanos();
-        }
-    },mostrarCumpleanosActual() {
-        if (this.cumpleanosList.length === 0) return;
+                // Si es el primer cumpleaños, iniciar carrusel
+                if (this.cumpleanosList.length >= 1) {
+                    console.log('Iniciando carrusel de cumpleaños');
+                    this.iniciarCarruselCumpleanos();
+                }
+              },mostrarCumpleanosActual() {
+                    if (this.cumpleanosList.length === 0) return;
 
-        const cumpleano = this.cumpleanosList[this.currentCarouselIndex];
+                    const cumpleano = this.cumpleanosList[this.currentCarouselIndex];
 
-        this.elementoCumpleanos.innerHTML = `
-            <div class="cumpleanos-carrusel">
-                <div class="cumpleanos-mensaje-profesional">
-                    <div class="cumpleanos-header">
-                        <span class="emoji-celebracion">🎉</span>
-                        <h2>¡Feliz Cumpleaños!</h2>
-                        <span class="emoji-celebracion">🎂</span>
-                    </div>
-                    <div class="cumpleanos-contenido">
-                        <div class="cumpleanos-avatar">
-                            ${cumpleano.avatar}
-                        </div>
-                        <div class="cumpleanos-detalles">
-                            <h3>${cumpleano.nombreCompleto}</h3>
-                            
-                            <div class="cumpleanos-insignia">
-                                🎂 Celebrando su día especial
+                    this.elementoCumpleanos.innerHTML = `
+                        <div class="cumpleanos-carrusel">
+                            <div class="cumpleanos-mensaje-profesional">
+                                <div class="cumpleanos-header">
+                                    <span class="emoji-celebracion">🎉</span>
+                                    <h2>¡Feliz Cumpleaños!</h2>
+                                    <span class="emoji-celebracion">🎂</span>
+                                </div>
+                                <div class="cumpleanos-contenido">
+                                    <div class="cumpleanos-avatar">
+                                        ${cumpleano.avatar}
+                                    </div>
+                                    <div class="cumpleanos-detalles">
+                                        <h3>${cumpleano.nombreCompleto}</h3>
+                                        
+                                        <div class="cumpleanos-insignia">
+                                            🎂 Celebrando su día especial
+                                        </div>
+                                    </div>
+                                </div>
+                                ${this.cumpleanosList.length > 1 ? this.generarIndicadores() : ''}
                             </div>
                         </div>
+                    `;
+
+                    this.agregarEstilosCumpleanos();
+
+                    // Lanzar animación de globos
+                    crearGlobos();
+                },
+                generarAvatarInicial(nombreCompleto) {
+                    const iniciales = nombreCompleto
+                    .split(' ')
+                    .map(nombre => nombre[0].toUpperCase())
+                    .slice(0, 2)
+                    .join('');
+        
+                    return `
+                    <div class="avatar-inicial" style="
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 36px;
+                    font-weight: bold;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    ">
+                    ${iniciales}
                     </div>
-                    ${this.cumpleanosList.length > 1 ? this.generarIndicadores() : ''}
-                </div>
-            </div>
-        `;
+                    `;
+                },// Método para agregar estilos dinámicamente
+                agregarEstilosCumpleanos() {
+                    const styleId = 'cumpleanos-styles';
+                    if (!document.getElementById(styleId)) {
+                    const style = document.createElement('style');
+                    style.id = styleId;
+                    style.textContent = `
+                    .cumpleanos-mensaje-profesional {
+                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                    border-radius: var(--border-radius);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                    padding: 20px;
+                    max-width: 500px;
+                    text-align: center;
+                    position: relative;
+                    overflow: hidden;
+                    }
 
-        this.agregarEstilosCumpleanos();
+                    .cumpleanos-header {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 15px;
+                    }
 
-        // Lanzar animación de globos
-        crearGlobos();
-    },
-               // Método para generar un avatar con iniciales
-            generarAvatarInicial(nombreCompleto) {
-                const iniciales = nombreCompleto
-                .split(' ')
-                .map(nombre => nombre[0].toUpperCase())
-                .slice(0, 2)
-                .join('');
-    
-                return `
-                <div class="avatar-inicial" style="
-                width: 80px;
-                height: 80px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 36px;
-                font-weight: bold;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                ">
-                ${iniciales}
-                </div>
-                `;
-            },// Método para agregar estilos dinámicamente
-            agregarEstilosCumpleanos() {
-                const styleId = 'cumpleanos-styles';
-                if (!document.getElementById(styleId)) {
-                const style = document.createElement('style');
-                style.id = styleId;
-                style.textContent = `
-                .cumpleanos-mensaje-profesional {
-                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                border-radius: 15px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                padding: 20px;
-                max-width: 500px;
-                margin: 20px auto;
-                text-align: center;
-                position: relative;
-                overflow: hidden;
-                }
+                    .cumpleanos-header h2 {
+                    margin: 0 15px;
+                    color: #333;
+                    font-size: 24px;
+                    }
 
-                .cumpleanos-header {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-bottom: 15px;
-                }
+                    .emoji-celebracion {
+                    font-size: 36px;
+                    animation: pulse 1.5s infinite;
+                    }
 
-                .cumpleanos-header h2 {
-                margin: 0 15px;
-                color: #333;
-                font-size: 24px;
-                }
+                    .cumpleanos-contenido {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: var(--gap);
+                    }
 
-                .emoji-celebracion {
-                font-size: 36px;
-                animation: pulse 1.5s infinite;
-                }
+                    .cumpleanos-detalles{
+                     display:flex;
+                     gap:var(--gap);
+                     flex-direction:column;
+                    }
 
-                .cumpleanos-contenido {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 20px;
-                }
+                    .cumpleanos-detalles h3 {
+                    margin: 0;
+                    color: #2c3e50;
+                    font-size: 20px;
+                    }
 
-                .cumpleanos-detalles h3 {
-                margin: 0;
-                color: #2c3e50;
-                font-size: 20px;
-                }
+                    .cumpleanos-detalles p {
+                    color: #7f8c8d;
+                    margin: 5px 0 15px;
+                    }
 
-                .cumpleanos-detalles p {
-                color: #7f8c8d;
-                margin: 5px 0 15px;
-                }
+                    .cumpleanos-insignia {
+                    background-color: #3498db;
+                    color: white;
+                    padding: 8px 15px;
+                    border-radius: var(--border-radius);
+                    font-size: 14px;
+                    display: inline-block;
+                    }
 
-                .cumpleanos-insignia {
-                background-color: #3498db;
-                color: white;
-                padding: 8px 15px;
-                border-radius: 20px;
-                font-size: 14px;
-                display: inline-block;
-                }
-
-           
-                `;
-                document.head.appendChild(style);
-                }
-            },
-   
-              mostrarMensajeError() {
+            
+                    `;
+                    document.head.appendChild(style);
+                    }
+                },
+              mostrarMensajeError(mensaje = 'Empleado no encontrado') {
                   if (this.elementoDisplay) {
-                      this.elementoDisplay.textContent = "No encontrado";
+                      this.elementoDisplay.textContent = mensaje;
                       this.elementoDisplay.style.cssText = `
                           color: red;
                           font-size:var(--size-text);
