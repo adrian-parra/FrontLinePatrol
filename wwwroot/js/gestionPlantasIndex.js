@@ -624,58 +624,68 @@ const pintarSoportesTable = (datos) => {
   `;
   
   // Agregar los datos a la tabla
-  datos.forEach(item => {
-      
+  if (datos.length === 0) {
       tablaHTML += `
-      
-          <tr >
-              <td style="display:none;" class="id-soporte">${item.id}</td>
-
-              <td>
-                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
-                      ${item.equipoComputo.lineas[0].linea.planta.nombre}
-                  </span>
-              </td>
-              <td>
-                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
-                      ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
-                  </span>
-              </td>
-              <td>
-                  <span class="text-extra text-truncate text-uppercase px-1 fw-light">
-                      ${item.equipoComputo.lineas[0].estacion.nombre}
-                  </span>
-              </td>
-             
-              <td>
-                  <span class="text-extra fw-light text-wrap text-break">
-                      ${item.descripcion ? capitalizeFirstLetter(item.descripcion) : 'N/A'}
-                  </span>
-              </td>
-              <td>
-                  <span class="text-extra fw-light text-wrap text-break">
-                      ${item.solucion ? capitalizeFirstLetter(item.solucion) : 'N/A'}
-                  </span>
-              </td>
-             <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.responsable ? item.responsable : 'N/A'}</span></td>
-
-             <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.requeridoPor ? item.requeridoPor : 'N/A'}</span></td>
-
-             <td>
-                 <span class="${getEstadoClass(item.estado)} estado-soporte text-${getBootstrapColorForEstado(item.estado)} bg-${getBootstrapColorForEstado(item.estado)} bg-opacity-10 px-1 rounded text-uppercase fw-light">
-                     ${item.estado}
-                 </span>
-             </td>
-
-              <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
-      class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
-  <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
-  ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
-</button>
-              </td>
-          </tr>
+      <tr>
+          <td colspan="10" class="text-center text-muted py-3">
+              No hay registros para mostrar
+          </td>
+      </tr>
       `;
-  });
+  } else {
+      datos.forEach(item => {
+          
+          tablaHTML += `
+          
+              <tr >
+                  <td style="display:none;" class="id-soporte">${item.id}</td>
+
+                  <td>
+                      <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                          ${item.equipoComputo.lineas[0].linea.planta.nombre}
+                      </span>
+                  </td>
+                  <td>
+                      <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                          ${["NO APLICA MCH3", "NO APLICA MCH2", "NO APLICA MCH1"].includes(item.equipoComputo.lineas[0].linea.nombre) ? "N/A" : item.equipoComputo.lineas[0].linea.nombre}
+                      </span>
+                  </td>
+                  <td>
+                      <span class="text-extra text-truncate text-uppercase px-1 fw-light">
+                          ${item.equipoComputo.lineas[0].estacion.nombre}
+                      </span>
+                  </td>
+                 
+                  <td>
+                      <span class="text-extra fw-light text-wrap text-break">
+                          ${item.descripcion ? capitalizeFirstLetter(item.descripcion) : 'N/A'}
+                      </span>
+                  </td>
+                  <td>
+                      <span class="text-extra fw-light text-wrap text-break">
+                          ${item.solucion ? capitalizeFirstLetter(item.solucion) : 'N/A'}
+                      </span>
+                  </td>
+                 <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.responsable ? item.responsable : 'N/A'}</span></td>
+
+                 <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.requeridoPor ? item.requeridoPor : 'N/A'}</span></td>
+
+                 <td>
+                     <span class="${getEstadoClass(item.estado)} estado-soporte text-${getBootstrapColorForEstado(item.estado)} bg-${getBootstrapColorForEstado(item.estado)} bg-opacity-10 px-1 rounded text-uppercase fw-light">
+                         ${item.estado}
+                     </span>
+                 </td>
+                 <td>
+                          <button style="${item.estado === 'Resuelto' ? 'display:none;' : ''} width:110px;" 
+                  class="btn btn-sm ${item.estado === 'Pendiente' ? 'btn-warning' : item.estado === 'En proceso' ? 'btn-success' : 'btn-secondary'}">
+              <i class="${item.estado === 'Pendiente' ? 'fas fa-clock' : item.estado === 'En proceso' ? 'fas fa-spinner' : 'fas fa-check'}"></i>
+              ${item.estado === 'Pendiente' ? 'En proceso' : item.estado === 'En proceso' ? 'Realizar' : 'Pendiente'}
+            </button>
+                  </td>
+              </tr>
+          `;
+      });
+  }
 
   // Cerrar las etiquetas de la tabla
   tablaHTML += `
