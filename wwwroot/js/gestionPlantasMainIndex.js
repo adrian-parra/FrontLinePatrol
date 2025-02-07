@@ -1218,42 +1218,6 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
     },
     plugins: [ChartDataLabels]
   });
-
-
-
-
-document.querySelector('.selected-option').addEventListener('click', () => {
-  const optionsContainer = document.getElementById('options');
-  const selectedOption = document.getElementById('selectedOption');
-
-  optionsContainer.style.display = optionsContainer.style.display === 'grid' ? 'none' : 'grid';
-
-  if (optionsContainer.style.display === 'grid') {
-    selectedOption.querySelector('i:nth-last-of-type(2)').style.display = 'inline';
-    selectedOption.querySelector('i:nth-last-of-type(1)').style.display = 'none';
-  } else {
-    selectedOption.querySelector('i:nth-last-of-type(2)').style.display = 'none';
-    selectedOption.querySelector('i:nth-last-of-type(1)').style.display = 'inline';
-  }
-});
-
-document.querySelector("#options").addEventListener("click", (e) => {
-  if (e.target.classList.contains("option")) {
-    const selectedOption = document.getElementById("selectedOption");
-    const hiddenInput = document.getElementById("customSelect");
-
-    selectedOption.firstChild.textContent = e.target.textContent;
-
-    selectedOption.querySelector("i").style.display = "inline";
-
-    selectedOption.querySelector("i:nth-last-of-type(1)").style.display =
-      "none";
-    selectedOption.querySelector("i:nth-last-of-type(2)").style.display =
-      "none";
-
-    hiddenInput.value = e.target.getAttribute("data-value");
-  }
-});
 }
 const updateInterfaz = async () => {
   const dataForm = new FormData()

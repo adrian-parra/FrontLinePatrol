@@ -623,20 +623,9 @@
         <form id="formCerrarSoftware">
           <div class="mb-2">
             @* <label class="form-label">Planta</label> *@
-            @* <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware"
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="selectSoftware"
             name="app">
-            </select> *@
-
-            <div class="custom-select">
-              <div class="selected-option" id="selectedOption">
-                Selecciona una opción
-                <i class="fas fa-check-circle" style="display: none;color:var(--ColorSuccess)"></i>
-              </div>
-              <div class="options" id="options">
-              </div>
-
-              <input type="hidden" name="app" id="customSelect" />
-            </div>
+            </select>
           </div>
 
           <div class="container-buttons">
@@ -898,11 +887,11 @@
         <form id="formRegistrarSoporteEquipoComputo">
            <div class="mb-2">
             <label for="">Problema/Descripción</label>
-            <input type="text" class="form-control form-control-sm" name="descripcion" placeholder="CMS Congelado">
+            <textarea rows="3" class="form-control form-control-sm" name="descripcion" placeholder="CMS Congelado"></textarea>
           </div>
           <div class="mb-2">
             <label for="">Solución/Acción (Opcional)</label>
-            <input type="text" class="form-control form-control-sm" name="solucion" placeholder="Se reinicio app">
+            <textarea rows="3" class="form-control form-control-sm" name="solucion" placeholder="Se reinicio app"></textarea>
           </div>
           <div class="mb-2">
             <label for="">Responsable </label>
