@@ -144,6 +144,16 @@
       </div>
       <div class="modal-body">
         <div class="container-filter-soportes">
+          <div class="mb-3" style="max-width: 800px;">
+            <label for="selectPlantas" class="form-label text-primary fw-bold">Seleccione Planta(s)</label>
+            <select multiple class="form-select" id="selectPlantas" aria-label="Selección de Plantas" style="max-height: 150px; overflow-y: auto;">
+            <option value="1">MOCHIS 1</option>
+            <option value="2">MOCHIS 2</option>
+            <option value="3">MOCHIS 3</option>
+            <option value="4">MOCHIS MAIN</option>
+            <option value="13">SANBLAS</option>
+            </select>
+          </div>
           <div class="input-group mb-3" style="max-width: 800px;">
               <span class="input-group-text" id="basic-addon1">Fecha Inicio</span>
               <input type="date" id="fechaInicio" name="fecha_inicio" class="form-control" aria-label="Fecha Inicio" aria-describedby="basic-addon1" />
@@ -155,6 +165,7 @@
               
               <button class="btn btn-outline-secondary" type="button" id="btnBuscarSoporteHoy">Buscar</button>
           </div>
+          
         </div>
         <div class="container-soportes">
 
@@ -747,7 +758,7 @@
 </div>
 
 
-<!-- MODAL LISTAR SOFTWARE INSTALADO EQUIPO COMPUTO -->
+<!-- MODAL LISTADO SOFTWARE INSTALADO EQUIPO COMPUTO -->
 <div class="modal fade" id="exampleModalDesinstalarSoftwareInstaladoEquipoComputo" tabindex="-1" aria-labelledby="exampleModalDesinstalarSoftwareInstaladoEquipoComputo"
   aria-hidden="true">
   <div class="modal-dialog">

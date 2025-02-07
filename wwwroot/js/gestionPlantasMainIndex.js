@@ -1,7 +1,7 @@
 // Importaciones agrupadas por módulo
 import * as gestionPlantas from "./gestionPlantasIndex.js";
 import * as comandosWmi from "./cmdIndex.js";
-import { hideLoading, showLoading, showModal,convertiFechaAUTC } from "./utils.js";
+import { hideLoading, showLoading, showModal,convertiFechaAUTC,establecerFechasPredeterminadas } from "./utils.js";
 
 let myChart;
 let chartSemanasSoportes;
@@ -158,6 +158,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const horaInicio = document.querySelector("#horaInicio").value;
     const fechaFin = document.querySelector("#fechaFin").value;
     const horaFin = document.querySelector("#horaFin").value;
+    const selectPlantas = document.getElementById('selectPlantas');
+
+    const selectedPlantas = Array.from(selectPlantas.selectedOptions)
+        .map(option => option.value)
+        .join(',');
+
+      console.log('Plantas seleccionadas loal:', selectedPlantas);
 
     const fechaInicioUTC = convertiFechaAUTC(fechaInicio, horaInicio);
     const fechaFinUTC = convertiFechaAUTC(fechaFin, horaFin);
@@ -165,6 +172,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formData = new FormData();
     formData.append("fechaInicio", fechaInicioUTC);
     formData.append("fechaFin", fechaFinUTC);
+    formData.append("plantas", selectedPlantas);
+
    
     await gestionPlantas.ObtenerSoportesPorFechas(formData);
 
@@ -1062,11 +1071,112 @@ document.addEventListener("DOMContentLoaded", async () => {
   //setTimeout(initDataTable, 100);
   initDataTable();
 
+ 
+
+  handleBuscarPlantas();
+
+  function handleMultiSelectPlantas() {
+    const selectPlantas = document.getElementById('selectPlantas');
+    
+    // Configurar selección múltiple
+    selectPlantas.setAttribute('multiple', 'multiple');
+    
+    // Añadir evento de cambio para manejar selecciones
+    selectPlantas.addEventListener('change', function() {
+      const selectedPlantas = Array.from(this.selectedOptions).map(option => option.value);
+      console.log('Plantas seleccionadas:', selectedPlantas);
+      // Aquí puedes añadir lógica adicional para procesar las plantas seleccionadas
+    });
+  }
+
+  handleMultiSelectPlantas();
+
+  establecerFechasPredeterminadas();
 
 }); // ! FINN EVENTO ONLOAD
 
 
+async function handleBuscarPlantas() {
+  const btnBuscarPlantas = document.getElementById('btnBuscarPlantas');
+  const selectPlantas = document.getElementById('selectPlantas');
+  const fechaInicio = document.getElementById('fechaInicio');
+  const fechaFin = document.getElementById('fechaFin');
 
+  btnBuscarPlantas.addEventListener('click', async function() {
+    const selectedPlantas = Array.from(selectPlantas.selectedOptions)
+      .map(option => option.value)
+      .join(',');
+
+    console.log('Plantas seleccionadas loal:', selectedPlantas);
+
+    if (selectedPlantas.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Selección de Plantas',
+        text: 'Por favor, seleccione al menos una planta.'
+      });
+      return;
+    }
+
+    // Validar fechas
+    if (!fechaInicio.value || !fechaFin.value) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Fechas Incompletas',
+        text: 'Por favor, seleccione tanto la fecha de inicio como la fecha de fin.'
+      });
+      return;
+    }
+
+    try {
+      // Mostrar loading
+      showLoading();
+      console.log(selectPlantas)
+      // Preparar parámetros de consulta
+      const queryParams = new URLSearchParams({
+        fecha_inicio: fechaInicio.value,
+        fecha_fin: fechaFin.value,
+        plantas: selectedPlantas
+      });
+
+    
+
+      // Realizar la solicitud al backend
+      const response = await fetch(`/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=${queryParams.get('fecha_inicio')}&fechaFin=${queryParams.get('fecha_fin')}&plantas=${queryParams.get('plantas')}`);
+
+      if (!response.ok) {
+        throw new Error('Error en la búsqueda de soportes');
+      }
+
+      const soportes = await response.json();
+
+      // Ocultar loading
+      hideLoading();
+
+      // Procesar y mostrar resultados
+      console.log('Soportes filtrados:', soportes);
+      
+      // Aquí puedes añadir lógica para mostrar los resultados
+      // Por ejemplo, actualizar una tabla o mostrar en un modal
+      Swal.fire({
+        icon: 'success',
+        title: 'Búsqueda Completada',
+        text: `Se encontraron ${soportes.length} soportes.`
+      });
+
+    } catch (error) {
+      // Ocultar loading
+      hideLoading();
+
+      console.error('Error al buscar soportes:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron obtener los soportes. Intente nuevamente.'
+      });
+    }
+  });
+}
 const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
   const dataF = new FormData()
 
@@ -1269,7 +1379,6 @@ const updateInterfaz = async () => {
     ],
   });
 }
-
 
 function obtenerSoftwarePorHostname(hostname) {
   const equipo = state.data.find((equipo) => equipo.hostname === hostname);

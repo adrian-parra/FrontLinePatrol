@@ -823,7 +823,7 @@ export const ObtenerSoportesPorFechas = async (formData)=>{
   try {
 
     showLoading()
-    const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio")  + "&fechaFin=" + formData.get("fechaFin"));
+    const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio")  + "&fechaFin=" + formData.get("fechaFin") + "&plantas=" + formData.get("plantas"));
 
     if (!response.ok) {
       const data = await response.json();

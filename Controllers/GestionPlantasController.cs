@@ -525,11 +525,11 @@ public class GestionPlantasController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> ObtenerSoportesPorFechas(string fechaInicio,string fechaFin)
+    public async Task<IActionResult> ObtenerSoportesPorFechas(string fechaInicio,string fechaFin,string plantas)
     {
         var cliente = new HttpClient();
 
-        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo/soporte/dia/?fecha_inicio={fechaInicio}&fecha_fin={fechaFin}");
+        var response = await cliente.GetAsync($"http://localhost:3000/api/gestion/planta/equipoComputo/soporte/dia/?fecha_inicio={fechaInicio}&fecha_fin={fechaFin}&plantas={plantas}");
 
         if (response.IsSuccessStatusCode)
         {
