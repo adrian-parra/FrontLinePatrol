@@ -75,3 +75,28 @@ export const convertiFechaAUTC = (fechaLocal,hora) =>{
   const fechaUTC = new Date(Date.UTC(yyyy, mm - 1, dd, hh, min));
   return fechaUTC.toISOString();
 }
+
+
+export function establecerFechasPredeterminadas() {
+  const fechaInicio = document.querySelector("#fechaInicio");
+  const horaInicio = document.querySelector("#horaInicio");
+  const fechaFin = document.querySelector("#fechaFin");
+  const horaFin = document.querySelector("#horaFin");
+
+  // Obtener fecha actual
+  const hoy = new Date();
+  
+  // Establecer fecha de inicio (hoy)
+  const fechaInicioLocal = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  fechaInicio.valueAsDate = fechaInicioLocal;
+  
+  // Establecer hora de inicio a 5:00 PM
+  horaInicio.value = "17:00";
+
+  // Calcular fecha de fin (día siguiente)
+  const manana = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
+  fechaFin.valueAsDate = manana;
+
+  // Establecer hora de fin a 12:00 PM
+  horaFin.value = "12:00";
+}
