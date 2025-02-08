@@ -87,7 +87,6 @@ export const cerrarAppWmi = async (dataForm) => {
 
 export const ping = async (hostname) => {
     try {
-        showLoading()
         const dataForm = new FormData();
         dataForm.append("ip", hostname);
 
@@ -107,8 +106,6 @@ export const ping = async (hostname) => {
             icon: "error",
             text: error.message,
         })
-    } finally {
-        hideLoading()
     }
 }
 export const apagarEquipoComputo = async (formData) => {
@@ -420,7 +417,7 @@ export const DeleteTempEquipoComputo = async (formData) => {
   }
 
 export const GetProcessEquipoComputo =  async (formData) => {
-    showLoading();
+    
   
     try {
       const respuesta = await fetch("/Cmd/GetProccessInfo", {
@@ -438,13 +435,8 @@ export const GetProcessEquipoComputo =  async (formData) => {
       return dataResponse;
     } catch (error) {
       console.error("Error al obtener procesos del equipo:", error);
-      Swal.fire({
-        icon: "error",
-        text: "Error al obtener procesos del equipo. Inténtalo de nuevo más tarde. "+error.message,
-      });
-    } finally {
-      hideLoading();
-    }
+      throw new Error(`Error: ${error.message}`);
+    } 
   }
 
 export const GetUsersInfoEquipoComputo = async (formData) => {

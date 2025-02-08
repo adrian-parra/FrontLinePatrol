@@ -1082,7 +1082,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
  
 
-  handleBuscarPlantas();
+  //handleBuscarPlantas();
 
   function handleMultiSelectPlantas() {
     const selectPlantas = document.getElementById('selectPlantas');
@@ -1444,17 +1444,135 @@ state.idEquipoComputo = target.parentNode.parentNode.querySelector("#idEquipo").
     "#exampleModalAccionesLabel"
   ).textContent = `Acciones para ${state.hostname}`;
 
-  const testConection = await comandosWmi.ping(state.hostname)
+  testConection();
 
-  if (testConection.estatus == "ok") {
-    document.querySelector(".test-conection").classList.add("bg-success")
-    document.querySelector(".test-conection").classList.remove("bg-danger")
-    document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
-  } else {
-    document.querySelector(".test-conection").classList.add("bg-danger")
-    document.querySelector(".test-conection").classList.remove("bg-success")
-    document.querySelector(".test-conection p").innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
+
+  let formData = new FormData();
+  formData.append("ip", state.hostname)
+
+
+  
+
+
+  let data;
+  try {
+    data = await comandosWmi.GetProcessEquipoComputo(formData);
+    
+    if (!data || data.length === 0) {
+      // Handle empty data scenario
+      console.warn('No se encontraron procesos en el equipo');
+      
+      // Optionally disable cards or show a warning
+      const cardOptions = document.querySelectorAll('.grid-container .card-options');
+      cardOptions.forEach(card => {
+        if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
+            card.id !== "btnObtenerSoporteEquipoComputo") {
+          card.classList.add('disabled');
+        }
+      });
+      
+      // Show a toast or alert
+      Swal.fire({
+        icon: 'warning',
+        title: 'Advertencia',
+        text: 'No se pudieron obtener los procesos del equipo',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      
+      return; // Exit the function early
+    }
+  
+    const isLogonUIRunning = data.some(process => process.name === "LogonUI.exe");
+
+    if (isLogonUIRunning) {
+      // Closed lock icon when LogonUI is running (indicating computer is locked)
+      document.querySelector("#exampleModalAccionesLabel").innerHTML += 
+        ` <span class="badge bg-danger"><i class="fas fa-lock me-1"></i>Equipo bloqueado</span>`;
+    } else {
+      // Open lock icon when LogonUI is not running (indicating computer is unlocked)
+      document.querySelector("#exampleModalAccionesLabel").innerHTML += 
+        ` <span class="badge bg-success"><i class="fas fa-lock-open me-1"></i>Equipo desbloqueado</span>`;
+    }
+  
+    // Rest of your existing code...
+  } catch (error) {
+    console.error('Error al obtener procesos del equipo:', error);
+    
+    // Disable most cards except support-related ones
+    const cardOptions = document.querySelectorAll('.grid-container .card-options');
+    cardOptions.forEach(card => {
+      if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
+          card.id !== "btnObtenerSoporteEquipoComputo") {
+        card.classList.add('disabled');
+      }
+    });
+    
+    // Show an error toast
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo conectar con el equipo',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
   }
 
-  showModal(DOM.modals.accionesRegistro);
 }
+
+const testConection = async () => {
+  try {
+    // Show loading state immediately
+    const testConnectionElement = document.querySelector(".test-conection");
+    const testConnectionText = document.querySelector(".test-conection p");
+    
+    testConnectionElement.classList.remove("bg-success", "bg-danger");
+    testConnectionElement.classList.add("bg-secondary");
+    testConnectionText.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Probando conexión...`;
+    // Show modal after connection test
+   showModal(DOM.modals.accionesRegistro);
+    // Run ping in a non-blocking way
+    const result = await comandosWmi.ping(state.hostname);
+
+    if (result.estatus === "ok") {
+      testConnectionElement.classList.add("bg-success");
+      testConnectionText.innerHTML = `<i class="fas fa-check-circle"></i> Conectado`;
+      const cardOptions = document.querySelectorAll('.grid-container .card-options');
+      cardOptions.forEach(card => {
+        card.classList.remove('disabled');
+      });
+    } else {
+      testConnectionElement.classList.add("bg-danger");
+      testConnectionText.innerHTML = `<i class="fas fa-times-circle"></i> Desconectado`;
+      
+      // Disable all card options in the grid container
+      const cardOptions = document.querySelectorAll('.grid-container .card-options');
+      cardOptions.forEach(card => {
+        // Check if the card does NOT have the specific IDs
+        if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
+            card.id !== "btnObtenerSoporteEquipoComputo") {
+          card.classList.add('disabled');
+        }
+      });
+    }
+
+    
+  } catch (error) {
+    console.error("Error en prueba de conexión:", error);
+    
+    // Handle error state
+    const testConnectionElement = document.querySelector(".test-conection");
+    const testConnectionText = document.querySelector(".test-conection p");
+    
+    testConnectionElement.classList.add("bg-danger");
+    testConnectionText.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error de conexión`;
+    
+    // Still show modal in case of error
+    showModal(DOM.modals.accionesRegistro);
+  }
+};
+
