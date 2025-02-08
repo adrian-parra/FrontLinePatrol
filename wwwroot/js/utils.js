@@ -100,3 +100,45 @@ export function establecerFechasPredeterminadas() {
   // Establecer hora de fin a 12:00 PM
   horaFin.value = "12:00";
 }
+
+export function copyToClipboard(text) {
+  if (text === 'N/A') return;
+
+  if (!navigator.clipboard) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Acceso al portapapeles no disponible',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    });
+    return;
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    Swal.fire({
+      icon: 'success',
+      title: 'Copiado',
+      text: `Hostname "${text}" copiado al portapapeles`,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    });
+  }).catch(err => {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo copiar el hostname',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
+    });
+  });
+}

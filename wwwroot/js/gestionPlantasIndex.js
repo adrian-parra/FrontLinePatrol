@@ -1,30 +1,36 @@
 
-import { 
-  $, 
-  showLoading, 
-  hideLoading, 
-  getEstadoClass, 
-  tiempoTranscurrido, 
-  diferenciaTiempo } 
-from "/js/utils.js";
+import {
+  $,
+  showLoading,
+  hideLoading,
+  getEstadoClass,
+  tiempoTranscurrido,
+  diferenciaTiempo
+}
+  from "/js/utils.js";
+
 
 
 export const obtenerEquiposComputo = async (dataForm) => {
-    showLoading();
+  showLoading();
 
-    const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + dataForm.get("idPlanta") || "");
-    const data = await response.json();
+  const response = await fetch("/GestionPlantas/ObtenerEquiposComputo?idPlanta=" + dataForm.get("idPlanta") || "");
+  const data = await response.json();
 
-    // Usar template literals y reduce para construcción de tabla más eficiente
-    const tableRows = data.reduce((html, equipo) => {
-        const lineaData = equipo.lineas[0] || {};
-        return html + `
+  // Usar template literals y reduce para construcción de tabla más eficiente
+  const tableRows = data.reduce((html, equipo) => {
+    const lineaData = equipo.lineas[0] || {};
+    return html + `
             <tr>
                 <td id="idEquipo" style="display:none;">${equipo.id || '<span class="text-danger">N/A</span>'}</td>
                 <td>${lineaData.linea?.planta?.nombre || '<span class="text-danger">N/A</span>'}</td>
                 <td>${lineaData.linea?.nombre || '<span class="text-danger">N/A</span>'}</td>
                 <td>${lineaData.estacion?.nombre || '<span class="text-danger">N/A</span>'}</td>
-                <td id="hostname">${equipo.hostname || '<span class="text-danger">N/A</span>'}</td>
+                <td id="hostname" class="text-start">
+                    <span class="badge bg-secondary text-white rounded-2 px-3 py-2 text-monospace cursor-pointer" 
+                        data-tippy-content="Haz clic para copiar"
+                        id="btnCopiarHostname">${equipo.hostname || '<span class="text-danger">N/A</span>'}</span>
+                </td>
                 <td>
                     <button class="btn btn-primary" id="btnAcciones" data-tippy-content="Acciones disponibles">
                         <i class="fas fa-tasks"></i> Acciones
@@ -32,9 +38,9 @@ export const obtenerEquiposComputo = async (dataForm) => {
                 </td>
             </tr>
         `;
-    }, '');
+  }, '');
 
-    $(".container-items").innerHTML = `
+  $(".container-items").innerHTML = `
         <table id="equiposTable" class="table">
             <thead class="table-header">
                 <tr>
@@ -50,19 +56,19 @@ export const obtenerEquiposComputo = async (dataForm) => {
         </table>
     `;
 
-    // Inicializar Tippy de manera más eficiente
-    requestAnimationFrame(() => {
-        tippy('[data-tippy-content]', {
-            animation: 'scale',
-            duration: [300, 200],
-            placement: 'top',
-            arrow: true,
-            delay: [100, 50]
-        });
+  // Inicializar Tippy de manera más eficiente
+  requestAnimationFrame(() => {
+    tippy('[data-tippy-content]', {
+      animation: 'scale',
+      duration: [300, 200],
+      placement: 'top',
+      arrow: true,
+      delay: [100, 50]
     });
+  });
 
-    hideLoading();
-    return data;
+  hideLoading();
+  return data;
 };
 
 export const registrarEquipoComputo = async (formData) => {
@@ -99,16 +105,16 @@ export const registrarEquipoComputo = async (formData) => {
 };
 
 
-export const obtenerSoftware = async ()=>{
+export const obtenerSoftware = async () => {
   try {
 
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerSoftware");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -123,7 +129,7 @@ export const obtenerSoftware = async ()=>{
   }
 }
 
-export const asignarSoftwareEquipoComputo = async (formData)=>{
+export const asignarSoftwareEquipoComputo = async (formData) => {
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/AsignarSoftwareEquipoComputo", {
@@ -135,7 +141,7 @@ export const asignarSoftwareEquipoComputo = async (formData)=>{
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     Swal.fire({
       icon: "success",
@@ -148,13 +154,13 @@ export const asignarSoftwareEquipoComputo = async (formData)=>{
       icon: "error",
       text: "Error al asignar software, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 
 }
 
-export const asignarEstacionUbicacionEquipoComputo = async (formData)=>{
+export const asignarEstacionUbicacionEquipoComputo = async (formData) => {
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/AsignarEstacionUbicacionEquipoComputo", {
@@ -166,7 +172,7 @@ export const asignarEstacionUbicacionEquipoComputo = async (formData)=>{
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     Swal.fire({
       icon: "success",
@@ -179,21 +185,21 @@ export const asignarEstacionUbicacionEquipoComputo = async (formData)=>{
       icon: "error",
       text: "Error al asignar estación, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 }
 
-export const obtenerEstaciones = async ()=>{
+export const obtenerEstaciones = async () => {
   try {
 
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerEstacionesUbicacion");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -208,16 +214,16 @@ export const obtenerEstaciones = async ()=>{
   }
 }
 
-export const obtenerLineas = async ()=>{
+export const obtenerLineas = async () => {
   try {
 
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerLineas");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -232,7 +238,7 @@ export const obtenerLineas = async ()=>{
   }
 }
 
-export const registrarPlanta = async (formData)=>{
+export const registrarPlanta = async (formData) => {
   showLoading();
 
   try {
@@ -258,14 +264,14 @@ export const registrarPlanta = async (formData)=>{
     console.error("Error al registrar planta:", error);
     Swal.fire({
       icon: "error",
-      text: "Error al registrar planta. Inténtalo de nuevo más tarde. "+error.message,
+      text: "Error al registrar planta. Inténtalo de nuevo más tarde. " + error.message,
     });
   } finally {
     hideLoading();
   }
 }
 
-export const registrarEstacion = async (formData)=>{
+export const registrarEstacion = async (formData) => {
   showLoading();
 
   try {
@@ -291,14 +297,14 @@ export const registrarEstacion = async (formData)=>{
     console.error("Error al registrar estación:", error);
     Swal.fire({
       icon: "error",
-      text: "Error al registrar estación. Inténtalo de nuevo más tarde. "+error.message,
+      text: "Error al registrar estación. Inténtalo de nuevo más tarde. " + error.message,
     });
   } finally {
     hideLoading();
   }
 }
 
-export const registrarLinea = async (formData)=>{
+export const registrarLinea = async (formData) => {
   showLoading();
 
   try {
@@ -324,23 +330,23 @@ export const registrarLinea = async (formData)=>{
     console.error("Error al registrar linea:", error);
     Swal.fire({
       icon: "error",
-      text: "Error al registrar linea. Inténtalo de nuevo más tarde. "+error.message,
+      text: "Error al registrar linea. Inténtalo de nuevo más tarde. " + error.message,
     });
   } finally {
     hideLoading();
   }
 }
 
-export const obtenerPlantas = async ()=>{
+export const obtenerPlantas = async () => {
   try {
 
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerPlantas");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -355,7 +361,7 @@ export const obtenerPlantas = async ()=>{
   }
 }
 
-export const registrarSoftware = async (formData)=>{
+export const registrarSoftware = async (formData) => {
   showLoading();
 
   try {
@@ -376,7 +382,7 @@ export const registrarSoftware = async (formData)=>{
     console.error("Error al registrar software:", error);
     Swal.fire({
       icon: "error",
-      text: "Error al registrar software. Inténtalo de nuevo más tarde. "+error.message,
+      text: "Error al registrar software. Inténtalo de nuevo más tarde. " + error.message,
     });
   } finally {
     hideLoading();
@@ -447,16 +453,16 @@ export const registrarImpresora = async (formData) => {
 
 }
 
-export const obtenerImpresora = async ()=>{
+export const obtenerImpresora = async () => {
   try {
     console.log("Obtenidbdo impresora")
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerImpresora");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -471,7 +477,7 @@ export const obtenerImpresora = async ()=>{
   }
 
 }
-export const asignarImpresoraEquipoComputo = async (formData)=>{
+export const asignarImpresoraEquipoComputo = async (formData) => {
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/AsignarImpresoraEquipoComputo", {
@@ -483,7 +489,7 @@ export const asignarImpresoraEquipoComputo = async (formData)=>{
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     Swal.fire({
       icon: "success",
@@ -496,7 +502,7 @@ export const asignarImpresoraEquipoComputo = async (formData)=>{
       icon: "error",
       text: "Error al asignar impresora, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 
@@ -539,15 +545,15 @@ export const registrarSoporte = async (formData) => {
 
 }
 
-export const SoportesPorHostname = ({soportes})=>{
+export const SoportesPorHostname = ({ soportes }) => {
 
 
   const containerSoportes = document.querySelector(".container-soportes-por-hostname")
-  
-    containerSoportes.innerHTML = ``
-  
-    // Crear una variable para almacenar el contenido de la tabla
-    let tablaHTML = `
+
+  containerSoportes.innerHTML = ``
+
+  // Crear una variable para almacenar el contenido de la tabla
+  let tablaHTML = `
     <table class="table">
         <thead>
             <tr>
@@ -564,11 +570,11 @@ export const SoportesPorHostname = ({soportes})=>{
         </thead>
         <tbody>
     `;
-  
-    // Agregar los datos a la tabla
-    soportes.forEach(item => {
-        
-        tablaHTML += `
+
+  // Agregar los datos a la tabla
+  soportes.forEach(item => {
+
+    tablaHTML += `
             <tr >
                 <td><span class="text-primary">${item.descripcion}</span></td>
                 <td><span class="text-primary">${item.responsable}</span></td>
@@ -576,21 +582,21 @@ export const SoportesPorHostname = ({soportes})=>{
                 <td><span class="${getEstadoClass(item.estado)} estado-soporte">${item.estado}</span></td>
                 <td><span class="text-primary">${tiempoTranscurrido(item.createdAt)}</span></td>
                 <td><span class="text-primary">${tiempoTranscurrido(item.updatedAt)}</span></td>
-                <td><span class="text-primary">${diferenciaTiempo(item.createdAt,item.updatedAt)}</span></td>
+                <td><span class="text-primary">${diferenciaTiempo(item.createdAt, item.updatedAt)}</span></td>
 
 
             </tr>
         `;
-    });
-  
-    // Cerrar las etiquetas de la tabla
-    tablaHTML += `
+  });
+
+  // Cerrar las etiquetas de la tabla
+  tablaHTML += `
         </tbody>
     </table>
     `;
-  
-    // Asignar el contenido de la tabla al contenedor
-    containerSoportes.innerHTML = tablaHTML;
+
+  // Asignar el contenido de la tabla al contenedor
+  containerSoportes.innerHTML = tablaHTML;
 }
 
 function capitalizeFirstLetter(string) {
@@ -601,7 +607,7 @@ function capitalizeFirstLetter(string) {
 
 const pintarSoportesTable = (datos) => {
   const containerSoportes = document.querySelector(".container-soportes")
-  
+
   containerSoportes.innerHTML = ``
 
   // Crear una variable para almacenar el contenido de la tabla
@@ -615,17 +621,17 @@ const pintarSoportesTable = (datos) => {
               <th style="min-width: 200px;" scope="col">Problema/Descripción</th>
               <th style="min-width: 200px;" scope="col">Solución/Acción</th>
                <th scope="col">Responsable</th>
-               <th scope="col">Requerido por</th>
+               <th scope="col">Req. por</th>
               <th scope="col">Estado/Situación</th>
               <th scope="col">Cambio de Es.</th>
           </tr>
       </thead>
       <tbody>
   `;
-  
+
   // Agregar los datos a la tabla
   if (datos.length === 0) {
-      tablaHTML += `
+    tablaHTML += `
       <tr>
           <td colspan="10" class="text-center text-muted py-3">
               No hay registros para mostrar
@@ -633,9 +639,9 @@ const pintarSoportesTable = (datos) => {
       </tr>
       `;
   } else {
-      datos.forEach(item => {
-          
-          tablaHTML += `
+    datos.forEach(item => {
+
+      tablaHTML += `
           
               <tr >
                   <td style="display:none;" class="id-soporte">${item.id}</td>
@@ -684,7 +690,7 @@ const pintarSoportesTable = (datos) => {
                   </td>
               </tr>
           `;
-      });
+    });
   }
 
   // Cerrar las etiquetas de la tabla
@@ -698,24 +704,24 @@ const pintarSoportesTable = (datos) => {
 }
 
 function getBootstrapColorForEstado(estado) {
-    switch(estado) {
-        case 'Pendiente': return 'warning';
-        case 'En Proceso': return 'primary';
-        case 'Resuelto': return 'success';
-        case 'Cancelado': return 'danger';
-        default: return 'secondary';
-    }
+  switch (estado) {
+    case 'Pendiente': return 'warning';
+    case 'En Proceso': return 'primary';
+    case 'Resuelto': return 'success';
+    case 'Cancelado': return 'danger';
+    default: return 'secondary';
+  }
 }
-export const obtenerSoportesHoy =  async ()=>{
+export const obtenerSoportesHoy = async () => {
 
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerSoportesHoy");
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const datos = await response.json();
 
     pintarSoportesTable(datos)
@@ -735,7 +741,7 @@ export const obtenerSoportesHoy =  async ()=>{
 
 }
 
-export const completarSoporte = async (formData)=>{
+export const completarSoporte = async (formData) => {
   showLoading();
 
   try {
@@ -770,7 +776,7 @@ export const completarSoporte = async (formData)=>{
 
 // ESTADISTICAS DE SOPORTES USANDO CHART.JS
 
-export const obtenerTopSoportes = async (formData)=>{
+export const obtenerTopSoportes = async (formData) => {
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerTopSoportes?mes=" + formData.get("mes") || "");
@@ -779,7 +785,7 @@ export const obtenerTopSoportes = async (formData)=>{
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -788,14 +794,14 @@ export const obtenerTopSoportes = async (formData)=>{
       icon: "error",
       text: "Error al obtener top soportes, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 
 
 }
 
-export const obtenerSoportesSemana = async (formData)=>{
+export const obtenerSoportesSemana = async (formData) => {
   try {
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerSoportesSeamanas?mes=" + formData.get("mes") || "");
@@ -804,7 +810,7 @@ export const obtenerSoportesSemana = async (formData)=>{
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -813,23 +819,23 @@ export const obtenerSoportesSemana = async (formData)=>{
       icon: "error",
       text: "Error al obtener soportes de la semana, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 
 }
 
-export const ObtenerSoportesPorFechas = async (formData)=>{
+export const ObtenerSoportesPorFechas = async (formData) => {
   try {
 
     showLoading()
-    const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio")  + "&fechaFin=" + formData.get("fechaFin") + "&plantas=" + formData.get("plantas"));
+    const response = await fetch("/GestionPlantas/ObtenerSoportesPorFechas?fechaInicio=" + formData.get("fechaInicio") + "&fechaFin=" + formData.get("fechaFin") + "&plantas=" + formData.get("plantas"));
 
     if (!response.ok) {
       const data = await response.json();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     pintarSoportesTable(data)
@@ -840,7 +846,7 @@ export const ObtenerSoportesPorFechas = async (formData)=>{
       icon: "error",
       text: "Error al obtener soportes por fechas, " + (error.message || "desconocido")
     });
-  }finally{
+  } finally {
     hideLoading()
   }
 

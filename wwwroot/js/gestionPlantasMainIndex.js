@@ -1,7 +1,13 @@
 // Importaciones agrupadas por módulo
 import * as gestionPlantas from "./gestionPlantasIndex.js";
 import * as comandosWmi from "./cmdIndex.js";
-import { hideLoading, showLoading, showModal,convertiFechaAUTC,establecerFechasPredeterminadas } from "./utils.js";
+import { hideLoading, 
+  showLoading, 
+  showModal,
+  convertiFechaAUTC,
+  establecerFechasPredeterminadas,
+  copyToClipboard
+} from "./utils.js";
 
 let myChart;
 let chartSemanasSoportes;
@@ -193,10 +199,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   DOM.containers.items.addEventListener("click", async (e) => {
     const target = e.target;
-    console.log(target);
-    if (target.id === "btnAcciones") {
 
+    if (target.id === "btnAcciones") {
       initAccionesEquipoSoftware(target)
+    }
+
+    if(target.id === "btnCopiarHostname"){
+      copyToClipboard(target.textContent);
     }
 
     if (target.tagName === 'TD') {
@@ -1428,10 +1437,8 @@ function buscarSoftware(termino) {
 }
 
 const initAccionesEquipoSoftware = async (target) => {
-  state.hostname =
-    target.parentNode.parentNode.querySelector("#hostname").textContent;
-  state.idEquipoComputo =
-    target.parentNode.parentNode.querySelector("#idEquipo").textContent;
+state.hostname = target.parentNode.parentNode.querySelector("#hostname").textContent.trim();
+state.idEquipoComputo = target.parentNode.parentNode.querySelector("#idEquipo").textContent.trim();;
 
   document.querySelector(
     "#exampleModalAccionesLabel"
