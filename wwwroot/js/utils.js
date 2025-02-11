@@ -142,3 +142,21 @@ export function copyToClipboard(text) {
     });
   });
 }
+
+// Utility function for consistent Swal alerts
+export const showAlert = (type, message, title = '') => {
+  const config = {
+    icon: type,
+    text: message,
+    title: title,
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  };
+  
+  // Remove title if empty
+  if (!title) delete config.title;
+  
+  Swal.fire(config);
+};

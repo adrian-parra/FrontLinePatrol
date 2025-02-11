@@ -1,15 +1,12 @@
-
 import {
   $,
   showLoading,
   hideLoading,
   getEstadoClass,
   tiempoTranscurrido,
-  diferenciaTiempo
-}
-  from "/js/utils.js";
-
-
+  diferenciaTiempo,
+  showAlert
+}from "/js/utils.js";
 
 export const obtenerEquiposComputo = async (dataForm) => {
   showLoading();
@@ -87,27 +84,19 @@ export const registrarEquipoComputo = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.data.message,
-    });
+    showAlert("success", "Equipo registrado correctamente.");
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar el equipo:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar el equipo. Inténtalo de nuevo más tarde.",
-    });
+    showAlert("error", "Error al registrar el equipo. Inténtalo de nuevo más tarde.");
   } finally {
     hideLoading();
   }
 };
 
-
 export const obtenerSoftware = async () => {
   try {
-
     showLoading()
     const response = await fetch("/GestionPlantas/ObtenerSoftware");
 
@@ -119,10 +108,7 @@ export const obtenerSoftware = async () => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener software, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener software, " + (error.message || "desconocido"));
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -143,21 +129,14 @@ export const asignarSoftwareEquipoComputo = async (formData) => {
     }
 
     const data = await response.json();
-    Swal.fire({
-      icon: "success",
-      text: data.message
-    });
+    showAlert("success", data.message);
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al asignar software, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al asignar software, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
-
 }
 
 export const asignarEstacionUbicacionEquipoComputo = async (formData) => {
@@ -174,17 +153,11 @@ export const asignarEstacionUbicacionEquipoComputo = async (formData) => {
     }
 
     const data = await response.json();
-    Swal.fire({
-      icon: "success",
-      text: data.message
-    });
+    showAlert("success", data.message);
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al asignar estación, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al asignar estación, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
@@ -204,10 +177,7 @@ export const obtenerEstaciones = async () => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener estaciones, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener estaciones, " + (error.message || "desconocido"));
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -228,10 +198,7 @@ export const obtenerLineas = async () => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener lineas, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener lineas, " + (error.message || "desconocido"));
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -254,18 +221,12 @@ export const registrarPlanta = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
+    showAlert("success", dataResponse.message);
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar planta:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar planta. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar planta. Inténtalo de nuevo más tarde. " + error.message);
   } finally {
     hideLoading();
   }
@@ -287,18 +248,12 @@ export const registrarEstacion = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
+    showAlert("success", dataResponse.message);
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar estación:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar estación. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar estación. Inténtalo de nuevo más tarde. " + error.message);
   } finally {
     hideLoading();
   }
@@ -320,18 +275,12 @@ export const registrarLinea = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
+    showAlert("success", dataResponse.message);
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar linea:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar linea. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar linea. Inténtalo de nuevo más tarde. " + error.message);
   } finally {
     hideLoading();
   }
@@ -351,10 +300,7 @@ export const obtenerPlantas = async () => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener plantas, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener plantas, " + (error.message || "desconocido"));
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -380,10 +326,7 @@ export const registrarSoftware = async (formData) => {
     return dataResponse;
   } catch (error) {
     console.error("Error al registrar software:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar software. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar software. Inténtalo de nuevo más tarde. " + error.message);
   } finally {
     hideLoading();
   }
@@ -412,10 +355,7 @@ export const confirmarPlantaRecorrido = async (formData) => {
     $("#exampleModalPlantaRecorrido .btn-close").click();
   } else {
     // MOSTRAR UN MENSAJE DE ERROR SI NO SE SELECCIONA NINGUNA PLANTA
-    Swal.fire({
-      icon: "error",
-      text: "Por favor, selecciona una planta.",
-    });
+    showAlert("error", "Por favor, selecciona una planta.");
   }
 };
 
@@ -435,18 +375,12 @@ export const registrarImpresora = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
+    showAlert("success", dataResponse.message);
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar impresora:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar impresora. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar impresora. Inténtalo de nuevo más tarde. " + error.message);
   } finally {
     hideLoading();
   }
@@ -467,10 +401,7 @@ export const obtenerImpresora = async () => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener impresoras, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener impresoras, " + (error.message || "desconocido"));
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
     hideLoading()
@@ -491,17 +422,11 @@ export const asignarImpresoraEquipoComputo = async (formData) => {
     }
 
     const data = await response.json();
-    Swal.fire({
-      icon: "success",
-      text: data.message
-    });
+    showAlert("success", data.message);
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al asignar impresora, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al asignar impresora, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
@@ -525,19 +450,12 @@ export const registrarSoporte = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
-
+    showAlert("success", dataResponse.message);
 
     return dataResponse.data;
   } catch (error) {
     console.error("Error al registrar soporte:", error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al registrar soporte. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al registrar soporte. Inténtalo de nuevo más tarde. " + error.message);
     return false;
   } finally {
     hideLoading();
@@ -712,6 +630,8 @@ function getBootstrapColorForEstado(estado) {
     default: return 'secondary';
   }
 }
+
+
 export const obtenerSoportesHoy = async () => {
 
   try {
@@ -729,10 +649,7 @@ export const obtenerSoportesHoy = async () => {
     return datos;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener soportes de hoy, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener soportes de hoy, " + (error.message || "desconocido"));
     return false;
   } finally {
     // Puedes limpiar algún estado aquí si lo necesitas
@@ -757,22 +674,18 @@ export const completarSoporte = async (formData) => {
 
     const dataResponse = await respuesta.json();
 
-    Swal.fire({
-      icon: "success",
-      text: dataResponse.message,
-    });
+    showAlert("success", dataResponse.message);
     return true;
   } catch (error) {
 
-    Swal.fire({
-      icon: "error",
-      text: "Error al completar soporte. Inténtalo de nuevo más tarde. " + error.message,
-    });
+    showAlert("error", "Error al completar soporte. Inténtalo de nuevo más tarde. " + error.message);
     return false;
   } finally {
     hideLoading();
   }
 }
+
+
 
 // ESTADISTICAS DE SOPORTES USANDO CHART.JS
 
@@ -790,10 +703,7 @@ export const obtenerTopSoportes = async (formData) => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener top soportes, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener top soportes, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
@@ -815,10 +725,7 @@ export const obtenerSoportesSemana = async (formData) => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener soportes de la semana, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener soportes de la semana, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
@@ -842,10 +749,7 @@ export const ObtenerSoportesPorFechas = async (formData) => {
     return data;
   } catch (error) {
     console.log(error);
-    Swal.fire({
-      icon: "error",
-      text: "Error al obtener soportes por fechas, " + (error.message || "desconocido")
-    });
+    showAlert("error", "Error al obtener soportes por fechas, " + (error.message || "desconocido"));
   } finally {
     hideLoading()
   }
