@@ -67,7 +67,13 @@
                 <i class="fas fa-clock"></i>
               </div>
               <h3>Dispositivo temporal</h3>
-            </div>  
+            </div>
+            <div class="card card-options" id="btnEstadoEquipos">
+              <div class="icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <h3>Estado de equipos</h3>
+            </div>    
           </div>
         </div>
 
@@ -76,7 +82,40 @@
   </div>
 </div>
 
+<div class="modal fade" id="exampleModalEstadoEquipos" tabindex="-1"
+  aria-labelledby="exampleModalEstadoEquipos" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Estado de equipos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="container">
+           <div class="row mb-3">
+             <div class="col-md-8">
+               <select id="selectLineaEquipoComputoStatus" class="form-select" aria-label="Seleccionar Línea">
+                 <option selected disabled>Selecciona una línea</option>
+                 <!-- Options will be populated dynamically via JavaScript -->
+               </select>
+             </div>
+             <div class="col-md-4">
+               <button id="btnBuscarEstadoEquipos" class="btn btn-primary w-100">
+                 <i class="fas fa-search me-2"></i>Buscar Estado de Equipos
+               </button>
+             </div>
+           </div>
+         
+           <div id="resultadosEstadoEquipos" class="mt-3">
+             <!-- Results will be displayed here -->
+           </div>
+         </div>
+        
 
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL INGRESAR Hostname TEMPORALES PARA ACCIONES-->
 <div class="modal fade" id="exampleModalAccionesDispositivoTemporal" tabindex="-1"

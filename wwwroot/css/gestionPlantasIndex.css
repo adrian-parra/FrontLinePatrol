@@ -16,7 +16,8 @@
 #exampleModalSoportesHoy .modal-body,
 #exampleModalObtenerSoporteEquipoComputo .modal-body,
 #exampleModalEstadisticasSoportes .modal-body,
-#exampleModalCerrarSoftwareEquipoComputo .modal-body {
+#exampleModalCerrarSoftwareEquipoComputo .modal-body,
+#exampleModalEstadoEquipos .modal-body {
   max-height: calc(100vh - 150px);
   overflow: auto;
 }
@@ -48,7 +49,8 @@ p{
 
 #exampleModalSoportesHoy .modal-dialog,
 #exampleModalObtenerSoporteEquipoComputo .modal-dialog,
-#exampleModalEstadisticasSoportes .modal-dialog {
+#exampleModalEstadisticasSoportes .modal-dialog,
+#exampleModalEstadoEquipos .modal-dialog {
   max-width: 1200px !important;
 }
 
@@ -470,3 +472,4 @@ p{
   pointer-events: none;
   opacity: 0.1;
 }
+

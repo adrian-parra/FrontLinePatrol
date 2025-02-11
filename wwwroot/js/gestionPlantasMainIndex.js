@@ -60,6 +60,7 @@ const DOM = {
     estadisticasSoportes: document.querySelector("#btnEstadisticasSoportes"),
     accionesDispositivoTemporal: document.querySelector("#btnAccionesDispositivoTemporal"),
     buscarSoporteHoy: document.querySelector("#btnBuscarSoporteHoy"),
+    estadoEquipos: document.querySelector("#btnEstadoEquipos"),
   },
   modals: {
     registrarOpciones: document.querySelector("#exampleModalOpcionesRegistro"),
@@ -79,7 +80,8 @@ const DOM = {
     obtenerPuntoRestauracionEquipoComputo: document.querySelector("#exampleModalObtenerPuntoRestauracionEquipoComputo"),
     accionesGenerales: document.querySelector("#exampleModalAccionesGenerales"),
     estadisticasSoportes: document.querySelector("#exampleModalEstadisticasSoportes"),
-    accionesDispositivoTemporal: document.querySelector("#exampleModalAccionesDispositivoTemporal")
+    accionesDispositivoTemporal: document.querySelector("#exampleModalAccionesDispositivoTemporal"),
+    estadoEquipos: document.querySelector("#exampleModalEstadoEquipos")
   },
   forms: {
     registrarEquipoComputo: document.querySelector("#formRegistrarEquipoComputo"),
@@ -1082,7 +1084,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
  
 
-  //handleBuscarPlantas();
+
 
   function handleMultiSelectPlantas() {
     const selectPlantas = document.getElementById('selectPlantas');
@@ -1102,8 +1104,83 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   establecerFechasPredeterminadas();
 
+  DOM.buttons.estadoEquipos.addEventListener("click", async () => {
+    const lineas = await gestionPlantas.obtenerLineas();
+
+    document.querySelector("#selectLineaEquipoComputoStatus").innerHTML = ``;
+
+    lineas.forEach((linea) => {
+      document.querySelector("#selectLineaEquipoComputoStatus").innerHTML += `
+      <option value="${linea.id}">${linea.nombre}</option>`;
+    })
+    showModal(DOM.modals.estadoEquipos)
+  });
+
+  document.getElementById('btnBuscarEstadoEquipos').addEventListener('click', buscarEstadoEquipos);
+
 }); // ! FINN EVENTO ONLOAD
 
+const buscarEstadoEquipos = async () => {
+  const selectLineas = document.getElementById('selectLineaEquipoComputoStatus');
+  const resultadosDiv = document.getElementById('resultadosEstadoEquipos');
+  
+  const lineaId = selectLineas.value;
+  
+  if (!lineaId) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Atención',
+      text: 'Selecciona una línea primero'
+    });
+    return;
+  }
+
+  try {
+    showLoading();
+    const response = await fetch(`http://localhost:3000/api/linea/${lineaId}/estaciones-equipos`);
+    const data = await response.json();
+    
+    // Clear previous results
+    resultadosDiv.innerHTML = '';
+    
+    // Create table to display results
+    const table = document.createElement('table');
+    table.className = 'table table-striped table-hover';
+    
+    // Table header
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Estación</th>
+          <th>Hostname</th>
+          <th>Estado</th>
+          <th>Detalles</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.data.map(equipo => `
+          <tr class="${equipo.status === 'Conectado' ? 'table-success' : 'table-danger'}">
+            <td>${equipo.estacion}</td>
+            <td>${equipo.hostname}</td>
+            <td>${equipo.status}</td>
+            <td>${equipo.status === 'Conectado' ? `Pérdida: ${equipo.detalles.packetLoss}%, Tiempo Promedio: ${equipo.detalles.avgTime}ms` : 'Sin conexión'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+    
+    resultadosDiv.appendChild(table);
+  } catch (error) {
+    console.error('Error al buscar estado de equipos:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo obtener el estado de los equipos'
+    });
+  }finally{
+    hideLoading();
+  }
+};
 
 async function handleBuscarPlantas() {
   const btnBuscarPlantas = document.getElementById('btnBuscarPlantas');
@@ -1463,10 +1540,11 @@ state.idEquipoComputo = target.parentNode.parentNode.querySelector("#idEquipo").
       console.warn('No se encontraron procesos en el equipo');
       
       // Optionally disable cards or show a warning
-      const cardOptions = document.querySelectorAll('.grid-container .card-options');
+      const cardOptions = document.querySelectorAll('#exampleModalAccionesRegistro .card-options');
       cardOptions.forEach(card => {
         if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
-            card.id !== "btnObtenerSoporteEquipoComputo") {
+            card.id !== "btnObtenerSoporteEquipoComputo" &&
+            card.id !== "btnAgregarEstacionUbicacion") {
           card.classList.add('disabled');
         }
       });
@@ -1502,10 +1580,11 @@ state.idEquipoComputo = target.parentNode.parentNode.querySelector("#idEquipo").
     console.error('Error al obtener procesos del equipo:', error);
     
     // Disable most cards except support-related ones
-    const cardOptions = document.querySelectorAll('.grid-container .card-options');
+    const cardOptions = document.querySelectorAll('#exampleModalAccionesRegistro .card-options');
     cardOptions.forEach(card => {
       if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
-          card.id !== "btnObtenerSoporteEquipoComputo") {
+          card.id !== "btnObtenerSoporteEquipoComputo" &&
+          card.id !== "btnAgregarEstacionUbicacion") {
         card.classList.add('disabled');
       }
     });
