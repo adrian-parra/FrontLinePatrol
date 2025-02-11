@@ -5,7 +5,9 @@ import {
   getEstadoClass,
   tiempoTranscurrido,
   diferenciaTiempo,
-  showAlert
+  showAlert,
+  ApiService,
+  IPUtils
 }from "/js/utils.js";
 
 export const obtenerEquiposComputo = async (dataForm) => {
@@ -69,30 +71,27 @@ export const obtenerEquiposComputo = async (dataForm) => {
 };
 
 export const registrarEquipoComputo = async (formData) => {
-  showLoading();
-
   try {
-    const respuesta = await fetch("/GestionPlantas/GuardarEquipoComputo", {
-      method: 'POST',
-      body: formData,
-    });
 
-    // Verifica si la respuesta es exitosa
-    if (!respuesta.ok) {
-      throw new Error(`Error: ${respuesta.status} ${respuesta.statusText}`);
+    const ip = formData.get("hostname");
+
+    if(!IPUtils.isPrivateIP(ip)) {
+      const hostname = await IPUtils.getHostnameFromIP(ip);
+      if(!hostname) {
+        throw new Error('No se pudo obtener el hostname');
+      }
+      formData.set("hostname", hostname);
     }
 
-    const dataResponse = await respuesta.json();
-
-    showAlert("success", "Equipo registrado correctamente.");
+    const dataResponse = await ApiService.fetchData("/GestionPlantas/GuardarEquipoComputo", {
+      method: 'POST',
+      body: formData
+    });
 
     return dataResponse.data;
   } catch (error) {
-    console.error("Error al registrar el equipo:", error);
-    showAlert("error", "Error al registrar el equipo. Inténtalo de nuevo más tarde.");
-  } finally {
-    hideLoading();
-  }
+    throw error;
+  } 
 };
 
 export const obtenerSoftware = async () => {

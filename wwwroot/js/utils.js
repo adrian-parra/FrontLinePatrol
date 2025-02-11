@@ -150,7 +150,7 @@ export const showAlert = (type, message, title = '') => {
     text: message,
     title: title,
     toast: true,
-    position: 'top-end',
+    position: 'top-start',
     showConfirmButton: false,
     timer: 3000
   };
@@ -159,4 +159,122 @@ export const showAlert = (type, message, title = '') => {
   if (!title) delete config.title;
   
   Swal.fire(config);
+};
+
+
+export class ApiService {
+  static async fetchData(url, options = {}) {
+    try {
+      const defaultOptions = {
+        method: 'GET',
+      };
+
+      const response = await fetch(url, { ...defaultOptions, ...options });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`API Error: ${error.message}`);
+      throw error;
+    }
+  }
+}
+
+// Utilidades para validación de IPs
+export const IPUtils = {
+  // Validar IPv4
+  isValidIPv4(ip) {
+    const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    return ipv4Regex.test(ip);
+  },
+
+  // Validar IPv6
+  isValidIPv6(ip) {
+    const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+    return ipv6Regex.test(ip);
+  },
+
+  // Extraer IPs de un texto
+  extractIPs(text) {
+    const ipv4Regex = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
+    return text.match(ipv4Regex) || [];
+  },
+
+  // Validar rango de IP privada
+  isPrivateIP(ip) {
+    const privateIPv4Ranges = [
+      /^10\./,                    // 10.0.0.0 - 10.255.255.255
+      // /^172\.(1[6-9]|2[0-9]|3[0-1])\./,  // 172.16.0.0 - 172.31.255.255
+      /^192\.168\./,              // 192.168.0.0 - 192.168.255.255
+      /^127\./                    // Localhost
+    ];
+
+    return privateIPv4Ranges.some(regex => regex.test(ip));
+  },
+
+  // Convertir IP a número entero (útil para comparaciones)
+  ipToNumber(ip) {
+    return ip.split('.').reduce((acc, octet) => (acc * 256) + parseInt(octet, 10), 0);
+  },
+
+  // Comparar dos IPs
+  compareIPs(ip1, ip2) {
+    if (!this.isValidIPv4(ip1) || !this.isValidIPv4(ip2)) {
+      throw new Error('Invalid IP address');
+    }
+
+    const num1 = this.ipToNumber(ip1);
+    const num2 = this.ipToNumber(ip2);
+
+    return Math.sign(num1 - num2);
+  },
+  async getHostnameFromIP(ip) {
+    try {
+      // Validar IP primero
+      if (!IPUtils.isValidIPv4(ip)) {
+        throw new Error('IP inválida');
+      }
+
+      const response = await ApiService.fetchData(`/Network/ResolveHostname?ip=${ip}`);
+      
+      if (response.success) {
+        // Eliminar el dominio específico
+        const cleanHostname = response.hostname.split('.')[0];
+        return cleanHostname;
+      } else {
+        console.warn(response.message);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error obteniendo hostname:", error);
+      showAlert('error', `Error al resolver hostname: ${error.message}`);
+      return null;
+    }
+  },
+// Método para obtener información de red completa
+async getNetworkInfo(ip) {
+  try {
+    // Validar IP primero
+    if (!IPUtils.isValidIPv4(ip)) {
+      throw new Error('IP inválida');
+    }
+
+    const response = await ApiService.fetchData(`/Network/GetNetworkInfo?ip=${ip}`);
+    
+    if (response.success) {
+      return response;
+    } else {
+      console.warn(response.message);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error obteniendo información de red:", error);
+    showAlert('error', `Error al obtener información de red: ${error.message}`);
+    return null;
+  }
+}
+
 };

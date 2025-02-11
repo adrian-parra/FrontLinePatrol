@@ -6,7 +6,8 @@ import { hideLoading,
   showModal,
   convertiFechaAUTC,
   establecerFechasPredeterminadas,
-  copyToClipboard
+  copyToClipboard,
+  showAlert
 } from "./utils.js";
 
 let myChart;
@@ -227,11 +228,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   DOM.forms.registrarEquipoComputo.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-
-    const data = await gestionPlantas.registrarEquipoComputo(formData);
-
-    e.target.reset();
-    updateInterfaz()
+  
+    try {
+      showLoading();
+      await gestionPlantas.registrarEquipoComputo(formData);
+      
+      showAlert("success", "Equipo registrado correctamente");
+      e.target.reset();
+      updateInterfaz();
+    } catch (error) {
+      console.error("Error al registrar equipo:", error);
+      showAlert("error", `Error al registrar equipo: ${error.message || "Intenta de nuevo más tarde"}`);
+    } finally {
+      hideLoading();
+    }
   });
 
   DOM.buttons.cerrarApp.addEventListener("click", async () => {
