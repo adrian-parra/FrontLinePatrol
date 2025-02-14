@@ -208,6 +208,45 @@ public class FileUploadsController : Controller
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> SaveImage(IFormFile image)
+    {
+        if (image == null || image.Length == 0)
+            return BadRequest("No se proporcionó imagen");
+    
+        try 
+        {
+            // Ruta absoluta directa
+            var uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "soportes");
+            Directory.CreateDirectory(uploadFolder);
+    
+            // Nombre de archivo único
+            var fileName = $"soporte_{DateTime.Now:yyyyMMddHHmmss}.png";
+            var filePath = Path.Combine(uploadFolder, fileName);
+    
+            // Guardar archivo
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(stream);
+            }
+    
+             // Devuelve un objeto JSON sin redirigir
+        return Json(new { 
+            success = true,
+            message = "Imagen guardada exitosamente", 
+            path = $"/images/soportes/{fileName}" 
+        });
+        }
+        catch (Exception ex)
+        {
+           // Devuelve un objeto JSON de error
+        return Json(new { 
+            success = false,
+            message = $"Error interno: {ex.Message}" 
+        });
+        }
+    }
+
 
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -215,6 +254,8 @@ public class FileUploadsController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    
 }
 
 

@@ -62,6 +62,8 @@ const DOM = {
     accionesDispositivoTemporal: document.querySelector("#btnAccionesDispositivoTemporal"),
     buscarSoporteHoy: document.querySelector("#btnBuscarSoporteHoy"),
     estadoEquipos: document.querySelector("#btnEstadoEquipos"),
+    descargarSoportesHoy: document.querySelector("#btnDescargarSoportesHoy"),
+    enviarSoportesHoyPorCorreo: document.querySelector("#btnEnviarSoportesHoyPorCorreo"),
   },
   modals: {
     registrarOpciones: document.querySelector("#exampleModalOpcionesRegistro"),
@@ -102,8 +104,12 @@ const DOM = {
   }
 };
 
+
+
 // ! INICIO ONLOAD
 document.addEventListener("DOMContentLoaded", async () => {
+
+ 
 
   const plantaGuardada = localStorage.getItem("plantaSeleccionadaG");
 
@@ -960,15 +966,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     } else {
-      html2canvas(document.querySelector(".container-soportes")).then(function (canvas) {
-        var imgData = canvas.toDataURL('image/png');
-        var link = document.createElement('a');
-        link.href = imgData;
-        link.download = 'soportes.png';
-        link.click();
-      }).catch(function (error) {
-        console.error('Error al capturar el div:', error);
-      });
+      // html2canvas(document.querySelector(".container-soportes")).then(function (canvas) {
+      //   var imgData = canvas.toDataURL('image/png');
+      //   var link = document.createElement('a');
+      //   link.href = imgData;
+      //   link.download = 'soportes.png';
+      //   link.click();
+      // }).catch(function (error) {
+      //   console.error('Error al capturar el div:', error);
+      // });
     }
   })
 
@@ -1128,6 +1134,190 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   document.getElementById('btnBuscarEstadoEquipos').addEventListener('click', buscarEstadoEquipos);
 
+  DOM.buttons.descargarSoportesHoy.addEventListener('click', async () => {
+    html2canvas(document.querySelector(".container-soportes")).then(function (canvas) {
+      var imgData = canvas.toDataURL('image/png');
+      var link = document.createElement('a');
+      link.href = imgData;
+      link.download = 'soportes.png';
+      link.click();
+    }).catch(function (error) {
+      console.error('Error al capturar el div:', error);
+    });
+  })
+
+  DOM.buttons.enviarSoportesHoyPorCorreo.addEventListener('click', async (e) => {
+    e.preventDefault(); // Previene el comportamiento predeterminado
+    
+    try {
+      html2canvas(document.querySelector(".container-soportes")).then(async function (canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        
+        // Convertir base64 a Blob
+        const response = await fetch(imgData);
+        const blob = await response.blob();
+        
+        // Crear FormData para enviar al servidor
+        const formData = new FormData();
+        formData.append('image', blob, 'soportes.png');
+        
+        // Enviar al backend para guardar
+        const saveResponse = await fetch('/FileUploads/SaveImage', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (saveResponse.ok) {
+          const result = await saveResponse.json();
+          console.log('Imagen guardada:', result.path);
+
+          
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            icon: 'success',
+            title: 'Imagen guardada',
+            text: 'La imagen se ha guardado correctamente',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+
+          const { value: confirmar } = await Swal.fire({
+            title: 'Enviar soportes por correo',
+            text: 'Est s seguro de que desea enviar los soportes?',
+            imageUrl: imgData,
+            imageHeight: 200,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'S , enviar',
+            cancelButtonText: 'Cancelar'
+          });
+          
+          if (confirmar) {
+            try {
+            Swal.fire({
+              title: 'Enviando correo electr nico',
+              html: 'Esto puede tardar un momento...',
+              timer: 10000,
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading()
+              }
+            });
+
+              const mailResponse = await fetch('http://localhost:3000/api/send-email', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  //to: 'adrian.borquez@sewsus.com.mx',
+                  //cc: "adrian.borquez@sewsus.com.mx",
+                  to: 'ramon.almeida@sewsus.com.mx, david.soto@sewsus.com.mx',
+                  cc: 'jorge.cota@sewsus.com.mx, mauricio.montes@sewsus.com.mx, isaac.apodaca@sewsus.com.mx, hannes.cota@sewsus.com.mx, pablo.buitimea@sewsus.com.mx, Francisco.Bernal@sewsus.com.mx, jorge.quintero@sewsus.com.mx',
+                  subject: 'Soportes Generados - MCH1,MCH2,MCH3',
+                  html: `
+                    <div style='max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;'>
+                      <span style='
+                        display: inline-block; 
+                        background-color: #ffff00; 
+                        color: black; 
+                        padding: 10px 15px; 
+                        text-align: left; 
+                        font-weight: bold; 
+                        margin-bottom: 15px; 
+                        border-radius: 5px;
+                        font-size: 24px;  // Tamaño de fuente de título
+                        line-height: 1.2;  // Altura de línea para mejor legibilidad
+                      '>NO SE GENERO TIEMPO MUERTO</span>
+                      <h3 style='color: #333; text-align: left; margin-bottom: 10px;'>ACTIVIDADES</h3>
+                      <div style='text-align: left;'>
+                        <img src='http://172.30.106.138:7100/images/soportes/${result.path.split('/').pop()}' alt='Soporte Técnico LinePatrol' style='max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'/>
+                      </div>
+                    </div>
+                  `
+                })
+              });
+          
+              const mailResult = await mailResponse.json();
+          
+              if (mailResponse.ok) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Correo enviado',
+                  text: 'El correo se ha enviado correctamente',
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: mailResult.message || 'No se pudo enviar el correo',
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000
+                });
+              }
+            } catch (error) {
+              console.error('Error al enviar correo:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un problema al enviar el correo',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+              });
+            }
+          }
+
+        } else {
+          // Mostrar mensaje de error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo guardar la imagen',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      }).catch(function (error) {
+        console.error('Error al capturar el div:', error);
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo capturar la imagen',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000
+        });
+      });
+    } catch (error) {
+      console.error('Error al procesar la imagen:', error);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al procesar la imagen',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    }
+  }, { passive: false }); // Importante para que preventDefault() funcione
 }); // ! FINN EVENTO ONLOAD
 
 const buscarEstadoEquipos = async () => {
@@ -1551,6 +1741,9 @@ state.idEquipoComputo = target.parentNode.parentNode.querySelector("#idEquipo").
       
       // Optionally disable cards or show a warning
       const cardOptions = document.querySelectorAll('#exampleModalAccionesRegistro .card-options');
+
+      console.log("entro aqui")
+
       cardOptions.forEach(card => {
         if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
             card.id !== "btnObtenerSoporteEquipoComputo" &&
@@ -1643,7 +1836,8 @@ const testConection = async () => {
       cardOptions.forEach(card => {
         // Check if the card does NOT have the specific IDs
         if (card.id !== "btnRegistrarSoporteEquipoComputo" && 
-            card.id !== "btnObtenerSoporteEquipoComputo") {
+            card.id !== "btnObtenerSoporteEquipoComputo" &&
+            card.id !== "btnAgregarEstacionUbicacion") {
           card.classList.add('disabled');
         }
       });

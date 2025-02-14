@@ -78,9 +78,10 @@ export const registrarEquipoComputo = async (formData) => {
     if(!IPUtils.isPrivateIP(ip)) {
       const hostname = await IPUtils.getHostnameFromIP(ip);
       if(!hostname) {
-        throw new Error('No se pudo obtener el hostname');
+       // throw new Error('No se pudo obtener el hostname');
+      }else{
+        formData.set("hostname", hostname);
       }
-      formData.set("hostname", hostname);
     }
 
     const dataResponse = await ApiService.fetchData("/GestionPlantas/GuardarEquipoComputo", {
