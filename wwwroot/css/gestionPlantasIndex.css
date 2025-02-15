@@ -494,3 +494,29 @@ p{
 .gemini-improve-btn:focus {
   outline: none;
 }
+
+
+.ai-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ai-sparkle {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, #4285F4 20%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+.ai-loader-text {
+  margin-top: 15px;
+  color: #4285F4;
+  font-weight: bold;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}

@@ -109,12 +109,19 @@ async function improveTextWithGemini(inputElement) {
       const originalText = inputElement.value.trim();
       if (!originalText) return;
 
-      // Mostrar loading
       Swal.fire({
-          title: 'Mejorando texto...',
-          icon: 'info',
+          html: `
+              <div class="ai-loader">
+                  <div class="ai-sparkle"></div>
+                  <div class="ai-loader-text">Transformando texto...</div>
+              </div>
+          `,
           showConfirmButton: false,
-          allowOutsideClick: false
+          allowOutsideClick: false,
+          background: 'transparent',
+          customClass: {
+              popup: 'ai-loader-popup'
+          }
       });
 
       const response = await fetch('http://localhost:3000/api/gemini/correct-text', {
