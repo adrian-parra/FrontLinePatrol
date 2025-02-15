@@ -473,3 +473,24 @@ p{
   opacity: 0.1;
 }
 
+
+
+.gemini-improve-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4285F4; /* Color de Gemini */
+  font-size: 1.2em;
+  margin-left: 5px;
+  vertical-align: middle;
+  transition: transform 0.2s;
+  background-color: transparent;
+}
+
+.gemini-improve-btn:hover {
+  transform: scale(1.1);
+}
+
+.gemini-improve-btn:focus {
+  outline: none;
+}

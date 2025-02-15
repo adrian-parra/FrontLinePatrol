@@ -104,7 +104,80 @@ const DOM = {
   }
 };
 
+async function improveTextWithGemini(inputElement) {
+  try {
+      const originalText = inputElement.value.trim();
+      if (!originalText) return;
 
+      // Mostrar loading
+      Swal.fire({
+          title: 'Mejorando texto...',
+          icon: 'info',
+          showConfirmButton: false,
+          allowOutsideClick: false
+      });
+
+      const response = await fetch('http://localhost:3000/api/gemini/correct-text', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text: originalText })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+          inputElement.value = result.correctedText;
+          Swal.fire({
+              title: 'Texto mejorado',
+              icon: 'success',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 2000
+          });
+      } else {
+          throw new Error(result.message);
+      }
+  } catch (error) {
+      Swal.fire({
+          title: 'Error',
+          text: 'No se pudo mejorar el texto',
+          icon: 'error'
+      });
+      console.error('Error mejorando texto:', error);
+  }
+}
+
+// Función para añadir botón de Gemini a inputs
+function addGeminiButtonToInputs() {
+  const textInputs = document.querySelectorAll('textarea, input[type="text"]');
+  
+  textInputs.forEach(input => {
+      // Verificar si ya tiene un botón de Gemini
+      if (input.nextElementSibling?.classList.contains('gemini-improve-btn')) return;
+
+      const geminiBtn = document.createElement('button');
+      geminiBtn.innerHTML = '<i class="fas fa-magic"></i>'; // Ícono de sparkle/magia
+      geminiBtn.classList.add('gemini-improve-btn');
+      geminiBtn.type = 'button';
+      tippy(geminiBtn, {
+          content: 'Mejorar texto con IA',
+          placement: 'top',
+          theme: 'light',
+          arrow: true,
+          animation: 'scale', // Animación de escala
+          delay: [100, 50], // Delay al mostrar y ocultar
+          duration: [300, 250] // Duración de animación al mostrar y ocultar
+      });
+      
+      geminiBtn.addEventListener('click', () => improveTextWithGemini(input));
+      
+      // Insertar después del input
+      input.parentNode.insertBefore(geminiBtn, input.nextSibling);
+  });
+}
 
 // ! INICIO ONLOAD
 document.addEventListener("DOMContentLoaded", async () => {
@@ -125,6 +198,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     showModal(DOM.modals.plantaRecorrido);
 
   }
+
+  addGeminiButtonToInputs();
 
   function initDataTable() {
       return $("#equiposTable").DataTable({
