@@ -582,12 +582,12 @@ const pintarSoportesTable = (datos) => {
                  
                   <td>
                       <span class="text-extra fw-light text-wrap text-break">
-                          ${item.descripcion ? capitalizeFirstLetter(item.descripcion) : 'N/A'}
+                          <pre style="white-space: pre-wrap; margin: 0;">${item.descripcion ? capitalizeFirstLetter(item.descripcion) : 'N/A'}</pre>
                       </span>
                   </td>
                   <td>
                       <span class="text-extra fw-light text-wrap text-break">
-                          ${item.solucion ? capitalizeFirstLetter(item.solucion) : 'N/A'}
+                          <pre style="white-space: pre-wrap; margin: 0;">${item.solucion ? capitalizeFirstLetter(item.solucion) : 'N/A'}</pre>
                       </span>
                   </td>
                  <td><span class="text-extra text-primary bg-primary bg-opacity-10 px-1 rounded text-uppercase fw-light">${item.responsable ? item.responsable : 'N/A'}</span></td>
