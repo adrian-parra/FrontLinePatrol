@@ -1299,7 +1299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   //to: 'adrian.borquez@sewsus.com.mx',
                   //cc: "adrian.borquez@sewsus.com.mx",
                   to: 'ramon.almeida@sewsus.com.mx, david.soto@sewsus.com.mx',
-                  cc: 'jorge.cota@sewsus.com.mx, mauricio.montes@sewsus.com.mx, isaac.apodaca@sewsus.com.mx, hannes.cota@sewsus.com.mx, pablo.buitimea@sewsus.com.mx, Francisco.Bernal@sewsus.com.mx, jorge.quintero@sewsus.com.mx',
+                  cc: 'jorge.cota@sewsus.com.mx, mauricio.montes@sewsus.com.mx, isaac.apodaca@sewsus.com.mx, hannes.cota@sewsus.com.mx, pablo.buitimea@sewsus.com.mx, Francisco.Bernal@sewsus.com.mx, jorge.quintero@sewsus.com.mx, oscar.soto@sewsus.com.mx',
                   subject: 'Soportes Generados - MCH1,MCH2,MCH3',
                   html: `
                     <div style='max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;'>
@@ -1562,6 +1562,8 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
 
   const data = await gestionPlantas.obtenerTopSoportes(dataF)
 
+  console.log(data)
+
   const ctx = document.getElementById('chartTopSoportes').getContext('2d');
   const ctxSemanas = document.getElementById('chartSemanasSoportes').getContext('2d');
 
@@ -1575,11 +1577,11 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
   myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: data.map(item => `${item.estacion} (${item.linea === 'NO APLICA MCH3' ? 'N/A' : item.linea})`),
+      labels: data.estacionesOrdenadas.map(item => `${item.estacion} (${item.linea === 'NO APLICA MCH3' ? 'N/A' : item.linea})`),
       datasets: [{
         label: 'Top 10 de Soportes por Ubicación/Estación',
         type: 'bar',
-        data: data.map(item => item.total),
+        data: data.estacionesOrdenadas.map(item => item.total),
         backgroundColor: 'rgba(54, 162, 235, 0.6)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1,
@@ -1598,7 +1600,7 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
       }, {
         label: 'Total',
         type: 'line',
-        data: data.map(item => item.total),
+        data: data.estacionesOrdenadas.map(item => item.total),
         borderColor: 'rgba(255, 99, 132, 1)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         fill: true,
@@ -1696,6 +1698,8 @@ const pintarGraficasEstadisticasDeSoportes = async (mesSelected = "") => {
     },
     plugins: [ChartDataLabels]
   });
+
+  document.getElementById('preAnalisisIaSoportesMes').textContent = data.analisisIA;
 }
 const updateInterfaz = async () => {
   const dataForm = new FormData()
