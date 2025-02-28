@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Upload PDF";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Upload PDF File</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Pdf" asp-action="Upload" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="pdfFile" class="form-label">Select PDF File</label>
+                            <input type="file" class="form-control" id="pdfFile" name="pdfFile" accept=".pdf" required>
+                            <div class="form-text">Please choose a PDF file to upload.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload PDF</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Método 1: iframe -->
+<!-- <iframe 
+    src="data:application/pdf;base64,TU9DQURBVE9TIC8vIEJhc2U2NCBkZWwgUERG" 
+    width="100%" 
+    height="600px">
+</iframe> -->
+
+<!-- Método 2: embed -->
+<!-- <embed 
+    src="data:application/pdf;base64,TU9DQURBVE9TIC8vIEJhc2U2NCBkZWwgUERG" 
+    type="application/pdf" 
+    width="100%" 
+    height="600px" /> -->
+
+<!-- Método 3: object -->
+<!-- <object 
+    data="data:application/pdf;base64,TU9DQURBVE9TIC8vIEJhc2U2NCBkZWwgUERG" 
+    type="application/pdf" 
+    width="100%" 
+    height="600px">
+    <p>Tu navegador no soporta mostrar PDFs</p>
+</object> -->
