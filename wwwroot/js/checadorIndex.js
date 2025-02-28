@@ -17,14 +17,17 @@ const CONFIG = {
 
 // Módulo de Utilidades
 const Utilidades = {
-    esCumpleanos(fechaCumpleanos) {
-        const hoy = new Date();
-        const [year, month, day] = fechaCumpleanos.split('-').map(Number);
-        const cumpleanos = new Date(year, month - 1, day);
-
-        return hoy.getMonth() === cumpleanos.getMonth() &&
-            hoy.getDate() === cumpleanos.getDate();
+    esCumpleanos(esCumpleanos) {
+        return esCumpleanos === "SI_CUMPLE";
     },
+    // esCumpleanos(fechaCumpleanos) {
+    //     const hoy = new Date();
+    //     const [year, month, day] = fechaCumpleanos.split('-').map(Number);
+    //     const cumpleanos = new Date(year, month - 1, day);
+
+    //     return hoy.getMonth() === cumpleanos.getMonth() &&
+    //         hoy.getDate() === cumpleanos.getDate();
+    // },
 
     calcularEdad(fechaCumpleanos) {
         const hoy = new Date();
@@ -84,8 +87,8 @@ const Utilidades = {
                 indirect: Math.floor(Math.random() * 50),     // 0-50 empleados indirectos
                 administrative: Math.floor(Math.random() * 20)
             }
-            ChartManager.actualizarDatos(datos)
-        }, 3000);
+            //ChartManager.actualizarDatos(datos)
+        }, 10000);
     }
 
 
@@ -309,7 +312,8 @@ const GestorEmpleados = {
 
     },
 
-    manejarEntrada(event) {
+    async manejarEntrada(event) {
+        console.log("entrooo");
         if (event.key !== 'Enter') return;
 
         event.preventDefault();
@@ -317,7 +321,7 @@ const GestorEmpleados = {
 
         if (!inputValue) return;
 
-        const empleado = this.buscarEmpleado(inputValue);
+        const empleado = await this.buscarEmpleado(inputValue);
 
         if (!empleado) {
             this.elementoInput.value = '';
@@ -326,19 +330,39 @@ const GestorEmpleados = {
         }
 
         this.mostrarInformacionEmpleado(empleado);
+        empleado.cumpleaños = "SI_CUMPLE";
         this.verificarCumpleanos(empleado);
         this.elementoInput.value = '';
     },
 
-    buscarEmpleado(numeroReloj) {
-        return CONFIG.EMPLEADOS.find(emp => emp.numero === numeroReloj);
-    },
+   async buscarEmpleado(numeroReloj) {
+       try {
+           const response = await fetch(`/Employee/GetEmployeeInfo?employeeId=${numeroReloj}`, {
+               method: 'GET',
+               headers: {
+                   'Accept': 'application/json'
+               }
+           });
+   
+           if (!response.ok) {
+               throw new Error('Error en la solicitud');
+           }
+   
+           const data = await response.json();
+           console.log(data);
+           return data;
+       } catch (error) {
+           console.error('Error:', error);
+           return null;
+       }
+   },
 
     mostrarInformacionEmpleado(empleado) {
+        console.log("empleadoooo ",empleado);
         if (this.elementoDisplay) {
             this.elementoDisplay.innerHTML = `
            <div class="nombre-empleado-checador">
-               ${empleado.nombreCompleto} ✅
+               ${empleado.nombreCompleto}
            </div>
        `;
 
@@ -363,10 +387,35 @@ const GestorEmpleados = {
                    overflow: hidden;
                    text-overflow: ellipsis;
                    animation: fadeIn 0.5s ease-out;
+                   transition: opacity 0.5s ease-out;
+               }
+
+               @keyframes fadeOut {
+                   from { opacity: 1; }
+                   to { opacity: 0; }
+               }
+
+               .nombre-empleado-checador.fade-out {
+                   animation: fadeOut 0.5s ease-out forwards;
                }
            `;
                 document.head.appendChild(style);
             }
+
+            // Limpiar el display con animación después de 10 segundos
+            setTimeout(() => {
+                if (this.elementoDisplay) {
+                    const nombreEmpleadoElement = this.elementoDisplay.querySelector('.nombre-empleado-checador');
+                    if (nombreEmpleadoElement) {
+                        nombreEmpleadoElement.classList.add('fade-out');
+                        
+                        // Eliminar el elemento después de la animación
+                        setTimeout(() => {
+                            this.elementoDisplay.innerHTML = '';
+                        }, 500); // Coincide con la duración de la animación
+                    }
+                }
+            }, 10000);
         }
     },
     iniciarCarruselCumpleanos() {
@@ -386,14 +435,14 @@ const GestorEmpleados = {
             this.carouselInterval = setInterval(() => {
                 this.avanzarCumpleanos();
             }, 3000); // Cambiar cada 5 segundos
-        }
+            }
     },
 
     verificarCumpleanos(empleado) {
-        if (!Utilidades.esCumpleanos(empleado.cumpleanos)) return;
+        if (!Utilidades.esCumpleanos(empleado.cumpleaños)) return;
 
         // Agregar al array de cumpleaños en lugar de mostrar inmediatamente
-        const edad = Utilidades.calcularEdad(empleado.cumpleanos);
+        const edad = Utilidades.calcularEdad(empleado.cumpleaños);
         const cumpleanoInfo = {
             nombreCompleto: empleado.nombreCompleto,
             edad: edad,
@@ -412,8 +461,11 @@ const GestorEmpleados = {
 
         const cumpleano = this.cumpleanosList[this.currentCarouselIndex];
 
+        // Agregar log de depuración
+        console.log('Mostrando cumpleaños:', cumpleano);
+
         this.elementoCumpleanos.innerHTML = `
-            <div class="cumpleanos-carrusel">
+            <div class="cumpleanos-carrusel" id="cumpleanos-carrusel-container">
                 <div class="cumpleanos-mensaje-profesional">
                     <div class="cumpleanos-header">
                         <span class="emoji-celebracion">🎉</span>
@@ -428,7 +480,7 @@ const GestorEmpleados = {
                             <h3>${cumpleano.nombreCompleto}</h3>
                             
                             <div class="cumpleanos-insignia">
-                                🎂 Celebrando su día especial
+                                Celebrando su día especial
                             </div>
                         </div>
                     </div>
@@ -440,7 +492,69 @@ const GestorEmpleados = {
         this.agregarEstilosCumpleanos();
 
         // Lanzar animación de globos
-        Utilidades.crearGlobos()
+        Utilidades.crearGlobos();
+
+        // Agregar estilos de desvanecimiento si no existen
+        const styleId = 'cumpleanos-fade-styles';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = `
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: scale(1); }
+                    to { opacity: 0; transform: scale(0.9); }
+                }
+
+                .cumpleanos-fade-out {
+                    animation: fadeOut 0.5s ease-out forwards;
+                    pointer-events: none;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Ocultar después de 10 segundos
+        setTimeout(() => {
+            try {
+                const carruselElemento = document.getElementById('cumpleanos-carrusel-container');
+                
+                if (carruselElemento) {
+                    console.log('Iniciando desvanecimiento de cumpleaños');
+                    carruselElemento.classList.add('cumpleanos-fade-out');
+                    
+                    // Limpiar el contenido después de la animación
+                    setTimeout(() => {
+                        console.log('Limpiando contenido de cumpleaños');
+                        if (this.elementoCumpleanos) {
+                            this.elementoCumpleanos.innerHTML = '';
+                            
+                            // Eliminar el cumpleaños actual del array
+                            this.cumpleanosList.splice(this.currentCarouselIndex, 1);
+                            
+                            // Detener el intervalo si no quedan cumpleaños
+                            if (this.cumpleanosList.length === 0) {
+                                if (this.carouselInterval) {
+                                    clearInterval(this.carouselInterval);
+                                }
+                                return;
+                            }
+                            
+                            // Ajustar el índice si es necesario
+                            if (this.currentCarouselIndex >= this.cumpleanosList.length) {
+                                this.currentCarouselIndex = 0;
+                            }
+                            
+                            // Mostrar el siguiente cumpleaños
+                            this.mostrarCumpleanosActual();
+                        }
+                    }, 500);
+                } else {
+                    console.error('No se encontró el elemento de cumpleaños');
+                }
+            } catch (error) {
+                console.error('Error al ocultar cumpleaños:', error);
+            }
+        }, 10000);
     },
     generarAvatarInicial(nombreCompleto) {
         const iniciales = nombreCompleto
@@ -659,7 +773,3 @@ window.addEventListener('online', () => {
     ChartManager.inicializar();
     mostrarToast('Con conexión a internet', 'online');
 });
-
-
-
-
