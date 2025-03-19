@@ -21,7 +21,7 @@ public class VoceoController : Controller
  var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
         string hostName = string.Empty;
 
-        // Aquí puedes configurar la URL de la API externa
+        // Aquí puedes configurar la URL de la API externa p
     string apiUrl = "http://172.30.73.72:9001/intranet/regresaVoceosCTS.php";
 
     using (var client = new HttpClient())
